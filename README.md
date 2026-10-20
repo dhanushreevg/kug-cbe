@@ -2,19 +2,27 @@
 Official website for the Kotlin User Group Coimbatore.
 
 **Organizer:** Dhanu Shree V G  
-**Co-Organizer:** Sanjay S  
+**Co-Organizer:** Sanjay S
 
-Built with plain HTML, CSS, and JS. Powered by GSAP, Lenis, and Three.js.
+## Tech Stack
+- React 18 + Vite
+- Three.js (liquid water hero simulation)
+- GSAP + ScrollTrigger + SplitText
+- Lenis smooth scroll
+- Tailwind CSS + glassmorphism
 
-## Getting Started
-No build step needed. Open `jithinrp.com/jithinrp.com/index.html` 
-in a browser or serve with any static file server:
-
+## Run Locally
 ```bash
-npx serve jithinrp.com/jithinrp.com
+npm install
+npm run dev
+```
+
+## Build
+```bash
+npm run build
 ```
 
 ## Links
-- [Kotlin User Groups](https://kotlinlang.org/community/user-groups/)
-- [KUG Guidelines](https://kotlinlang.org/docs/kug-guidelines.html)
-- [JetBrains](https://www.jetbrains.com/)
+- https://kotlinlang.org/community/user-groups/
+- https://kotlinlang.org/docs/kug-guidelines.html
+- https://www.jetbrains.com/
