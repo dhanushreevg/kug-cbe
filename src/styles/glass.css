@@ -78,6 +78,7 @@
 .kotlin-gradient-text {
   background: linear-gradient(135deg, #B69CFF 0%, #7F52FF 40%, #FE2857 85%, #F88909 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 

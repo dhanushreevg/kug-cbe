@@ -101,7 +101,7 @@ export default function About() {
           ))}
 
           {/* JetBrains & Kodee badge */}
-          <div className="pt-4 border-t border-white/10 flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/5">
+          <div className="pt-4 flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/5">
             <img
               src="/assets/kotlin_mascot_2/Digital/SVG/Kodee_Assets_Digital_Kodee-sitting.svg"
               alt="Kodee sitting"
