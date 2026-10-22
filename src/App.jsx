@@ -8,13 +8,27 @@ import { useGsapReveal } from "@/hooks/useGsapReveal"
 import Navbar from "@/components/Navbar"
 import Hero from "@/components/Hero"
 import Events from "@/components/Events"
+import KodeeShowcase from "@/components/KodeeShowcase"
 import Resources from "@/components/Resources"
 import About from "@/components/About"
 import Community from "@/components/Community"
 import Contact from "@/components/Contact"
 import Footer from "@/components/Footer"
+import KodeeCompanion from "@/components/KodeeCompanion"
+import PageLoader from "@/components/PageLoader"
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
+
+const MARQUEE_ITEMS = [
+  { text: "Kotlin 2.0", icon: "/assets/kotlin_mascot_2/Digital/Emoji/kodee-happy.gif" },
+  { text: "Android Studio", icon: "/assets/kotlin_mascot_2/Digital/SVG/Kodee_Assets_Digital_Kodee-petite-56px-24px.svg" },
+  { text: "Jetpack Compose", icon: "/assets/kotlin_mascot_2/Digital/Emoji/kodee-floating.gif" },
+  { text: "Kotlin Multiplatform", icon: "/assets/kotlin_mascot_2/Digital/Emoji/kodee-walking.gif" },
+  { text: "Coroutines & Flow", icon: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-electrified.png" },
+  { text: "KUG Coimbatore", icon: "/assets/kotlin_mascot_2/Digital/Emoji/kodee-greetings.gif" },
+  { text: "Server-side & Ktor", icon: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-excited.png" },
+  { text: "Community Powered", icon: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-loving.png" },
+]
 
 export default function App() {
   useLenis()
@@ -74,7 +88,7 @@ export default function App() {
     if (!track) return
     const anim = gsap.to(track, {
       xPercent: -50,
-      duration: 22,
+      duration: 25,
       ease: "none",
       repeat: -1,
     })
@@ -85,31 +99,39 @@ export default function App() {
   }, [])
 
   return (
-    <div className="relative min-h-screen bg-kotlin-dark text-white">
+    <div className="relative min-h-screen bg-kotlin-dark text-white selection:bg-kotlin-purple selection:text-white">
+      <PageLoader onFinish={() => ScrollTrigger.refresh()} />
       <Navbar />
       <main>
         <Hero />
 
-        {/* Marquee divider */}
-        <div className="overflow-hidden py-4 border-y border-white/5">
-          <div className="marquee-track flex whitespace-nowrap gap-12 text-sm font-mono text-kotlin-purple/70 uppercase tracking-widest">
-            {Array(8)
-              .fill(
-                "Kotlin · Android · Multiplatform · Coroutines · Compose · JVM · Backend · KUG CBE ·"
-              )
-              .map((t, i) => (
-                <span key={i}>{t}</span>
-              ))}
+        {/* Marquee divider with animated Kodee emojis */}
+        <div className="overflow-hidden py-4 border-y border-white/5 bg-kotlin-surface/30">
+          <div className="marquee-track flex whitespace-nowrap gap-10 text-xs sm:text-sm font-mono text-kotlin-purple/85 uppercase tracking-widest items-center">
+            {/* Duplicated for seamless loop */}
+            {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS, ...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
+              <span key={i} className="inline-flex items-center gap-2.5">
+                <img
+                  src={item.icon}
+                  alt={item.text}
+                  className="w-5 h-5 object-contain inline-block"
+                />
+                <span>{item.text}</span>
+                <span className="text-white/20 ml-2">✦</span>
+              </span>
+            ))}
           </div>
         </div>
 
         <Events />
-        <Resources />
+        <KodeeShowcase />
         <About />
         <Community />
+        <Resources />
         <Contact />
       </main>
       <Footer />
+      <KodeeCompanion />
     </div>
   )
 }

@@ -27,17 +27,31 @@ export default function About() {
             {[
               { name: "Dhanu Shree V G", role: "Organizer" },
               { name: "Sanjay S", role: "Co-Organizer" },
+              {
+                name: "Kodee",
+                role: "Official Mascot",
+                icon: "/assets/kotlin_mascot_2/Digital/SVG/Kodee_Assets_Digital_Kodee-regular-156px-more.svg",
+              },
             ].map((o) => (
               <div
                 key={o.name}
-                className="glass rounded-xl px-5 py-3 border-l-2 border-kotlin-purple flex flex-col gap-0.5"
+                className="glass rounded-xl px-5 py-3 border-l-2 border-kotlin-purple flex items-center gap-3"
               >
-                <span className="font-semibold text-sm text-white">
-                  {o.name}
-                </span>
-                <span className="text-xs font-mono text-kotlin-purple/80 uppercase tracking-widest">
-                  {o.role}
-                </span>
+                {o.icon && (
+                  <img
+                    src={o.icon}
+                    alt={o.name}
+                    className="w-8 h-8 object-contain shrink-0 animate-float"
+                  />
+                )}
+                <div className="flex flex-col gap-0.5">
+                  <span className="font-semibold text-sm text-white">
+                    {o.name}
+                  </span>
+                  <span className="text-xs font-mono text-kotlin-purple/80 uppercase tracking-widest">
+                    {o.role}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
@@ -45,41 +59,59 @@ export default function About() {
 
         {/* Right: glassmorphism info panel */}
         <div className="reveal glass-card p-8 flex flex-col gap-6">
-          <h3 className="font-semibold text-lg text-kotlin-light">
-            What We Do
-          </h3>
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold text-lg text-kotlin-light">
+              What We Do
+            </h3>
+            <span className="text-xs font-mono text-kotlin-coral font-medium bg-kotlin-coral/10 px-2.5 py-1 rounded-full border border-kotlin-coral/20">
+              ✦ 100% Free
+            </span>
+          </div>
           {[
             {
               icon: "🎤",
               label: "Monthly Meetups",
-              detail: "In-person gatherings with talks and demos",
+              detail: "In-person gatherings with talks, lightning demos, and networking",
             },
             {
               icon: "🛠",
               label: "Hands-on Workshops",
-              detail: "Practical sessions for all experience levels",
+              detail: "Practical coding labs for Android, Compose, and KMP",
             },
             {
               icon: "🌐",
-              label: "Online Sessions",
-              detail: "Livestreams and virtual deep-dives",
+              label: "Online Sessions & Streams",
+              detail: "Virtual deep-dives and live coding sessions",
             },
             {
               icon: "🤝",
-              label: "Community Networking",
-              detail: "Connect with Kotlin developers across Tamil Nadu",
+              label: "Community Mentorship",
+              detail: "Connect with Kotlin developers and leaders across Tamil Nadu",
             },
           ].map((item) => (
             <div key={item.label} className="flex items-start gap-4">
               <span className="text-xl mt-0.5">{item.icon}</span>
               <div>
-                <div className="font-medium text-sm">{item.label}</div>
-                <div className="text-xs text-white/45 mt-0.5">
+                <div className="font-medium text-sm text-white">{item.label}</div>
+                <div className="text-xs text-white/50 mt-0.5 leading-relaxed">
                   {item.detail}
                 </div>
               </div>
             </div>
           ))}
+
+          {/* JetBrains & Kodee badge */}
+          <div className="pt-4 border-t border-white/10 flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/5">
+            <img
+              src="/assets/kotlin_mascot_2/Digital/SVG/Kodee_Assets_Digital_Kodee-sitting.svg"
+              alt="Kodee sitting"
+              className="w-12 h-12 object-contain shrink-0 animate-float"
+            />
+            <div className="text-xs text-white/70 leading-relaxed">
+              <span className="font-semibold text-white block">Official JetBrains KUG</span>
+              Following official guidelines to foster a diverse, friendly, and thriving developer ecosystem in Coimbatore.
+            </div>
+          </div>
         </div>
       </div>
     </section>

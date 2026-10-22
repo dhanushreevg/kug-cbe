@@ -52,15 +52,23 @@ export default function Community() {
       {/* Full-width glass band */}
       <div className="glass border-y border-kotlin-purple/10 py-20 max-w-7xl mx-auto rounded-3xl px-10">
         <div className="text-center mb-14">
-          <span className="reveal text-kotlin-purple font-mono text-sm tracking-widest uppercase">
+          <div className="reveal relative w-fit mx-auto mb-4">
+            <div className="absolute inset-0 mascot-glow rounded-full scale-125 pointer-events-none -z-10 animate-pulse-glow" />
+            <img
+              src="/assets/kotlin_mascot_2/Digital/SVG/Kodee_Assets_Digital_Kodee-in-love.svg"
+              alt="Kodee in love"
+              className="w-20 h-20 md:w-24 md:h-24 object-contain mx-auto animate-float"
+            />
+          </div>
+          <span className="reveal text-kotlin-purple font-mono text-sm tracking-widest uppercase inline-flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-kotlin-purple" />
             Growing Together
           </span>
           <h2 className="reveal text-4xl md:text-6xl font-bold mt-3">
-            Be Part of the Community
+            Be Part of the <span className="kotlin-gradient-text">Community</span>
           </h2>
-          <p className="reveal text-white/50 mt-4 max-w-xl mx-auto">
-            We are just getting started. Join us and help shape the Kotlin community
-            in Coimbatore.
+          <p className="reveal text-white/60 mt-4 max-w-xl mx-auto text-base leading-relaxed">
+            We are just getting started. Join our group, attend local meetups, and help shape Coimbatore’s premier Kotlin hub!
           </p>
         </div>
 

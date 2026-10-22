@@ -2,14 +2,24 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="py-28 px-6 md:px-12 max-w-3xl mx-auto text-center"
+      className="py-28 px-6 md:px-12 max-w-3xl mx-auto text-center relative"
     >
-      <span className="reveal text-kotlin-purple font-mono text-sm tracking-widest uppercase">
+      <div className="reveal relative w-fit mx-auto mb-6">
+        <div className="absolute inset-0 mascot-glow rounded-full scale-125 pointer-events-none -z-10 animate-pulse-glow" />
+        <img
+          src="/assets/kotlin_mascot_2/Digital/SVG/Kodee_Assets_Digital_Kodee-waving.svg"
+          alt="Kodee waving"
+          className="w-24 h-24 object-contain mx-auto animate-float"
+        />
+      </div>
+
+      <span className="reveal text-kotlin-purple font-mono text-sm tracking-widest uppercase inline-flex items-center gap-2">
+        <span className="w-2 h-2 rounded-full bg-kotlin-purple" />
         Say Hello
       </span>
 
       <h2 className="reveal text-4xl md:text-6xl font-bold mt-3 mb-6">
-        Get in Touch
+        Get in <span className="kotlin-gradient-text">Touch</span>
       </h2>
 
       <p className="reveal text-white/55 text-lg leading-relaxed mb-10">
