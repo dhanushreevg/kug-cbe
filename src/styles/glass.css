@@ -41,3 +41,43 @@
   border-color: rgba(127, 82, 255, 0.7);
   box-shadow: 0 0 24px rgba(127, 82, 255, 0.3);
 }
+
+/* Mascot spotlight and glow utilities */
+.mascot-glow {
+  background: radial-gradient(circle, rgba(127, 82, 255, 0.35) 0%, rgba(254, 40, 87, 0.18) 45%, transparent 70%);
+  filter: blur(36px);
+}
+
+.mascot-glow-intense {
+  background: radial-gradient(circle, rgba(127, 82, 255, 0.45) 0%, rgba(254, 40, 87, 0.25) 40%, rgba(248, 137, 9, 0.15) 60%, transparent 75%);
+  filter: blur(48px);
+}
+
+.speech-bubble {
+  position: relative;
+  background: rgba(27, 27, 31, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(127, 82, 255, 0.3);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 16px rgba(127, 82, 255, 0.15);
+}
+
+.speech-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 28px;
+  width: 14px;
+  height: 14px;
+  background: rgba(27, 27, 31, 0.85);
+  border-right: 1px solid rgba(127, 82, 255, 0.3);
+  border-bottom: 1px solid rgba(127, 82, 255, 0.3);
+  transform: rotate(45deg);
+}
+
+.kotlin-gradient-text {
+  background: linear-gradient(135deg, #B69CFF 0%, #7F52FF 40%, #FE2857 85%, #F88909 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+

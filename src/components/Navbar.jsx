@@ -39,9 +39,10 @@ export default function Navbar() {
 
   const navLinks = [
     { label: "Events", href: "#events" },
-    { label: "Resources", href: "#resources" },
+    { label: "Mascot", href: "#kodee" },
     { label: "About", href: "#about" },
     { label: "Community", href: "#community" },
+    { label: "Resources", href: "#resources" },
     { label: "Contact", href: "#contact" },
   ]
 
@@ -53,34 +54,50 @@ export default function Navbar() {
     <header
       ref={navRef}
       className={`fixed top-0 left-0 right-0 z-50 h-16 transition-all duration-300 border-b border-white/5 ${
-        isScrolled ? "glass-strong bg-kotlin-dark/90 shadow-lg shadow-black/20" : "glass-strong"
+        isScrolled ? "glass-strong bg-kotlin-dark/95 shadow-lg shadow-black/30" : "glass-strong"
       }`}
     >
       <div className="max-w-7xl mx-auto h-full px-6 md:px-12 flex items-center justify-between">
-        {/* Left: Wordmark */}
+        {/* Left: Wordmark with Kotlin mark & Kodee */}
         <a
           href="#"
-          className="nav-anim-item flex items-center gap-2.5 font-semibold text-white tracking-tight hover:opacity-90 transition-opacity"
+          className="nav-anim-item flex items-center gap-2.5 font-semibold text-white tracking-tight hover:opacity-95 transition-opacity group"
         >
-          <svg
-            className="w-3.5 h-3.5 shrink-0"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M24 24H0V0h24L12 12Z" fill="#7F52FF" />
-          </svg>
-          <span className="text-base font-semibold">KUG Coimbatore</span>
+          <div className="relative flex items-center gap-1.5">
+            <svg
+              className="w-4 h-4 shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M24 24H0V0h24L12 12Z" fill="#7F52FF" />
+            </svg>
+            <img
+              src="/assets/kotlin_mascot_2/Digital/SVG/Kodee_Assets_Digital_Kodee-petite-56px-24px.svg"
+              alt="Kodee"
+              className="w-4 h-4 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12"
+            />
+          </div>
+          <span className="text-base font-semibold">
+            KUG <span className="text-kotlin-light">Coimbatore</span>
+          </span>
         </a>
 
         {/* Center: Nav links (desktop) */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-7">
           {navLinks.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              className="nav-anim-item text-sm font-medium text-white/70 hover:text-white transition-colors"
+              className={`nav-anim-item text-sm font-medium transition-colors ${
+                link.label === "Mascot"
+                  ? "text-kotlin-light hover:text-white flex items-center gap-1 font-semibold"
+                  : "text-white/70 hover:text-white"
+              }`}
             >
+              {link.label === "Mascot" && (
+                <span className="w-1.5 h-1.5 rounded-full bg-kotlin-purple animate-ping" />
+              )}
               {link.label}
             </a>
           ))}
