@@ -9,9 +9,10 @@ import Navbar from "@/components/Navbar"
 import Hero from "@/components/Hero"
 import Events from "@/components/Events"
 import KodeeShowcase from "@/components/KodeeShowcase"
-import Resources from "@/components/Resources"
+import KodeeArcade from "@/components/KodeeArcade"
 import About from "@/components/About"
 import Community from "@/components/Community"
+import Resources from "@/components/Resources"
 import Contact from "@/components/Contact"
 import Footer from "@/components/Footer"
 import KodeeCompanion from "@/components/KodeeCompanion"
@@ -19,55 +20,40 @@ import PageLoader from "@/components/PageLoader"
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
-const MARQUEE_ITEMS = [
-  { text: "Kotlin 2.0", icon: "/assets/kotlin_mascot_2/Digital/Emoji/kodee-happy.gif" },
-  { text: "Android Studio", icon: "/assets/kotlin_mascot_2/Digital/SVG/Kodee_Assets_Digital_Kodee-petite-56px-24px.svg" },
-  { text: "Jetpack Compose", icon: "/assets/kotlin_mascot_2/Digital/Emoji/kodee-floating.gif" },
-  { text: "Kotlin Multiplatform", icon: "/assets/kotlin_mascot_2/Digital/Emoji/kodee-walking.gif" },
-  { text: "Coroutines & Flow", icon: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-electrified.png" },
-  { text: "KUG Coimbatore", icon: "/assets/kotlin_mascot_2/Digital/Emoji/kodee-greetings.gif" },
-  { text: "Server-side & Ktor", icon: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-excited.png" },
-  { text: "Community Powered", icon: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-loving.png" },
-]
+const MARQUEE_TEXT = "KOTLIN · COIMBATORE · LEARN · BUILD · SHARE · CONNECT · "
 
 export default function App() {
   useLenis()
   useGsapReveal(".reveal")
 
-  // Liquid heading effect on h2 elements
+  // Mechanical character stagger for section headings
   useEffect(() => {
     const reduceMotion =
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
     if (reduceMotion) return
 
-    const headings = document.querySelectorAll("h2")
+    const headings = document.querySelectorAll("h2.section-heading")
     const splits = []
     const triggers = []
 
     headings.forEach((h) => {
       try {
-        const split = new SplitText(h, { type: "chars,words" })
+        const split = new SplitText(h, { type: "chars" })
         splits.push(split)
-        const anim = gsap.fromTo(
-          split.chars,
-          { opacity: 0, y: 30, filter: "blur(8px)" },
-          {
-            opacity: 1,
-            y: 0,
-            filter: "blur(0px)",
-            duration: 0.7,
-            ease: "power3.out",
-            stagger: { each: 0.03, from: "start" },
-            scrollTrigger: {
-              trigger: h,
-              start: "top 85%",
-            },
-          }
-        )
+        const anim = gsap.from(split.chars, {
+          opacity: 0,
+          duration: 0.03,
+          stagger: 0.02,
+          ease: "none",
+          scrollTrigger: {
+            trigger: h,
+            start: "top 85%",
+          },
+        })
         if (anim.scrollTrigger) triggers.push(anim.scrollTrigger)
       } catch (err) {
-        console.warn("SplitText error on heading:", err)
+        console.warn("SplitText heading fallback:", err)
       }
     })
 
@@ -77,7 +63,7 @@ export default function App() {
     }
   }, [])
 
-  // Horizontal marquee on the divider band
+  // Marquee animation
   useEffect(() => {
     const reduceMotion =
       typeof window !== "undefined" &&
@@ -86,9 +72,10 @@ export default function App() {
 
     const track = document.querySelector(".marquee-track")
     if (!track) return
+
     const anim = gsap.to(track, {
       xPercent: -50,
-      duration: 25,
+      duration: 20,
       ease: "none",
       repeat: -1,
     })
@@ -99,37 +86,41 @@ export default function App() {
   }, [])
 
   return (
-    <div className="relative min-h-screen bg-kotlin-dark text-white selection:bg-kotlin-purple selection:text-white">
+    <div className="relative min-h-screen bg-void text-text-body selection:bg-kotlin-violet/30 selection:text-white">
       <PageLoader onFinish={() => ScrollTrigger.refresh()} />
       <Navbar />
+
       <main>
         <Hero />
 
-        {/* Marquee divider with animated Kodee emojis */}
-        <div className="overflow-hidden py-4 border-y border-white/5 bg-kotlin-surface/30">
-          <div className="marquee-track flex whitespace-nowrap gap-10 text-xs sm:text-sm font-mono text-kotlin-purple/85 uppercase tracking-widest items-center">
-            {/* Duplicated for seamless loop */}
-            {[...MARQUEE_ITEMS, ...MARQUEE_ITEMS, ...MARQUEE_ITEMS, ...MARQUEE_ITEMS].map((item, i) => (
-              <span key={i} className="inline-flex items-center gap-2.5">
-                <img
-                  src={item.icon}
-                  alt={item.text}
-                  className="w-5 h-5 object-contain inline-block"
-                />
-                <span>{item.text}</span>
-                <span className="text-white/20 ml-2">✦</span>
-              </span>
-            ))}
+        {/* Marquee divider — THE ONLY GRADIENT BACKGROUND ON THE SITE */}
+        <div className="overflow-hidden py-3 bg-gradient-kotlin select-none border-y border-border">
+          <div className="marquee-track flex whitespace-nowrap text-xs font-mono font-bold text-white/90 uppercase tracking-[0.15em]">
+            <span>{MARQUEE_TEXT.repeat(12)}</span>
           </div>
         </div>
 
         <Events />
+        <div className="border-t border-border" />
+
         <KodeeShowcase />
+        <div className="border-t border-border" />
+
+        <KodeeArcade />
+        <div className="border-t border-border" />
+
         <About />
+        <div className="border-t border-border" />
+
         <Community />
+        <div className="border-t border-border" />
+
         <Resources />
+        <div className="border-t border-border" />
+
         <Contact />
       </main>
+
       <Footer />
       <KodeeCompanion />
     </div>

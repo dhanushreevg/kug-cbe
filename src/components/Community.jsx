@@ -1,109 +1,67 @@
-import { useEffect } from "react"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-
-gsap.registerPlugin(ScrollTrigger)
+const STATS = [
+  { number: "250+", label: "Engineers in Network" },
+  { number: "01", label: "Metro Chapter (CBE)" },
+  { number: "100%", label: "Free & Open Source" },
+  { number: "2.0", label: "Compiler Era" },
+]
 
 export default function Community() {
-  useEffect(() => {
-    const reduceMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-
-    const triggers = []
-    const statElements = document.querySelectorAll(".stat-number")
-
-    statElements.forEach((el) => {
-      const end = parseInt(el.dataset.end, 10) || 0
-      const suffix = el.dataset.suffix || ""
-
-      if (reduceMotion) {
-        el.textContent = end + suffix
-        return
-      }
-
-      const obj = { val: 0 }
-      const anim = gsap.fromTo(
-        obj,
-        { val: 0 },
-        {
-          val: end,
-          duration: 2,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 85%",
-          },
-          onUpdate: () => {
-            el.textContent = Math.round(obj.val) + suffix
-          },
-        }
-      )
-      if (anim.scrollTrigger) triggers.push(anim.scrollTrigger)
-    })
-
-    return () => {
-      triggers.forEach((t) => t.kill())
-    }
-  }, [])
-
   return (
-    <section id="community" className="py-28 px-6 md:px-12">
-      {/* Full-width glass band */}
-      <div className="glass border-y border-kotlin-purple/10 py-20 max-w-7xl mx-auto rounded-3xl px-10">
-        <div className="text-center mb-14">
-          <div className="reveal relative w-fit mx-auto mb-4">
-            <div className="absolute inset-0 mascot-glow rounded-full scale-125 pointer-events-none -z-10 animate-pulse-glow" />
-            <img
-              src="/assets/kotlin_mascot_2/Digital/SVG/Kodee_Assets_Digital_Kodee-in-love.svg"
-              alt="Kodee in love"
-              className="w-20 h-20 md:w-24 md:h-24 object-contain mx-auto animate-float"
-            />
+    <section id="community" className="py-24 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-void">
+      <div className="mb-14">
+        <div className="section-label">Community Metrics</div>
+        <h2 className="section-heading font-display font-bold text-white text-[clamp(1.8rem,4vw,3rem)] leading-none tracking-[-0.03em] mb-4">
+          Built by <span className="gradient-text">Developers</span>, for Developers
+        </h2>
+        <p className="font-body text-text-body text-base max-w-2xl leading-relaxed">
+          From independent software vendors to college research groups and enterprise engineering teams across Coimbatore, we are creating a home for pragmatic programmers.
+        </p>
+      </div>
+
+      {/* 4-column Stats Grid with dividers on bg-surface */}
+      <div className="bg-surface grid grid-cols-2 lg:grid-cols-4 border-l border-t border-border mb-16 rounded-sm overflow-hidden">
+        {STATS.map((stat, i) => (
+          <div key={i} className="border-r border-b border-border p-8 flex flex-col justify-center">
+            <div className="font-mono text-4xl sm:text-5xl font-bold gradient-text mb-2 tabular-nums">
+              {stat.number}
+            </div>
+            <div className="font-mono text-xs tracking-widest uppercase text-text-dim">
+              {stat.label}
+            </div>
           </div>
-          <span className="reveal text-kotlin-purple font-mono text-sm tracking-widest uppercase inline-flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-kotlin-purple" />
-            Growing Together
+        ))}
+      </div>
+
+      {/* Join the Movement Card with Primary CTA */}
+      <div className="card-base p-8 sm:p-12 flex flex-col md:flex-row md:items-center justify-between gap-8">
+        <div className="max-w-xl">
+          <span className="font-mono text-xs uppercase tracking-widest text-kotlin-pink block mb-2">
+            Get Involved
           </span>
-          <h2 className="reveal text-4xl md:text-6xl font-bold mt-3">
-            Be Part of the <span className="kotlin-gradient-text">Community</span>
-          </h2>
-          <p className="reveal text-white/60 mt-4 max-w-xl mx-auto text-base leading-relaxed">
-            We are just getting started. Join our group, attend local meetups, and help shape Coimbatore’s premier Kotlin hub!
+          <h3 className="font-display text-2xl font-bold text-white mb-3">
+            Join the Coimbatore Kotlin User Group
+          </h3>
+          <p className="font-body text-sm text-text-muted leading-relaxed">
+            RSVP for upcoming technical meetups, collaborate on open-source Kotlin experiments, and connect directly with local engineers.
           </p>
         </div>
 
-        {/* Stats */}
-        <div className="reveal flex flex-wrap justify-center gap-12 mb-14">
-          {[
-            { end: 0, suffix: "+", label: "Members" },
-            { end: 0, suffix: "+", label: "Events Hosted" },
-            { end: 1, suffix: "", label: "City" },
-          ].map((stat, i) => (
-            <div key={i} className="text-center">
-              <div
-                className="stat-number text-5xl md:text-6xl font-bold text-kotlin-purple tabular-nums"
-                data-end={stat.end}
-                data-suffix={stat.suffix}
-              >
-                {stat.end}
-                {stat.suffix}
-              </div>
-              <div className="text-sm text-white/45 font-mono uppercase tracking-widest mt-2">
-                {stat.label}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="reveal flex justify-center">
+        <div className="flex flex-wrap items-center gap-4 shrink-0">
           <a
             href="https://surveys.jetbrains.com/s3/submit-a-local-kotlin-user-group"
             target="_blank"
             rel="noopener noreferrer"
-            className="glass-btn rounded-full px-8 py-4 font-semibold text-kotlin-purple text-base inline-flex items-center gap-2"
+            className="relative px-7 py-3.5 rounded-sm font-body font-medium text-sm text-white bg-gradient-kotlin overflow-hidden transition-all duration-200 hover:brightness-110 hover:shadow-kotlin-md active:scale-[0.97] active:brightness-90 select-none inline-flex items-center gap-2"
           >
-            <span>Join KUG Coimbatore</span>
-            <span>→</span>
+            Register with Group
+          </a>
+          <a
+            href="https://slack-chats.kotlinlang.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="gradient-border px-7 py-3.5 rounded-sm font-body font-medium text-sm text-text-body bg-surface transition-all duration-200 hover:bg-surface-2 hover:text-white active:scale-[0.97] select-none inline-flex items-center gap-2"
+          >
+            Global Slack
           </a>
         </div>
       </div>

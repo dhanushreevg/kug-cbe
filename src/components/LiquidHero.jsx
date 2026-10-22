@@ -1,6 +1,8 @@
+"use client"
+
 import { useEffect, useRef } from "react"
 import * as THREE from "three"
-import { cn } from "@/lib/utils.js"
+import { cn } from "@/lib/utils"
 
 const simulationVertexShader = `
 varying vec2 vUv;
@@ -125,7 +127,7 @@ void main() {
 export function LiquidHero({
   imagePath = "",
   imageAlign = "center",
-  className,
+  className = "",
   fillFactor = 0.5,
 }) {
   const containerRef = useRef(null)
@@ -229,12 +231,11 @@ export function LiquidHero({
 
     const readThemeColors = () => {
       const styles = getComputedStyle(document.documentElement)
-      const bg = styles.getPropertyValue("--background").trim()
-      const fg = styles.getPropertyValue("--foreground").trim()
-      return {
-        bg: bg ? (bg.startsWith("#") || bg.startsWith("rgb") || bg.startsWith("hsl") ? bg : `hsl(${bg})`) : "#1B1B1F",
-        fg: fg ? (fg.startsWith("#") || fg.startsWith("rgb") || fg.startsWith("hsl") ? fg : `hsl(${fg})`) : "#FFFFFF"
-      }
+      const bg = styles.getPropertyValue("--color-void").trim() || styles.getPropertyValue("--background").trim() || "240 20% 5%"
+      const fg = styles.getPropertyValue("--color-text-primary").trim() || styles.getPropertyValue("--foreground").trim() || "0 0% 100%"
+      const finalBg = bg.startsWith("#") || bg.startsWith("rgb") || bg.startsWith("hsl") ? bg : `hsl(${bg})`
+      const finalFg = fg.startsWith("#") || fg.startsWith("rgb") || fg.startsWith("hsl") ? fg : `hsl(${fg})`
+      return { bg: finalBg, fg: finalFg }
     }
 
     let themeColors = readThemeColors()
@@ -249,7 +250,10 @@ export function LiquidHero({
         return
       }
 
+      // The source portrait's hairstyle rises to the very top of the image;
+      // keep the full head visible by drawing the entire source.
       const imageAspect = logoImg.width / logoImg.height || 1
+      // Use CSS pixels for the responsive breakpoint check
       const cssW = w / dpr
       const useRightAlign = imageAlign === "right" && cssW >= 768
 
@@ -259,6 +263,9 @@ export function LiquidHero({
       let logoY
 
       if (useRightAlign) {
+        // Desktop: keep the portrait in its own right-hand column (~40% of
+        // the canvas, a ~13% reduction) and nudge it down slightly so the
+        // face clears the headline band instead of sitting under it.
         const availW = w * 0.4
         const availH = h * 0.94
         if (imageAspect > availW / availH) {
@@ -271,6 +278,7 @@ export function LiquidHero({
         logoX = w - logoW
         logoY = (h - logoH) / 2 + h * 0.02
       } else {
+        // Mobile / center: use fillFactor, centered
         const canvasAspect = w / h
         if (imageAspect > canvasAspect) {
           logoW = w * fillFactor
@@ -283,8 +291,11 @@ export function LiquidHero({
         logoY = (h - logoH) / 2
       }
 
+      // Draw the logo into the canvas texture, contain-fitted and centered
+      // (object-fit: contain equivalent) so nothing is clipped or distorted.
       ctx.drawImage(logoImg, logoX, logoY, logoW, logoH)
 
+      // Fill the theme background behind anything still transparent.
       ctx.save()
       ctx.globalCompositeOperation = "destination-over"
       ctx.fillStyle = themeColors.bg
@@ -320,6 +331,8 @@ export function LiquidHero({
       rtA = rtB
       rtB = tmp
 
+      // Persist this frame's cursor position so the next frame can measure
+      // how far the pointer travelled and inject a ripple accordingly.
       simMaterial.uniforms.prevMouse.value.copy(mouse)
 
       animationId = requestAnimationFrame(tick)
@@ -379,6 +392,7 @@ export function LiquidHero({
     renderer.domElement.addEventListener("pointermove", onMouseMove)
     renderer.domElement.addEventListener("pointerleave", onMouseLeave)
     renderer.domElement.addEventListener("pointerdown", onPointerDown)
+    window.addEventListener("pointermove", onMouseMove)
 
     let resizeRaf = null
     const applyResize = () => {
@@ -412,11 +426,15 @@ export function LiquidHero({
       offscreen.width = width
       offscreen.height = height
 
+      // Restart the simulation so the wave field doesn't read stale buffers
+      // sampled at the previous resolution (causes hot-pixel artifacts).
       frame = 0
       simMaterial.uniforms.frame.value = 0
 
       updateWaveField()
       paintCanvas(width, height)
+      // CanvasTexture caches its image; reassign so three.js re-uploads at
+      // the new dimensions on the next animate() tick.
       textTexture.image = offscreen
       textTexture.needsUpdate = true
     }
@@ -461,6 +479,7 @@ export function LiquidHero({
       io.disconnect()
       ro.disconnect()
       themeObserver.disconnect()
+      window.removeEventListener("pointermove", onMouseMove)
       renderer.domElement.removeEventListener("pointermove", onMouseMove)
       renderer.domElement.removeEventListener("pointerleave", onMouseLeave)
       renderer.domElement.removeEventListener("pointerdown", onPointerDown)
@@ -485,4 +504,5 @@ export function LiquidHero({
     />
   )
 }
+
 export default LiquidHero

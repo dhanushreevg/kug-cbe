@@ -1,236 +1,253 @@
 import { useState } from "react"
 
-const EMOTIONS = [
-  {
-    id: "floating",
-    name: "Floating",
-    category: "Animation",
-    src: "/assets/kotlin_mascot_2/Digital/Emoji/kodee-floating.gif",
-    isGif: true,
-    tag: "Multiplatform",
-    quote: "Floating across platforms effortlessly — iOS, Android, Desktop, and Web with Kotlin Multiplatform!",
-  },
-  {
-    id: "greetings",
-    name: "Greetings",
-    category: "Animation",
-    src: "/assets/kotlin_mascot_2/Digital/Emoji/kodee-greetings.gif",
-    isGif: true,
-    tag: "Welcome",
-    quote: "A big Vanakkam from Coimbatore! Whether you are a student or seasoned dev, you belong here.",
-  },
-  {
-    id: "happy",
-    name: "Pure Joy",
-    category: "Animation",
-    src: "/assets/kotlin_mascot_2/Digital/Emoji/kodee-happy.gif",
-    isGif: true,
-    tag: "Kotlin 2.0",
-    quote: "The K2 compiler is stable and builds are faster than ever. Pure happiness!",
-  },
-  {
-    id: "walking",
-    name: "On The Move",
-    category: "Animation",
-    src: "/assets/kotlin_mascot_2/Digital/Emoji/kodee-walking.gif",
-    isGif: true,
-    tag: "Journey",
-    quote: "Every Kotlin journey starts with a simple `fun main()`. Step by step to production greatness.",
-  },
+const KODEE_EXPRESSIONS = [
   {
     id: "electrified",
     name: "Electrified",
-    category: "Emoji",
     src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-electrified.png",
-    isGif: false,
+    scenario: "Structured Concurrency",
+    desc: "Non-blocking coroutines running across lightweight worker pools with zero thread contention.",
     tag: "Coroutines",
-    quote: "Non-blocking, asynchronous, lightning fast — powering through tasks with Kotlin Coroutines!",
+  },
+  {
+    id: "excited",
+    name: "Excited",
+    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-excited.png",
+    scenario: "K2 Compiler Green",
+    desc: "Compilation finished in record time with 0 warnings, 0 errors, and maximum build cache hits.",
+    tag: "Kotlin 2.0",
   },
   {
     id: "loving",
-    name: "In Love",
-    category: "Emoji",
+    name: "Loving",
     src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-loving.png",
-    isGif: false,
+    scenario: "Community Hub",
+    desc: "Welcoming new Kotlin learners and collaborating with developers across Coimbatore.",
     tag: "Community",
-    quote: "Kotlin isn't just a language; it's a worldwide community of friendly, collaborative developers.",
   },
   {
-    id: "winter",
-    name: "Winter Scarf",
-    category: "Vector SVG",
-    src: "/assets/kotlin_mascot_2/Digital/SVG/Kodee_Assets_Digital_Kodee-winter.svg",
-    isGif: false,
-    tag: "Special Edition",
-    quote: "Even during rainy monsoon or breezy winter evenings in Coimbatore, Kodee stays cozy coding.",
+    id: "welcoming",
+    name: "Welcoming",
+    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-welcoming.png",
+    scenario: "First Meetup RSVP",
+    desc: "A warm Vanakkam to builders, students, and engineers joining Coimbatore's tech ecosystem.",
+    tag: "Meetup",
   },
   {
-    id: "sharing",
-    name: "Sharing",
-    category: "Vector SVG",
-    src: "/assets/kotlin_mascot_2/Digital/SVG/Kodee_Assets_Digital_Kodee-sharing.svg",
-    isGif: false,
-    tag: "Open Source",
-    quote: "Knowledge grows when shared. Speak at our meetup or contribute to local open source!",
+    id: "pleased",
+    name: "Pleased",
+    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-pleased.png",
+    scenario: "KMP Multiplatform Target",
+    desc: "Single shared business module successfully linking to native iOS, Android, and Desktop builds.",
+    tag: "Multiplatform",
+  },
+  {
+    id: "shocked",
+    name: "Shocked",
+    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-shocked.png",
+    scenario: "NullPointerException Catch",
+    desc: "When someone uses the force unwrap operator (!!) in production code instead of safe-calls (?.).",
+    tag: "Debugging",
+  },
+  {
+    id: "surprised",
+    name: "Surprised",
+    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-surprised.png",
+    scenario: "Smart Cast In Action",
+    desc: "When the compiler automatically smart-casts your variable without any manual type casting.",
+    tag: "Type Safety",
+  },
+  {
+    id: "angry",
+    name: "Angry",
+    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-angry.png",
+    scenario: "Clean Build Requested",
+    desc: "When someone deleted ~/.gradle/caches and the entire project is re-indexing from scratch.",
+    tag: "Gradle",
+  },
+  {
+    id: "frustrated",
+    name: "Frustrated",
+    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-frustrated.png",
+    scenario: "Git Merge Conflict",
+    desc: "Conflicting dependency version upgrades in build.gradle.kts right before a deployment deadline.",
+    tag: "CI / CD",
+  },
+  {
+    id: "naughty",
+    name: "Naughty",
+    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-naughty.png",
+    scenario: "Experimental Opt-In",
+    desc: "Adding @OptIn(ExperimentalContracts::class) to unleash bleeding-edge compiler compiler features.",
+    tag: "Compiler",
+  },
+  {
+    id: "lost",
+    name: "Lost",
+    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-lost.png",
+    scenario: "Unresolved Reference",
+    desc: "Missing import directive after refactoring package hierarchy across nested multi-modules.",
+    tag: "Refactor",
+  },
+  {
+    id: "grumpy",
+    name: "Grumpy",
+    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-grumpy.png",
+    scenario: "Legacy Java Codebase",
+    desc: "Staring at thousands of lines of getters, setters, and boilerplate builder factories.",
+    tag: "Legacy",
+  },
+  {
+    id: "sad",
+    name: "Sad",
+    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-sad.png",
+    scenario: "Network Timeout",
+    desc: "Ktor client request timed out while fetching remote endpoints during a demo presentation.",
+    tag: "Networking",
+  },
+  {
+    id: "frightened",
+    name: "Frightened",
+    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-frightened.png",
+    scenario: "OutOfMemoryError",
+    desc: "Heap limit exceeded during large parallel bitmap transformations without proper downsampling.",
+    tag: "Memory",
+  },
+  {
+    id: "broken-hearted",
+    name: "Broken Hearted",
+    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-broken-hearted.png",
+    scenario: "Deprecated API",
+    desc: "When your favorite experimental coroutine operator is deprecated in the latest release.",
+    tag: "Deprecation",
   },
 ]
 
-const KOTLIN_TIDBITS = [
-  "Did you know? JetBrains introduced Kodee in 2023 as the official robotic Kotlin mascot crafted from geometric shapes!",
-  "Kotlin 2.0 comes with the brand new K2 compiler, offering up to 2x compilation speedup and unified architecture.",
-  "With Kotlin Multiplatform (KMP), you share business logic, networking, and state management while keeping 100% native UI.",
-  "Coroutines use cooperative multitasking — suspending functions pause execution without blocking OS threads.",
-  "Jetpack Compose is fully declarative, letting you build intuitive Android & Desktop UIs with minimal boilerplate.",
+const TRIVIA_FACTS = [
+  {
+    number: "2023",
+    label: "Kodee Mascot Introduced",
+    detail: "Crafted from geometric Kotlin primitives as the developer-first robotic companion.",
+  },
+  {
+    number: "2.0",
+    label: "Next-Gen Compiler",
+    detail: "Unified compiler frontend bringing unprecedented build speed and compiler plugin parity.",
+  },
+  {
+    number: "100%",
+    label: "Java Interoperability",
+    detail: "Seamless two-way callability with existing JVM codebases, libraries, and frameworks.",
+  },
 ]
 
 export default function KodeeShowcase() {
-  const [selectedEmotion, setSelectedEmotion] = useState(EMOTIONS[0])
-  const [tidbitIndex, setTidbitIndex] = useState(0)
-
-  const nextTidbit = () => {
-    setTidbitIndex((prev) => (prev + 1) % KOTLIN_TIDBITS.length)
-  }
+  const [selectedExpression, setSelectedExpression] = useState(KODEE_EXPRESSIONS[0])
 
   return (
-    <section id="kodee" className="py-28 px-6 md:px-12 max-w-7xl mx-auto relative">
-      {/* Decorative ambient aura */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 mascot-glow-intense pointer-events-none -z-10" />
-
-      {/* Section Header */}
-      <div className="text-center mb-16">
-        <span className="reveal inline-flex items-center gap-2 text-kotlin-purple font-mono text-sm tracking-widest uppercase bg-kotlin-purple/10 px-4 py-1.5 rounded-full border border-kotlin-purple/20">
-          <span className="w-2 h-2 rounded-full bg-kotlin-purple animate-pulse" />
-          Official Mascot Playground
-        </span>
-        <h2 className="reveal text-4xl md:text-6xl font-bold mt-4">
-          Meet <span className="kotlin-gradient-text">Kodee</span>
+    <section id="kodee" className="py-24 px-6 sm:px-10 lg:px-16 bg-surface">
+      <div className="max-w-7xl mx-auto">
+        <div className="section-label">Mascot &amp; Architecture</div>
+        <h2 className="section-heading font-display font-bold text-white text-[clamp(1.8rem,4vw,3rem)] leading-none tracking-[-0.03em] mb-4">
+          Meet <span className="gradient-text">Kodee</span> &amp; Expression Matrix
         </h2>
-        <p className="reveal text-white/60 mt-4 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
-          Kodee is the curious, warm, and playful mascot created by JetBrains for the Kotlin ecosystem.
-          Click through Kodee’s moods and animations below!
+        <p className="font-body text-text-muted text-base max-w-xl leading-relaxed mb-12">
+          JetBrains designed Kodee with geometric shapes directly sampled from the Kotlin language mark.
+          Explore the official developer expression states below.
         </p>
-      </div>
 
-      {/* Main Interactive Stage */}
-      <div className="reveal grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-        {/* Left Column: Emotion Selection Grid */}
-        <div className="lg:col-span-5 flex flex-col gap-3">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-mono text-white/50 uppercase tracking-widest">
-              Choose an emotion / state:
+        {/* Mascot Centerpiece Card — No bouncing float animation */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-void border border-border rounded-sm p-8 sm:p-12 mb-12">
+          <div className="lg:col-span-5 flex justify-center items-center">
+            <div className="p-6 flex items-center justify-center">
+              {/* Kodee PNG: Static, crisp, greyscale by default, hover to reveal full color */}
+              <img
+                src={selectedExpression.src}
+                alt={selectedExpression.name}
+                className="w-48 h-48 sm:w-56 sm:h-56 object-contain kodee-img select-none"
+              />
+            </div>
+          </div>
+
+          <div className="lg:col-span-7 flex flex-col justify-center">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="font-mono text-xs tracking-widest uppercase text-kotlin-pink">
+                {selectedExpression.tag}
+              </span>
+              <span className="font-mono text-[10px] text-text-dim border border-border px-2 py-0.5 rounded-sm">
+                Status: {selectedExpression.name}
+              </span>
+            </div>
+            <h3 className="font-display text-2xl sm:text-3xl font-bold text-white mb-4">
+              {selectedExpression.scenario}
+            </h3>
+            <p className="font-body text-text-muted text-base leading-relaxed mb-6 max-w-lg">
+              {selectedExpression.desc}
+            </p>
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-xs text-text-dim">
+                Official JetBrains Mascot Asset · KUG Coimbatore
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* 15-Emotion Interactive Grid Selector */}
+        <div className="mb-14">
+          <div className="flex items-center justify-between mb-4">
+            <span className="font-mono text-xs tracking-widest uppercase text-text-dim">
+              All 15 Official Emoji States (Select to Inspect)
             </span>
-            <span className="text-xs font-mono text-kotlin-light">
-              {EMOTIONS.length} Expressions
+            <span className="font-mono text-xs text-kotlin-indigo">
+              {selectedExpression.name} Active
             </span>
           </div>
 
-          <div className="grid grid-cols-2 gap-2.5">
-            {EMOTIONS.map((item) => {
-              const isSelected = item.id === selectedEmotion.id
+          <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-15 gap-2">
+            {KODEE_EXPRESSIONS.map((expr) => {
+              const isActive = selectedExpression.id === expr.id
               return (
                 <button
-                  key={item.id}
-                  onClick={() => setSelectedEmotion(item)}
-                  className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all duration-200 group ${
-                    isSelected
-                      ? "bg-kotlin-purple/25 border-kotlin-purple text-white shadow-lg shadow-kotlin-purple/20 scale-[1.02]"
-                      : "bg-white/5 border-white/5 text-white/70 hover:bg-white/10 hover:border-white/20 hover:text-white"
+                  key={expr.id}
+                  onClick={() => setSelectedExpression(expr)}
+                  className={`p-2.5 rounded-sm flex flex-col items-center justify-center gap-1.5 transition-all duration-150 select-none ${
+                    isActive
+                      ? "bg-surface-3 border-2 border-kotlin-indigo shadow-kotlin-sm"
+                      : "bg-surface-2 border border-border hover:border-border-strong hover:bg-surface-3"
                   }`}
+                  title={`${expr.name} - ${expr.scenario}`}
                 >
                   <img
-                    src={item.src}
-                    alt={item.name}
-                    className="w-8 h-8 object-contain shrink-0 group-hover:scale-110 transition-transform"
+                    src={expr.src}
+                    alt={expr.name}
+                    className={`w-9 h-9 object-contain select-none transition-all duration-200 ${
+                      isActive ? "filter-none scale-105" : "grayscale opacity-75 hover:grayscale-0 hover:opacity-100"
+                    }`}
                   />
-                  <div className="overflow-hidden">
-                    <div className="text-sm font-semibold truncate leading-tight">
-                      {item.name}
-                    </div>
-                    <div className="text-[11px] font-mono text-white/40 truncate">
-                      {item.tag}
-                    </div>
-                  </div>
+                  <span className="font-mono text-[9px] uppercase tracking-wider text-text-dim truncate max-w-full">
+                    {expr.name}
+                  </span>
                 </button>
               )
             })}
           </div>
-
-          {/* Mascot Fact Card */}
-          <div className="mt-4 glass-card p-5 border-white/10 flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono text-kotlin-light uppercase tracking-wider flex items-center gap-1.5">
-                <span>💡</span>
-                <span>Kodee Trivia</span>
-              </span>
-              <button
-                onClick={nextTidbit}
-                className="text-xs font-mono text-white/50 hover:text-white transition-colors underline decoration-dotted"
-              >
-                Next Fact →
-              </button>
-            </div>
-            <p className="text-xs sm:text-sm text-white/75 leading-relaxed font-sans">
-              {KOTLIN_TIDBITS[tidbitIndex]}
-            </p>
-          </div>
         </div>
 
-        {/* Right Column: Hero Stage Preview */}
-        <div className="lg:col-span-7 glass-card p-8 md:p-12 flex flex-col items-center justify-between border-kotlin-purple/30 relative overflow-hidden">
-          {/* Subtle water-like glow background inside preview */}
-          <div className="absolute inset-0 bg-gradient-to-b from-kotlin-purple/15 via-transparent to-kotlin-purple/5 pointer-events-none" />
-
-          {/* Top category badges */}
-          <div className="relative z-10 w-full flex items-center justify-between border-b border-white/10 pb-4">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-mono bg-kotlin-purple/20 text-kotlin-purple border border-kotlin-purple/30 px-3 py-1 rounded-full uppercase tracking-wider">
-                {selectedEmotion.category}
-              </span>
-              <span className="text-xs font-mono text-white/40">
-                • {selectedEmotion.tag}
-              </span>
+        {/* Trivia Cards in card-base with stat numbers in gradient-text */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {TRIVIA_FACTS.map((fact, idx) => (
+            <div key={idx} className="card-base p-6">
+              <div className="font-mono text-3xl font-bold gradient-text mb-2">
+                {fact.number}
+              </div>
+              <div className="font-mono text-xs tracking-widest uppercase text-text-dim mb-3">
+                {fact.label}
+              </div>
+              <p className="font-body text-sm text-text-muted leading-relaxed">
+                {fact.detail}
+              </p>
             </div>
-            <span className="text-xs font-mono text-kotlin-coral font-medium">
-              KUG CBE Companion
-            </span>
-          </div>
-
-          {/* Center Mascot Image with Dynamic Animation */}
-          <div className="relative z-10 my-8 flex flex-col items-center justify-center">
-            <div className="relative">
-              <div className="absolute inset-0 mascot-glow rounded-full scale-110 pointer-events-none -z-10 animate-pulse-glow" />
-              <img
-                key={selectedEmotion.id}
-                src={selectedEmotion.src}
-                alt={selectedEmotion.name}
-                className={`w-64 h-64 md:w-72 md:h-72 object-contain drop-shadow-[0_25px_35px_rgba(127,82,255,0.45)] transition-all duration-300 ${
-                  selectedEmotion.isGif ? "" : "animate-float"
-                }`}
-              />
-            </div>
-            <span className="mt-4 text-xs font-mono text-white/40 tracking-wider">
-              {selectedEmotion.name} Edition
-            </span>
-          </div>
-
-          {/* Dynamic Quote & Community Context */}
-          <div className="relative z-10 w-full glass rounded-2xl p-5 border-kotlin-purple/25 text-center">
-            <p className="text-sm sm:text-base text-white/90 font-medium leading-relaxed italic">
-              "{selectedEmotion.quote}"
-            </p>
-            <div className="mt-3 flex items-center justify-center gap-2 text-xs font-mono text-white/45">
-              <span>Coimbatore Kotlin User Group</span>
-              <span>•</span>
-              <a
-                href="https://surveys.jetbrains.com/s3/submit-a-local-kotlin-user-group"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-kotlin-purple hover:text-kotlin-light transition-colors underline"
-              >
-                Join with Kodee →
-              </a>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
