@@ -1,167 +1,154 @@
-import { useEffect, useState, useRef } from "react"
-import { gsap } from "gsap"
+import { useEffect, useState } from "react"
+
+const NAV_LINKS = [
+  { label: "Events", href: "#events" },
+  { label: "Mascot", href: "#kodee" },
+  { label: "Arcade", href: "#arcade" },
+  { label: "About", href: "#about" },
+  { label: "Community", href: "#community" },
+  { label: "Resources", href: "#resources" },
+  { label: "Contact", href: "#contact" },
+]
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const navRef = useRef(null)
+  const [activeSection, setActiveSection] = useState("")
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 80)
+      setIsScrolled(window.scrollY > 40)
     }
     window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  // Spy on current section
   useEffect(() => {
-    const navItems = navRef.current?.querySelectorAll(".nav-anim-item")
-    if (navItems && navItems.length > 0) {
-      const reduceMotion =
-        typeof window !== "undefined" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    const sectionIds = ["events", "kodee", "arcade", "about", "community", "resources", "contact"]
+    const observers = []
 
-      if (reduceMotion) {
-        navItems.forEach((el) => {
-          el.style.opacity = "1"
-          el.style.transform = "none"
-        })
-        return
-      }
-
-      gsap.fromTo(
-        navItems,
-        { opacity: 0, y: -12 },
-        { opacity: 1, y: 0, duration: 0.6, stagger: 0.08, ease: "power2.out" }
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id)
+      if (!el) return
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setActiveSection(id)
+          }
+        },
+        { threshold: 0.3 }
       )
-    }
+      obs.observe(el)
+      observers.push(obs)
+    })
+
+    return () => observers.forEach((o) => o.disconnect())
   }, [])
 
-  const navLinks = [
-    { label: "Events", href: "#events" },
-    { label: "Mascot", href: "#kodee" },
-    { label: "About", href: "#about" },
-    { label: "Community", href: "#community" },
-    { label: "Resources", href: "#resources" },
-    { label: "Contact", href: "#contact" },
-  ]
-
-  const handleLinkClick = (e, href) => {
-    setIsMobileMenuOpen(false)
-  }
-
   return (
-    <header
-      ref={navRef}
-      className={`fixed top-0 left-0 right-0 z-50 h-16 transition-all duration-300 border-b border-white/5 ${
-        isScrolled ? "glass-strong bg-kotlin-dark/95 shadow-lg shadow-black/30" : "glass-strong"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto h-full px-6 md:px-12 flex items-center justify-between">
-        {/* Left: Wordmark with Kotlin mark & Kodee */}
-        <a
-          href="#"
-          className="nav-anim-item flex items-center gap-2.5 font-semibold text-white tracking-tight hover:opacity-95 transition-opacity group"
-        >
-          <div className="relative flex items-center gap-1.5">
-            <svg
-              className="w-4 h-4 shrink-0"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M24 24H0V0h24L12 12Z" fill="#7F52FF" />
-            </svg>
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 h-16 transition-all duration-200 ${
+          isScrolled
+            ? "bg-void/90 backdrop-blur-sm border-b border-border shadow-sm"
+            : "bg-transparent border-b border-transparent"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto h-full px-6 sm:px-10 lg:px-16 flex items-center justify-between">
+          {/* Logo */}
+          <a href="#" className="flex items-center gap-3 group select-none">
             <img
-              src="/assets/kotlin_mascot_2/Digital/SVG/Kodee_Assets_Digital_Kodee-petite-56px-24px.svg"
-              alt="Kodee"
-              className="w-4 h-4 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12"
+              src="/assets/kug-logo.png"
+              alt="KUG Coimbatore Logo"
+              className="w-8 h-8 object-contain shrink-0 group-hover:scale-105 transition-transform duration-200"
             />
-          </div>
-          <span className="text-base font-semibold">
-            KUG <span className="text-kotlin-light">Coimbatore</span>
-          </span>
-        </a>
-
-        {/* Center: Nav links (desktop) */}
-        <nav className="hidden md:flex items-center gap-7">
-          {navLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className={`nav-anim-item text-sm font-medium transition-colors ${
-                link.label === "Mascot"
-                  ? "text-kotlin-light hover:text-white flex items-center gap-1 font-semibold"
-                  : "text-white/70 hover:text-white"
-              }`}
-            >
-              {link.label === "Mascot" && (
-                <span className="w-1.5 h-1.5 rounded-full bg-kotlin-purple animate-ping" />
-              )}
-              {link.label}
-            </a>
-          ))}
-        </nav>
-
-        {/* Right: Join CTA + Mobile Toggle */}
-        <div className="flex items-center gap-3">
-          <a
-            href="https://surveys.jetbrains.com/s3/submit-a-local-kotlin-user-group"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="nav-anim-item glass-btn rounded-full px-4 py-2 text-sm font-semibold text-kotlin-purple inline-flex items-center gap-1.5"
-          >
-            <span>Join Us</span>
-            <span>→</span>
+            <div className="flex flex-col leading-none">
+              <span className="font-display font-bold text-xl text-white tracking-tight">
+                KUG
+              </span>
+              <span className="font-mono text-[10px] tracking-wider text-text-muted uppercase">
+                Coimbatore
+              </span>
+            </div>
           </a>
 
-          {/* Hamburger button (mobile) */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 focus:outline-none"
-            aria-label="Toggle navigation menu"
-          >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              {isMobileMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
-        </div>
-      </div>
+          {/* Desktop Nav Links */}
+          <nav className="hidden md:flex items-center gap-8">
+            {NAV_LINKS.map((link) => {
+              const isActive = activeSection === link.href.replace("#", "")
+              return (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className={`font-body text-sm transition-colors duration-150 py-1 ${
+                    isActive
+                      ? "gradient-text border-b border-kotlin-indigo/40 font-medium"
+                      : "text-text-muted hover:text-white"
+                  }`}
+                >
+                  {link.label}
+                </a>
+              )
+            })}
+          </nav>
 
-      {/* Mobile menu dropdown */}
+          {/* Right: CTA & Mobile Toggle */}
+          <div className="flex items-center gap-4">
+            <a
+              href="#community"
+              className="hidden sm:inline-flex relative px-4 py-2 rounded-sm font-body font-medium text-sm text-white bg-gradient-kotlin overflow-hidden transition-all duration-200 hover:brightness-110 hover:shadow-kotlin-md active:scale-[0.97] active:brightness-90 select-none"
+            >
+              Join Group
+            </a>
+
+            {/* Mobile Hamburger Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 text-text-muted hover:text-white transition-colors"
+              aria-label="Toggle Navigation Menu"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                {isMobileMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Full-Height Overlay */}
       {isMobileMenuOpen && (
-        <div className="md:hidden glass-strong border-b border-white/10 px-6 py-6 animate-fade-in flex flex-col gap-4">
-          {navLinks.map((link) => (
+        <div className="fixed inset-0 z-40 bg-void flex flex-col items-start justify-center p-8 gap-6 md:hidden">
+          <div className="section-label mb-2">Navigation</div>
+          {NAV_LINKS.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              onClick={(e) => handleLinkClick(e, link.href)}
-              className="text-base font-medium text-white/80 hover:text-white transition-colors py-1"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="font-display text-2xl font-bold text-white hover:text-kotlin-violet transition-colors"
             >
               {link.label}
             </a>
           ))}
+          <a
+            href="#community"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="mt-4 px-6 py-3 rounded-sm font-body font-medium text-sm text-white bg-gradient-kotlin select-none w-full text-center"
+          >
+            Join the Group
+          </a>
         </div>
       )}
-    </header>
+    </>
   )
 }

@@ -1,106 +1,98 @@
 import { useState } from "react"
 
+const QUICK_TIPS = [
+  "Vanakkam! Welcome to KUG Coimbatore.",
+  "Kotlin 2.0 default K2 compiler brings 2x speedups.",
+  "Compose Multiplatform lets you share UI across iOS and Android.",
+  "Coroutines offer structured concurrency without thread blocking.",
+]
+
 export default function KodeeCompanion() {
   const [isOpen, setIsOpen] = useState(false)
-  const [reactionIndex, setReactionIndex] = useState(0)
+  const [tipIndex, setTipIndex] = useState(0)
 
-  const quickMessages = [
-    "Vanakkam! Welcome to KUG Coimbatore 🚀",
-    "Got questions about Kotlin Multiplatform? Ask us at the next meetup!",
-    "Join the Coimbatore developer community today 💜",
-    "Kotlin 2.0 is blazing fast. Have you tried the K2 compiler yet?",
-  ]
-
-  const cycleMessage = () => {
-    setReactionIndex((prev) => (prev + 1) % quickMessages.length)
+  const cycleTip = () => {
+    setTipIndex((prev) => (prev + 1) % QUICK_TIPS.length)
   }
 
   return (
     <div className="fixed bottom-6 right-6 z-40 select-none">
-      {/* Expanded Companion Card */}
+      {/* Expanded Dialog Box */}
       {isOpen && (
-        <div className="mb-3 glass-strong rounded-2xl p-5 border-kotlin-purple/30 shadow-2xl shadow-black/60 w-80 animate-fade-in flex flex-col gap-3">
-          <div className="flex items-center justify-between pb-2 border-b border-white/10">
-            <div className="flex items-center gap-2">
-              <img
-                src="/assets/kotlin_mascot_2/Digital/Emoji/kodee-happy.gif"
-                alt="Kodee"
-                className="w-6 h-6 object-contain"
-              />
-              <span className="font-semibold text-sm text-white">Kodee Companion</span>
-            </div>
+        <div className="mb-3 bg-surface border border-border-strong rounded-sm p-4 shadow-kotlin-md w-72 flex flex-col gap-3">
+          <div className="flex items-center justify-between border-b border-border pb-2">
+            <span className="font-mono text-xs uppercase tracking-wider text-text-muted">
+              Kodee Terminal
+            </span>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-white/40 hover:text-white text-xs p-1 rounded-md hover:bg-white/5 transition-colors"
-              aria-label="Close Kodee popup"
+              className="text-text-dim hover:text-white font-mono text-xs p-1"
+              aria-label="Close Companion"
             >
-              ✕
+              [esc]
             </button>
           </div>
 
           <div
-            onClick={cycleMessage}
-            className="cursor-pointer bg-kotlin-purple/10 border border-kotlin-purple/20 rounded-xl p-3 text-xs text-white/90 leading-relaxed hover:bg-kotlin-purple/15 transition-colors group"
+            onClick={cycleTip}
+            className="cursor-pointer bg-surface-2 border border-border rounded-sm p-3 hover:border-border-strong transition-colors"
           >
-            <p className="font-sans">{quickMessages[reactionIndex]}</p>
-            <span className="block mt-1 text-[10px] font-mono text-kotlin-light/70 group-hover:text-kotlin-light">
-              Tap to see another tip ↻
+            <p className="font-body text-xs text-text-body leading-relaxed">
+              {QUICK_TIPS[tipIndex]}
+            </p>
+            <span className="font-mono text-[10px] text-kotlin-pink block mt-2">
+              Next insight &gt;
             </span>
           </div>
 
-          {/* Quick Links */}
-          <div className="flex flex-col gap-1.5 pt-1">
+          <div className="flex flex-col gap-1 pt-1 font-mono text-xs">
             <a
               href="#events"
               onClick={() => setIsOpen(false)}
-              className="text-xs font-medium text-white/80 hover:text-white hover:bg-white/5 px-3 py-2 rounded-lg transition-colors flex items-center justify-between"
+              className="py-1 px-2 text-text-muted hover:text-white hover:bg-surface-2 rounded-sm transition-colors flex justify-between"
             >
-              <span>📅 Upcoming Events</span>
-              <span className="text-white/40">→</span>
+              <span>01. Events</span>
+              <span>&rarr;</span>
             </a>
             <a
               href="#kodee"
               onClick={() => setIsOpen(false)}
-              className="text-xs font-medium text-white/80 hover:text-white hover:bg-white/5 px-3 py-2 rounded-lg transition-colors flex items-center justify-between"
+              className="py-1 px-2 text-text-muted hover:text-white hover:bg-surface-2 rounded-sm transition-colors flex justify-between"
             >
-              <span>🎨 Mascot Playground</span>
-              <span className="text-white/40">→</span>
+              <span>02. Mascot Spec</span>
+              <span>&rarr;</span>
             </a>
             <a
-              href="https://surveys.jetbrains.com/s3/submit-a-local-kotlin-user-group"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-semibold text-kotlin-purple hover:text-kotlin-light bg-kotlin-purple/10 px-3 py-2 rounded-lg transition-colors flex items-center justify-between"
+              href="#arcade"
+              onClick={() => setIsOpen(false)}
+              className="py-1 px-2 text-kotlin-pink hover:text-white hover:bg-surface-2 rounded-sm transition-colors flex justify-between"
             >
-              <span>💜 Join KUG Coimbatore</span>
-              <span>↗</span>
+              <span>03. Kodee Arcade 🎮</span>
+              <span>&rarr;</span>
+            </a>
+            <a
+              href="#community"
+              onClick={() => setIsOpen(false)}
+              className="py-1 px-2 text-kotlin-indigo hover:text-white hover:bg-surface-2 rounded-sm transition-colors flex justify-between"
+            >
+              <span>04. Join Chapter</span>
+              <span>&rarr;</span>
             </a>
           </div>
         </div>
       )}
 
-      {/* Floating Trigger Button */}
+      {/* Floating square trigger: w-10 h-10 bg-surface border border-border-mid rounded-sm hover:border-border-strong shadow-kotlin-sm */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="group relative flex items-center gap-2.5 glass-strong rounded-full p-2.5 pr-4 border-kotlin-purple/35 shadow-xl shadow-kotlin-purple/20 hover:scale-105 active:scale-95 transition-all duration-300"
-        aria-label="Open Kodee assistant"
+        className="w-10 h-10 bg-surface border border-border-mid rounded-sm flex items-center justify-center hover:border-border-strong hover:shadow-kotlin-sm active:scale-95 transition-all duration-200 group"
+        aria-label="Kodee Companion Toggle"
       >
-        <div className="relative">
-          <div className="absolute inset-0 bg-kotlin-purple/40 rounded-full blur-md group-hover:blur-lg transition-all animate-pulse-glow" />
-          <img
-            src="/assets/kotlin_mascot_2/Digital/Emoji/kodee-floating.gif"
-            alt="Kodee floating"
-            className="w-10 h-10 object-contain relative z-10"
-          />
-        </div>
-        <div className="flex flex-col items-start text-left">
-          <span className="text-[11px] font-mono font-semibold text-kotlin-light leading-none">
-            Kodee
-          </span>
-          <span className="text-[10px] text-white/60 leading-none mt-0.5">
-            {isOpen ? "Close" : "Say Hi 👋"}
-          </span>
-        </div>
+        <img
+          src="/assets/kotlin_mascot_2/Digital/SVG/Kodee_Assets_Digital_Kodee-petite-56px-24px.svg"
+          alt="Kodee Companion"
+          className="w-6 h-6 object-contain kodee-img group-hover:scale-110 transition-transform duration-200"
+        />
       </button>
     </div>
   )

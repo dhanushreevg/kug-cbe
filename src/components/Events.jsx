@@ -1,157 +1,135 @@
-import { useEffect } from "react"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
+const ArrowRight = ({ className = "w-4 h-4" }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M5 12h14" />
+    <path d="m12 5 7 7-7 7" />
+  </svg>
+)
 
-gsap.registerPlugin(ScrollTrigger)
-
-const events = [
+const EVENTS = [
   {
-    tag: "Meetup",
-    title: "KUG CBE Kickoff Meetup",
-    meta: "Coming Soon · Coimbatore",
-    desc: "Our first in-person gathering — talks, demos, and networking for Kotlin enthusiasts across CBE.",
-    href: "#",
+    category: "Featured Meetup",
+    title: "KUG Coimbatore Kickoff: Kotlin 2.0 & Beyond",
+    description: "The inaugural in-person gathering for Kotlin engineers in Coimbatore. Deep dive into K2 compiler performance, coroutines, and community roadmap.",
+    date: "November 2024 · CBE",
+    featured: true,
   },
   {
-    tag: "Workshop",
-    title: "Kotlin for Android Beginners",
-    meta: "Coming Soon · Online",
-    desc: "Hands-on introduction to Kotlin for Android development. No prior experience needed.",
-    href: "#",
+    category: "Hands-on Workshop",
+    title: "Kotlin Multiplatform: Compose Across Platforms",
+    description: "Build a single codebase that runs seamlessly across Android, iOS, and Desktop with shared Kotlin logic and declarative Compose UI.",
+    date: "December 2024 · Hands-on",
+    featured: false,
   },
   {
-    tag: "Talk",
-    title: "Coroutines Deep Dive",
-    meta: "Coming Soon · Online",
-    desc: "A technical session on Kotlin coroutines, flows, and async patterns in production apps.",
-    href: "#",
+    category: "Deep Dive Talk",
+    title: "High-Throughput Backends with Ktor & Coroutines",
+    description: "Master non-blocking asynchronous servers, structured concurrency, and resilience patterns using Ktor and Kotlin Flow in production.",
+    date: "January 2025 · Online",
+    featured: false,
   },
 ]
 
 export default function Events() {
-  useEffect(() => {
-    const reduceMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-
-    if (reduceMotion) return
-
-    const triggers = []
-    const cards = gsap.utils.toArray(".event-card")
-    cards.forEach((card, i) => {
-      const anim = gsap.fromTo(
-        card,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          ease: "power3.out",
-          delay: i * 0.1,
-          scrollTrigger: {
-            trigger: card,
-            start: "top 85%",
-          },
-        }
-      )
-      if (anim.scrollTrigger) triggers.push(anim.scrollTrigger)
-    })
-
-    return () => {
-      triggers.forEach((t) => t.kill())
-    }
-  }, [])
-
   return (
-    <section id="events" className="py-28 px-6 md:px-12 max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+    <section id="events" className="py-24 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-void">
+      {/* Title Header with staggered left edge: padding-left 8% */}
+      <div className="mb-14 sm:pl-[8%]">
+        <div className="section-label">Upcoming Events</div>
+        <h2 className="section-heading font-display font-bold text-white text-[clamp(1.8rem,4vw,3rem)] leading-none tracking-[-0.03em] max-w-2xl mb-4">
+          Events &amp; <span className="gradient-text">Workshops</span>
+        </h2>
+        <p className="font-body text-text-muted text-base max-w-lg leading-relaxed">
+          Technical sessions, live code labs, and architect breakdowns — free and open to everyone in Coimbatore.
+        </p>
+      </div>
+
+      {/* Grid: Gap is the Border rule (gap-px with bg-border-mid container) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border-mid rounded-sm overflow-hidden mb-12">
+        {EVENTS.map((event, idx) => {
+          if (event.featured) {
+            return (
+              <div
+                key={idx}
+                className="gradient-border bg-surface-2 p-6 flex flex-col justify-between group cursor-pointer"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-mono text-xs tracking-widest uppercase text-kotlin-pink">
+                      {event.category}
+                    </span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-gradient-vivid opacity-100 transition-opacity duration-300" />
+                  </div>
+                  <h3 className="font-display text-lg font-bold text-text-primary leading-snug mb-3">
+                    {event.title}
+                  </h3>
+                  <p className="font-body text-sm text-text-muted leading-relaxed mb-6">
+                    {event.description}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between border-t border-border pt-4 mt-auto">
+                  <span className="font-mono text-xs text-text-dim">{event.date}</span>
+                  <ArrowRight className="w-4 h-4 text-kotlin-indigo group-hover:translate-x-1 transition-transform duration-200" />
+                </div>
+              </div>
+            )
+          }
+
+          return (
+            <div
+              key={idx}
+              className="card-base bg-surface p-6 flex flex-col justify-between group cursor-pointer"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="font-mono text-xs tracking-widest uppercase text-text-dim">
+                    {event.category}
+                  </span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-gradient-vivid opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </div>
+                <h3 className="font-display text-lg font-bold text-text-primary leading-snug mb-3">
+                  {event.title}
+                </h3>
+                <p className="font-body text-sm text-text-muted leading-relaxed mb-6">
+                  {event.description}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between border-t border-border pt-4 mt-auto">
+                <span className="font-mono text-xs text-text-dim">{event.date}</span>
+                <ArrowRight className="w-4 h-4 text-text-dim group-hover:text-kotlin-indigo group-hover:translate-x-1 transition-all duration-200" />
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Call for Speakers Banner: full-width, bg-surface, border border-border, CTA right-aligned */}
+      <div className="bg-surface border border-border rounded-sm p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
-          <span className="reveal text-kotlin-purple font-mono text-sm tracking-widest uppercase inline-flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-kotlin-purple" />
-            Upcoming Community Gatherings
+          <span className="font-mono text-xs tracking-widest uppercase text-text-dim block mb-1">
+            Community CFP
           </span>
-          <h2 className="reveal text-4xl md:text-6xl font-bold mt-2">
-            Events & <span className="kotlin-gradient-text">Workshops</span>
-          </h2>
-          <p className="reveal text-white/60 mt-4 max-w-xl text-base leading-relaxed">
-            Meetups, workshops, and deep-dives — free and open to all developers, students, and engineers in Coimbatore.
+          <h3 className="font-display text-xl font-bold text-text-primary">
+            Have a Kotlin project or case study to share?
+          </h3>
+          <p className="font-body text-sm text-text-muted mt-1 max-w-xl">
+            Whether it&apos;s a 15-minute lightning talk or a deep architectural breakdown, we welcome first-time and seasoned speakers alike.
           </p>
         </div>
-
-        {/* Kodee Meetup Teaser Card */}
-        <div className="reveal glass rounded-2xl p-4 flex items-center gap-4 border-kotlin-purple/25 max-w-sm shrink-0 shadow-lg shadow-kotlin-purple/5">
-          <img
-            src="/assets/kotlin_mascot_2/Digital/SVG/Kodee_Assets_Digital_Kodee-jumping.svg"
-            alt="Kodee jumping"
-            className="w-16 h-16 object-contain animate-float shrink-0"
-          />
-          <div className="flex flex-col gap-0.5">
-            <span className="font-semibold text-sm text-white">First Meetup Loading!</span>
-            <span className="text-xs text-white/50">
-              Coimbatore in-person venue announcements coming soon.
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Events Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {events.map((ev, i) => (
-          <div
-            key={i}
-            className="reveal event-card glass-card p-7 flex flex-col justify-between gap-4 group hover:border-kotlin-purple/50"
-          >
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-mono font-semibold tracking-widest uppercase text-kotlin-purple bg-kotlin-purple/15 border border-kotlin-purple/30 rounded-full px-3 py-1 w-fit">
-                  {ev.tag}
-                </span>
-                <span className="text-xs text-white/40 font-mono">{ev.meta}</span>
-              </div>
-              <h3 className="text-xl font-bold leading-snug group-hover:text-kotlin-light transition-colors">
-                {ev.title}
-              </h3>
-              <p className="text-sm text-white/60 leading-relaxed">
-                {ev.desc}
-              </p>
-            </div>
-            <a
-              href={ev.href}
-              className="mt-2 text-sm font-semibold text-kotlin-purple hover:text-kotlin-light transition-colors inline-flex items-center gap-1.5 pt-3 border-t border-white/5"
-            >
-              <span>RSVP Interest</span>
-              <span>→</span>
-            </a>
-          </div>
-        ))}
-      </div>
-
-      {/* Call for Speakers Banner with Kodee Sharing */}
-      <div className="reveal mt-12 glass rounded-3xl p-8 md:p-10 border-kotlin-purple/20 flex flex-col md:flex-row items-center justify-between gap-8 bg-gradient-to-r from-kotlin-surface/60 via-kotlin-surface/40 to-kotlin-purple/10">
-        <div className="flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
-          <img
-            src="/assets/kotlin_mascot_2/Digital/SVG/Kodee_Assets_Digital_Kodee-sharing.svg"
-            alt="Kodee sharing knowledge"
-            className="w-24 h-24 object-contain animate-float shrink-0"
-          />
-          <div className="flex flex-col gap-1.5">
-            <span className="text-xs font-mono text-kotlin-light uppercase tracking-wider">
-              Call For Speakers · Coimbatore
-            </span>
-            <h3 className="text-xl sm:text-2xl font-bold text-white">
-              Have something cool built in Kotlin?
-            </h3>
-            <p className="text-sm text-white/60 max-w-xl">
-              We welcome first-time and seasoned speakers alike. Share your Android, Compose, KMP, Coroutines, or Backend experiences with the local community!
-            </p>
-          </div>
-        </div>
         <a
-          href="mailto:kugcoimbatore@gmail.com?subject=KUG%20CBE%20Speaker%20Proposal"
-          className="glass-btn shrink-0 rounded-full px-6 py-3.5 font-semibold text-kotlin-purple text-sm inline-flex items-center gap-2 hover:scale-105 transition-transform"
+          href="mailto:kugcoimbatore@gmail.com?subject=Call%20for%20Speakers%20-%20KUG%20Coimbatore"
+          className="gradient-border px-7 py-3.5 rounded-sm font-body font-medium text-sm text-text-body bg-surface transition-all duration-200 hover:bg-surface-2 hover:text-white active:scale-[0.97] select-none inline-flex items-center justify-center shrink-0"
         >
-          <span>Submit Talk Proposal</span>
-          <span>🎤</span>
+          Submit a Talk
         </a>
       </div>
     </section>

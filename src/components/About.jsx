@@ -1,115 +1,102 @@
+import PinwheelDeco from "@/components/PinwheelDeco"
+
 export default function About() {
   return (
-    <section id="about" className="py-28 px-6 md:px-12 max-w-7xl mx-auto">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        {/* Left: text */}
-        <div className="flex flex-col gap-6">
-          <span className="reveal text-kotlin-purple font-mono text-sm tracking-widest uppercase">
-            Who We Are
-          </span>
-          <h2 className="reveal text-4xl md:text-5xl font-bold leading-tight">
-            About<br />KUG Coimbatore
-          </h2>
-          <p className="reveal text-white/60 leading-relaxed text-base">
-            KUG Coimbatore is an officially recognised JetBrains Kotlin User Group based
-            in Coimbatore, Tamil Nadu. We bring together developers, students, and
-            tech enthusiasts passionate about Kotlin and its ecosystem — from Android
-            and backend to Kotlin Multiplatform.
-          </p>
-          <p className="reveal text-white/60 leading-relaxed text-base">
-            Whether you are just starting out or shipping production Kotlin code, this
-            is your local home base. We host meetups, workshops, live coding sessions,
-            and talks — all free and open to everyone.
-          </p>
+    <section id="about" className="relative py-24 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-void overflow-hidden">
+      {/* Decorative low opacity GDG aperture pinwheel in background */}
+      <PinwheelDeco
+        className="top-12 -right-24 pointer-events-none opacity-[0.05]"
+        size={460}
+      />
 
-          {/* Organizer cards */}
-          <div className="reveal flex flex-wrap gap-3 mt-2">
-            {[
-              { name: "Dhanu Shree V G", role: "Organizer" },
-              { name: "Sanjay S", role: "Co-Organizer" },
-              {
-                name: "Kodee",
-                role: "Official Mascot",
-                icon: "/assets/kotlin_mascot_2/Digital/SVG/Kodee_Assets_Digital_Kodee-regular-156px-more.svg",
-              },
-            ].map((o) => (
-              <div
-                key={o.name}
-                className="glass rounded-xl px-5 py-3 border-l-2 border-kotlin-purple flex items-center gap-3"
-              >
-                {o.icon && (
-                  <img
-                    src={o.icon}
-                    alt={o.name}
-                    className="w-8 h-8 object-contain shrink-0 animate-float"
-                  />
-                )}
-                <div className="flex flex-col gap-0.5">
-                  <span className="font-semibold text-sm text-white">
-                    {o.name}
-                  </span>
-                  <span className="text-xs font-mono text-kotlin-purple/80 uppercase tracking-widest">
-                    {o.role}
-                  </span>
-                </div>
+      <div className="relative z-10">
+        <div className="section-label">Identity &amp; Foundation</div>
+        <h2 className="section-heading font-display font-bold text-white text-[clamp(1.8rem,4vw,3rem)] leading-none tracking-[-0.03em] max-w-3xl mb-8">
+          About <span className="gradient-text">KUG Coimbatore</span>
+        </h2>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          <div className="lg:col-span-7 flex flex-col gap-6">
+            <p className="font-body text-base text-text-body leading-relaxed max-w-2xl">
+              Kotlin User Group Coimbatore is an officially recognized JetBrains developer community based in the industrial and technology hub of Western Tamil Nadu.
+            </p>
+            <p className="font-body text-base text-text-muted leading-relaxed max-w-2xl">
+              We connect Android developers, backend systems architects, frontend engineers, and student builders. Our focus is technical precision: mastering coroutines, shipping declarative Compose UIs, and architecting resilient cross-platform applications with Kotlin Multiplatform.
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+              <div className="card-base p-5">
+                <span className="font-mono text-xs uppercase tracking-wider text-kotlin-pink block mb-1">
+                  Affiliation
+                </span>
+                <h4 className="font-display text-base font-bold text-white mb-1">
+                  JetBrains Recognized
+                </h4>
+                <p className="font-body text-xs text-text-muted leading-relaxed">
+                  Registered under the global JetBrains Kotlin Community Network.
+                </p>
               </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Right: glassmorphism info panel */}
-        <div className="reveal glass-card p-8 flex flex-col gap-6">
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-lg text-kotlin-light">
-              What We Do
-            </h3>
-            <span className="text-xs font-mono text-kotlin-coral font-medium bg-kotlin-coral/10 px-2.5 py-1 rounded-full border border-kotlin-coral/20">
-              ✦ 100% Free
-            </span>
-          </div>
-          {[
-            {
-              icon: "🎤",
-              label: "Monthly Meetups",
-              detail: "In-person gatherings with talks, lightning demos, and networking",
-            },
-            {
-              icon: "🛠",
-              label: "Hands-on Workshops",
-              detail: "Practical coding labs for Android, Compose, and KMP",
-            },
-            {
-              icon: "🌐",
-              label: "Online Sessions & Streams",
-              detail: "Virtual deep-dives and live coding sessions",
-            },
-            {
-              icon: "🤝",
-              label: "Community Mentorship",
-              detail: "Connect with Kotlin developers and leaders across Tamil Nadu",
-            },
-          ].map((item) => (
-            <div key={item.label} className="flex items-start gap-4">
-              <span className="text-xl mt-0.5">{item.icon}</span>
-              <div>
-                <div className="font-medium text-sm text-white">{item.label}</div>
-                <div className="text-xs text-white/50 mt-0.5 leading-relaxed">
-                  {item.detail}
-                </div>
+              <div className="card-base p-5">
+                <span className="font-mono text-xs uppercase tracking-wider text-kotlin-indigo block mb-1">
+                  Access
+                </span>
+                <h4 className="font-display text-base font-bold text-white mb-1">
+                  Open &amp; Free Always
+                </h4>
+                <p className="font-body text-xs text-text-muted leading-relaxed">
+                  All community meetups, workshops, and recordings are 100% free of charge.
+                </p>
               </div>
             </div>
-          ))}
+          </div>
 
-          {/* JetBrains & Kodee badge */}
-          <div className="pt-4 flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/5">
-            <img
-              src="/assets/kotlin_mascot_2/Digital/SVG/Kodee_Assets_Digital_Kodee-sitting.svg"
-              alt="Kodee sitting"
-              className="w-12 h-12 object-contain shrink-0 animate-float"
-            />
-            <div className="text-xs text-white/70 leading-relaxed">
-              <span className="font-semibold text-white block">Official JetBrains KUG</span>
-              Following official guidelines to foster a diverse, friendly, and thriving developer ecosystem in Coimbatore.
+          <div className="lg:col-span-5 flex flex-col gap-4">
+            <span className="font-mono text-xs tracking-widest uppercase text-text-dim">
+              Organizers &amp; Stewards
+            </span>
+            <div className="card-base p-6 flex flex-col gap-5">
+              <div className="flex items-center justify-between border-b border-border pb-4">
+                <div>
+                  <div className="font-display font-medium text-white text-base">
+                    Dhanu Shree V G
+                  </div>
+                  <div className="font-mono text-xs text-text-dim">
+                    Lead Organizer · KUG Coimbatore
+                  </div>
+                </div>
+                <span className="font-mono text-xs px-2 py-0.5 rounded-sm bg-surface-2 text-kotlin-pink border border-border">
+                  Organizer
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between border-b border-border pb-4">
+                <div>
+                  <div className="font-display font-medium text-white text-base">
+                    Sanjay S
+                  </div>
+                  <div className="font-mono text-xs text-text-dim">
+                    Co-Organizer &amp; Tech Lead
+                  </div>
+                </div>
+                <span className="font-mono text-xs px-2 py-0.5 rounded-sm bg-surface-2 text-kotlin-violet border border-border">
+                  Co-Organizer
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-display font-medium text-white text-base">
+                    Kodee
+                  </div>
+                  <div className="font-mono text-xs text-text-dim">
+                    Robotic Community Companion
+                  </div>
+                </div>
+                <span className="font-mono text-xs px-2 py-0.5 rounded-sm bg-surface-2 text-kotlin-indigo border border-border">
+                  Mascot
+                </span>
+              </div>
             </div>
           </div>
         </div>

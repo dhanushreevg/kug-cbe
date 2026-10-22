@@ -20,29 +20,31 @@ export function useGsapReveal(selector = ".reveal", deps = []) {
       return
     }
 
+    // Reveal elements with 0.08s stagger
     const triggers = []
 
-    els.forEach((el) => {
-      const anim = gsap.fromTo(
-        el,
-        { opacity: 0, y: 44 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.85,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 88%",
-            toggleActions: "play none none none",
-          },
-        }
-      )
-      if (anim.scrollTrigger) triggers.push(anim.scrollTrigger)
-    })
+    const anim = gsap.fromTo(
+      els,
+      { opacity: 0, y: 24 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.7,
+        ease: "power3.out",
+        stagger: 0.08,
+        scrollTrigger: {
+          trigger: els[0] || document.body,
+          start: "top 88%",
+          toggleActions: "play none none none",
+        },
+      }
+    )
+
+    if (anim.scrollTrigger) triggers.push(anim.scrollTrigger)
 
     return () => {
       triggers.forEach((t) => t.kill())
+      anim.kill()
     }
   }, deps)
 }
