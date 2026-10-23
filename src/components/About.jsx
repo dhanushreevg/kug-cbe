@@ -1,4 +1,6 @@
 import PinwheelDeco from "@/components/PinwheelDeco"
+import dhanuPhoto from "../../dhanu.jpeg"
+import sanjayPhoto from "../../sanjay.png"
 
 export default function About() {
   return (
@@ -56,32 +58,51 @@ export default function About() {
               Organizers &amp; Stewards
             </span>
             <div className="card-base p-6 flex flex-col gap-5">
-              <div className="flex items-center justify-between border-b border-border pb-4">
-                <div>
+              <div className="flex items-start gap-4 border-b border-border pb-5">
+                <img
+                  src={dhanuPhoto}
+                  alt="Dhanu Shree V G"
+                  width="591"
+                  height="1004"
+                  loading="lazy"
+                  className="w-20 aspect-[3/4] object-cover object-top rounded-sm border border-border shrink-0"
+                />
+                <div className="min-w-0">
                   <div className="font-display font-medium text-white text-base">
                     Dhanu Shree V G
                   </div>
-                  <div className="font-mono text-xs text-text-dim">
+                  <div className="font-mono text-xs text-text-dim mt-1">
                     Lead Organizer · KUG Coimbatore
                   </div>
+                  <span className="inline-block mt-3 font-mono text-xs px-2 py-0.5 rounded-sm bg-surface-2 text-kotlin-pink border border-border">
+                    Organizer
+                  </span>
                 </div>
-                <span className="font-mono text-xs px-2 py-0.5 rounded-sm bg-surface-2 text-kotlin-pink border border-border">
-                  Organizer
-                </span>
               </div>
 
-              <div className="flex items-center justify-between border-b border-border pb-4">
-                <div>
+              <div className="flex items-start gap-4 border-b border-border pb-5">
+                <img
+                  src={sanjayPhoto}
+                  alt="Sanjay S"
+                  width="591"
+                  height="1004"
+                  loading="lazy"
+                  className="w-20 aspect-[3/4] object-cover object-top rounded-sm border border-border shrink-0"
+                />
+                <div className="min-w-0">
                   <div className="font-display font-medium text-white text-base">
                     Sanjay S
                   </div>
-                  <div className="font-mono text-xs text-text-dim">
+                  <div className="font-mono text-xs text-text-dim mt-1">
                     Co-Organizer &amp; Tech Lead
                   </div>
+                  <span className="inline-block mt-3 font-mono text-xs px-2 py-0.5 rounded-sm bg-surface-2 text-kotlin-violet border border-border">
+                    Co-Organizer
+                  </span>
+                  <blockquote className="mt-4 border-l-2 border-kotlin-violet pl-3 font-body text-sm text-text-muted italic leading-relaxed">
+                    “If you want to crack the system, first understand the system.”
+                  </blockquote>
                 </div>
-                <span className="font-mono text-xs px-2 py-0.5 rounded-sm bg-surface-2 text-kotlin-violet border border-border">
-                  Co-Organizer
-                </span>
               </div>
 
               <div className="flex items-center justify-between">
