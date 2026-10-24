@@ -1,6 +1,6 @@
 import PinwheelDeco from "@/components/PinwheelDeco"
-import dhanuPhoto from "../../dhanu.jpeg"
-import sanjayPhoto from "../../sanjay.png"
+import dhanuPhoto from "../../dhanuu.png"
+import sanjayPhoto from "../../sanjayy.png"
 
 export default function About() {
   return (
@@ -61,18 +61,18 @@ export default function About() {
               <div className="flex items-start gap-4 border-b border-border pb-5">
                 <img
                   src={dhanuPhoto}
-                  alt="Dhanu Shree V G"
-                  width="591"
-                  height="1004"
+                  alt="Dhanu Shree"
+                  width="152"
+                  height="228"
                   loading="lazy"
-                  className="w-20 aspect-[3/4] object-cover object-top rounded-sm border border-border shrink-0"
+                  className="w-20 aspect-[3/4] object-cover object-top rounded-sm border border-border shrink-0 bg-white/5"
                 />
                 <div className="min-w-0">
                   <div className="font-display font-medium text-white text-base">
-                    Dhanu Shree V G
+                    Dhanu Shree
                   </div>
                   <div className="font-mono text-xs text-text-dim mt-1">
-                    Lead Organizer · KUG Coimbatore
+                    Organizer · KUG Coimbatore
                   </div>
                   <span className="inline-block mt-3 font-mono text-xs px-2 py-0.5 rounded-sm bg-surface-2 text-kotlin-pink border border-border">
                     Organizer
@@ -83,15 +83,15 @@ export default function About() {
               <div className="flex items-start gap-4 border-b border-border pb-5">
                 <img
                   src={sanjayPhoto}
-                  alt="Sanjay S"
-                  width="591"
-                  height="1004"
+                  alt="Sanjay"
+                  width="152"
+                  height="221"
                   loading="lazy"
-                  className="w-20 aspect-[3/4] object-cover object-top rounded-sm border border-border shrink-0"
+                  className="w-20 aspect-[3/4] object-cover object-top rounded-sm border border-border shrink-0 bg-white/5"
                 />
                 <div className="min-w-0">
                   <div className="font-display font-medium text-white text-base">
-                    Sanjay S
+                    Sanjay
                   </div>
                   <div className="font-mono text-xs text-text-dim mt-1">
                     Co-Organizer &amp; Tech Lead
