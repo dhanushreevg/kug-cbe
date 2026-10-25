@@ -218,3 +218,21 @@ body {
 .btn-secondary:active {
   transform: scale(0.97);
 }
+
+/* ── Organizer Profile Cards ── */
+.organizer-card {
+  /* isolate so the z-index of the info panel stays local */
+  isolation: isolate;
+}
+
+/* Portrait wrapper — clip the zoom without affecting surrounding layout */
+.organizer-card .organizer-img-wrap {
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .organizer-card img {
+    transition: none;
+  }
+}
+

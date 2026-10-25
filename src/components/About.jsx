@@ -1,10 +1,117 @@
 import PinwheelDeco from "@/components/PinwheelDeco"
-import dhanuPhoto from "../../dhanuu.png"
-import sanjayPhoto from "../../sanjayy.png"
+import dhanuPhoto from "../assets/dhanuu.jpeg"
+import sanjayPhoto from "../assets/sanjayy.png"
 
+/* ─── OrganizerCard ─────────────────────────────────────────────────────────
+   Editorial profile: large portrait with an overlapping info panel that rises
+   ~56 px into the bottom of the image, creating a deliberate composition.
+   ────────────────────────────────────────────────────────────────────────── */
+function OrganizerCard({ photo, alt, name, role, org, badge, accentClass, quote }) {
+  return (
+    <article className="organizer-card group flex flex-col w-full sm:w-[17.5rem] shrink-0">
+      {/* Portrait */}
+      <div className="relative w-full overflow-hidden rounded-sm" style={{ height: "22rem" }}>
+        <img
+          src={photo}
+          alt={alt}
+          loading="lazy"
+          className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+        />
+        {/* bottom vignette blends portrait into panel */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-28 pointer-events-none"
+          style={{ background: "linear-gradient(to bottom, transparent 0%, rgba(10,10,15,0.6) 100%)" }}
+        />
+      </div>
+
+      {/* Info panel — negative top margin creates the overlap */}
+      <div
+        className="relative mx-3 rounded-sm border border-border-mid bg-surface overflow-hidden"
+        style={{ marginTop: "-3.5rem" }}
+      >
+        {/* gradient accent line at panel top */}
+        <div
+          className="absolute inset-x-0 top-0 h-px"
+          style={{ background: "var(--gradient-kotlin-h)", opacity: 0.75 }}
+        />
+
+        <div className="pt-5 pb-5 px-5">
+          {/* Badge */}
+          <span className={`inline-block mb-3 font-mono text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-sm bg-surface-3 border border-border ${accentClass}`}>
+            {badge}
+          </span>
+
+          {/* Name */}
+          <h3
+            className="font-display font-bold text-white leading-tight mb-1"
+            style={{ fontSize: "clamp(1.35rem, 2.5vw, 1.65rem)" }}
+          >
+            {name}
+          </h3>
+
+          {/* Role */}
+          <p className="font-body text-sm text-text-muted leading-snug">
+            {role}
+          </p>
+
+          {/* Org */}
+          {org && (
+            <p className="font-mono text-xs text-text-dim mt-0.5">{org}</p>
+          )}
+
+          {/* Quote */}
+          {quote && (
+            <blockquote className="mt-4 pt-4 border-t border-border">
+              <span className={`font-mono text-[10px] tracking-widest uppercase block mb-1.5 ${accentClass}`}>
+                // quote
+              </span>
+              <p className="font-body text-sm text-text-muted italic leading-relaxed">
+                &ldquo;{quote}&rdquo;
+              </p>
+            </blockquote>
+          )}
+        </div>
+      </div>
+    </article>
+  )
+}
+
+/* ─── KodeeCard ─────────────────────────────────────────────────────────────
+   Compact mascot entry — visually coordinated but intentionally secondary.
+   ────────────────────────────────────────────────────────────────────────── */
+function KodeeCard() {
+  return (
+    <article className="card-base flex flex-row items-center gap-4 px-5 py-4 w-full">
+      {/* Lambda glyph as Kotlin-flavored avatar */}
+      <div
+        className="w-10 h-10 shrink-0 rounded-sm flex items-center justify-center text-lg font-mono font-bold text-white select-none"
+        style={{ background: "var(--gradient-kotlin)", opacity: 0.9 }}
+        aria-hidden="true"
+      >
+        λ
+      </div>
+
+      <div className="min-w-0">
+        <div className="font-display font-semibold text-white text-sm">Kodee</div>
+        <div className="font-body text-xs text-text-muted mt-0.5 leading-snug">
+          Robotic Community Companion
+        </div>
+      </div>
+
+      <span className="ml-auto shrink-0 font-mono text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-sm bg-surface-3 text-kotlin-indigo border border-border">
+        Mascot
+      </span>
+    </article>
+  )
+}
+
+/* ─── About ─────────────────────────────────────────────────────────────── */
 export default function About() {
   return (
-    <section id="about" className="relative py-24 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-void overflow-hidden">
+    <section
+      id="about"
+      className="relative py-24 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-void overflow-hidden"
+    >
       {/* Decorative low opacity GDG aperture pinwheel in background */}
       <PinwheelDeco
         className="top-12 -right-24 pointer-events-none opacity-[0.05]"
@@ -12,13 +119,20 @@ export default function About() {
       />
 
       <div className="relative z-10">
+        {/* ── Section header ── */}
         <div className="section-label">Identity &amp; Foundation</div>
-        <h2 className="section-heading font-display font-bold text-white text-[clamp(1.8rem,4vw,3rem)] leading-none tracking-[-0.03em] max-w-3xl mb-8">
+        <h2
+          className="section-heading font-display font-bold text-white leading-none tracking-[-0.03em] max-w-3xl mb-8"
+          style={{ fontSize: "clamp(1.8rem, 4vw, 3rem)" }}
+        >
           About <span className="gradient-text">KUG Coimbatore</span>
         </h2>
 
+        {/* ── Two-column grid: description left, organizers right ── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          <div className="lg:col-span-7 flex flex-col gap-6">
+
+          {/* Left — intro + affiliation cards */}
+          <div className="lg:col-span-6 flex flex-col gap-6">
             <p className="font-body text-base text-text-body leading-relaxed max-w-2xl">
               Kotlin User Group Coimbatore is an officially recognized JetBrains developer community based in the industrial and technology hub of Western Tamil Nadu.
             </p>
@@ -53,72 +167,37 @@ export default function About() {
             </div>
           </div>
 
-          <div className="lg:col-span-5 flex flex-col gap-4">
+          {/* Right — organizer profiles */}
+          <div className="lg:col-span-6 flex flex-col gap-6">
             <span className="font-mono text-xs tracking-widest uppercase text-text-dim">
               Organizers &amp; Stewards
             </span>
-            <div className="card-base p-6 flex flex-col gap-5">
-              <div className="flex items-start gap-4 border-b border-border pb-5">
-                <img
-                  src={dhanuPhoto}
-                  alt="Dhanu Shree"
-                  width="152"
-                  height="228"
-                  loading="lazy"
-                  className="w-20 aspect-[3/4] object-cover object-top rounded-sm border border-border shrink-0 bg-white/5"
-                />
-                <div className="min-w-0">
-                  <div className="font-display font-medium text-white text-base">
-                    Dhanu Shree
-                  </div>
-                  <div className="font-mono text-xs text-text-dim mt-1">
-                    Organizer · KUG Coimbatore
-                  </div>
-                  <span className="inline-block mt-3 font-mono text-xs px-2 py-0.5 rounded-sm bg-surface-2 text-kotlin-pink border border-border">
-                    Organizer
-                  </span>
-                </div>
-              </div>
 
-              <div className="flex items-start gap-4 border-b border-border pb-5">
-                <img
-                  src={sanjayPhoto}
-                  alt="Sanjay"
-                  width="152"
-                  height="221"
-                  loading="lazy"
-                  className="w-20 aspect-[3/4] object-cover object-top rounded-sm border border-border shrink-0 bg-white/5"
-                />
-                <div className="min-w-0">
-                  <div className="font-display font-medium text-white text-base">
-                    Sanjay
-                  </div>
-                  <div className="font-mono text-xs text-text-dim mt-1">
-                    Co-Organizer &amp; Tech Lead
-                  </div>
-                  <span className="inline-block mt-3 font-mono text-xs px-2 py-0.5 rounded-sm bg-surface-2 text-kotlin-violet border border-border">
-                    Co-Organizer
-                  </span>
-                  <blockquote className="mt-4 border-l-2 border-kotlin-violet pl-3 font-body text-sm text-text-muted italic leading-relaxed">
-                    “If you want to crack the system, first understand the system.”
-                  </blockquote>
-                </div>
-              </div>
+            {/* Profile cards row — wraps vertically on mobile */}
+            <div className="flex flex-row flex-wrap gap-6 items-start">
+              <OrganizerCard
+                photo={dhanuPhoto}
+                alt="Dhanu Shree — Organizer, KUG Coimbatore"
+                name="Dhanu Shree"
+                role="Organizer"
+                org="KUG Coimbatore"
+                badge="Organizer"
+                accentClass="text-kotlin-pink"
+              />
 
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-display font-medium text-white text-base">
-                    Kodee
-                  </div>
-                  <div className="font-mono text-xs text-text-dim">
-                    Robotic Community Companion
-                  </div>
-                </div>
-                <span className="font-mono text-xs px-2 py-0.5 rounded-sm bg-surface-2 text-kotlin-indigo border border-border">
-                  Mascot
-                </span>
-              </div>
+              <OrganizerCard
+                photo={sanjayPhoto}
+                alt="Sanjay — Co-Organizer & Tech Lead, KUG Coimbatore"
+                name="Sanjay"
+                role="Co-Organizer &amp; Tech Lead"
+                badge="Co-Organizer"
+                accentClass="text-kotlin-violet"
+                quote="If you want to crack the system, first understand the system."
+              />
             </div>
+
+            {/* Kodee mascot — compact secondary entry */}
+            <KodeeCard />
           </div>
         </div>
       </div>
