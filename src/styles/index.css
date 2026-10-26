@@ -219,19 +219,356 @@ body {
   transform: scale(0.97);
 }
 
-/* ── Organizer Profile Cards ── */
+/* ── Organizer Editorial Profiles ──────────────────────────────────────────
+   Geometry is intentionally percentage-driven so both compositions scale
+   identically inside their grid columns. The panel stays in normal flow with
+   a negative top margin, which guarantees the wrapper reserves its height.
+   ────────────────────────────────────────────────────────────────────────── */
 .organizer-card {
-  /* isolate so the z-index of the info panel stays local */
+  --portrait-w: clamp(15rem, 62%, 22rem);
+  --panel-left: clamp(1.25rem, 4.8%, 2rem);
+  --panel-w: min(
+    calc(100% - var(--panel-left)),
+    clamp(16.5rem, 78%, 27rem)
+  );
+  --panel-h: 13.25rem;
+  --overlap: clamp(2.5rem, 6vw, 5rem);
+
+  position: relative;
+  width: 100%;
+  max-width: 34rem;
+  margin-inline: auto;
   isolation: isolate;
+  padding-bottom: 0.5rem;
 }
 
-/* Portrait wrapper — clip the zoom without affecting surrounding layout */
-.organizer-card .organizer-img-wrap {
+@media (min-width: 1024px) {
+  .organizer-card {
+    max-width: none;
+    margin-inline: 0;
+  }
+}
+
+/* Soft accent bloom behind the portrait */
+.organizer-card__aura {
+  position: absolute;
+  z-index: 0;
+  top: 6%;
+  left: -10%;
+  width: 72%;
+  aspect-ratio: 1;
+  background: radial-gradient(
+    circle,
+    rgba(155, 89, 245, 0.16) 0%,
+    rgba(155, 89, 245, 0.05) 40%,
+    transparent 70%
+  );
+  filter: blur(18px);
+  pointer-events: none;
+}
+
+/* Portrait — left anchor, generous 3:4 crop */
+.organizer-card__portrait {
+  position: relative;
+  z-index: 1;
+  width: var(--portrait-w);
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border: 1px solid #2a2a3c;
+  border-radius: 1.75rem 1.75rem 2.5rem 1.75rem;
+  background: #111119;
+  box-shadow:
+    0 32px 70px -32px rgba(0, 0, 0, 0.95),
+    0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+}
+
+.organizer-card__portrait img {
+  display: block;
   will-change: transform;
 }
 
+.organizer-card__portrait-shade {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 44%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(10, 10, 15, 0.55) 60%,
+    rgba(10, 10, 15, 0.9) 100%
+  );
+  pointer-events: none;
+}
+
+.organizer-card__portrait-edge {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.07) 0%,
+    transparent 38%
+  );
+  pointer-events: none;
+}
+
+/* Sculpted information panel — asymmetric radii + accent sheen */
+.organizer-card__panel {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  width: var(--panel-w);
+  min-height: var(--panel-h);
+  margin-top: calc(-1 * var(--overlap));
+  margin-left: var(--panel-left);
+  padding: clamp(1.35rem, 2.2vw, 1.85rem) clamp(1.4rem, 2.6vw, 2.15rem);
+  background:
+    radial-gradient(
+      120% 140% at 100% 0%,
+      rgba(155, 89, 245, 0.1) 0%,
+      transparent 55%
+    ),
+    linear-gradient(160deg, #191924 0%, #12121b 55%, #101018 100%);
+  border: 1px solid #2a2a3c;
+  border-radius: 2.25rem 3.75rem 1.75rem 2.75rem / 1.75rem 2.75rem 1.5rem
+    2.25rem;
+  box-shadow:
+    0 28px 60px -28px rgba(0, 0, 0, 0.95),
+    0 0 40px -18px rgba(155, 89, 245, 0.28);
+  overflow: hidden;
+  transition: box-shadow 0.35s ease;
+}
+
+.organizer-card__panel:hover {
+  box-shadow:
+    0 32px 70px -28px rgba(0, 0, 0, 0.95),
+    0 0 52px -16px rgba(155, 89, 245, 0.38);
+}
+
+/* Tinted sheen uses the per-organizer accent text colour */
+.organizer-card__panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    85% 130% at 100% 100%,
+    currentColor 0%,
+    transparent 62%
+  );
+  opacity: 0.055;
+  pointer-events: none;
+}
+
+.organizer-card__panel-body {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.organizer-card__name {
+  font-family: "Space Grotesk", Inter, sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.65rem, 2.6vw, 2.2rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.organizer-card__role {
+  margin-top: 0.45rem;
+  font-family: Inter, sans-serif;
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  line-height: 1.4;
+  color: #e8e8f0;
+}
+
+.organizer-card__org {
+  margin-top: 0.2rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: #8888a8;
+}
+
+.organizer-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1.1rem;
+  padding: 0.36rem 0.75rem;
+  border: 1px solid #2a2a3c;
+  border-radius: 999px;
+  background: rgba(34, 34, 47, 0.65);
+  color: currentColor;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.organizer-card__badge-dot {
+  width: 5px;
+  height: 5px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+/* Quote lives outside the primary panel so both panels stay aligned */
+.organizer-card__quote {
+  position: relative;
+  width: var(--panel-w);
+  margin-top: 1.4rem;
+  margin-left: var(--panel-left);
+  padding-left: 1.15rem;
+}
+
+.organizer-card__quote::before {
+  content: "";
+  position: absolute;
+  top: 0.15rem;
+  bottom: 0.15rem;
+  left: 0;
+  width: 1px;
+  background: var(--gradient-kotlin-v);
+  opacity: 0.7;
+}
+
+.organizer-card__quote blockquote {
+  font-family: Inter, sans-serif;
+  font-size: 0.875rem;
+  font-style: italic;
+  line-height: 1.65;
+  color: #8888a8;
+}
+
+.organizer-card__quote figcaption {
+  margin-top: 0.55rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #55556a;
+}
+
+/* ── Kodee supporting feature ── */
+.organizer-mascot {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1.1rem 1.4rem;
+  border: 1px solid #1c1c2a;
+  border-radius: 1.25rem;
+  background: linear-gradient(
+    135deg,
+    rgba(25, 25, 36, 0.92) 0%,
+    rgba(17, 17, 25, 0.92) 100%
+  );
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.organizer-mascot:hover {
+  border-color: #3a3a52;
+  box-shadow: 0 0 32px rgba(155, 89, 245, 0.08);
+}
+
+.organizer-mascot__mark {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+  border-radius: 0.9rem;
+  background: var(--gradient-kotlin);
+  color: #ffffff;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 1.3rem;
+  font-weight: 700;
+  user-select: none;
+}
+
+.organizer-mascot__badge {
+  margin-left: auto;
+  flex-shrink: 0;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #2a2a3c;
+  border-radius: 999px;
+  color: #8888a8;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* ── Organizer responsive tuning ── */
+@media (max-width: 640px) {
+  .organizer-card {
+    --panel-h: 11.25rem;
+    --overlap: 2.5rem;
+    --panel-left: 1.25rem;
+  }
+
+  .organizer-card__panel {
+    border-radius: 1.75rem 2.75rem 1.5rem 2.25rem / 1.5rem 2.25rem 1.35rem
+      1.9rem;
+  }
+
+  .organizer-mascot {
+    flex-wrap: wrap;
+    padding: 1rem 1.1rem;
+  }
+
+  .organizer-mascot__badge {
+    margin-left: 3.75rem;
+  }
+}
+
+.organizer-profile {
+  isolation: isolate;
+}
+
+.organizer-portrait {
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 60px 120px -60px rgba(127, 82, 255, 0.3);
+}
+
+.organizer-panel {
+  z-index: 2;
+  backdrop-filter: blur(8px);
+}
+
+@media (max-width: 1279px) {
+  .organizer-panel {
+    width: clamp(300px, 60vw, 440px);
+    left: clamp(70px, 14vw, 120px);
+  }
+}
+
+@media (max-width: 639px) {
+  .organizer-portrait {
+    width: clamp(260px, 80vw, 320px);
+    height: clamp(320px, 95vw, 380px);
+  }
+  .organizer-panel {
+    left: clamp(50px, 18vw, 90px);
+    bottom: -clamp(60px, 16vw, 80px);
+    width: calc(100vw - 4rem);
+    max-width: 380px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .organizer-card img {
+  .organizer-card__portrait img,
+  .organizer-profile img {
     transition: none;
   }
 }
