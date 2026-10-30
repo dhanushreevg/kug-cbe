@@ -96,8 +96,9 @@ export default function App() {
 
         {/* Minimal Solid Marquee Divider */}
         <div className="overflow-hidden py-3 bg-[#111111] select-none border-y border-white/[0.08]">
-          <div className="marquee-track flex whitespace-nowrap text-xs font-mono font-bold text-[#8a8a8a] uppercase tracking-[0.15em]">
-            <span>{MARQUEE_TEXT.repeat(12)}</span>
+          <div className="marquee-track flex w-max whitespace-nowrap text-xs font-mono font-bold text-[#8a8a8a] uppercase tracking-[0.15em]">
+            <span>{MARQUEE_TEXT.repeat(6)}</span>
+            <span aria-hidden="true">{MARQUEE_TEXT.repeat(6)}</span>
           </div>
         </div>
 

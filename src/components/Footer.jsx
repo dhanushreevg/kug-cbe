@@ -21,7 +21,7 @@ export default function Footer() {
           </div>
 
           {/* Right: Nav Links */}
-          <div className="flex flex-wrap gap-8 text-sm font-body text-[#8a8a8a]">
+          <div className="flex flex-wrap gap-x-6 gap-y-3 sm:gap-8 text-sm font-body text-[#8a8a8a]">
             <a
               href="https://kotlinlang.org"
               target="_blank"

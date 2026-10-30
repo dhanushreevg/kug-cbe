@@ -9,16 +9,7 @@ function OrganizerProfile({ photo, alt, name, role, org, badge, accentClass, quo
   return (
     <article className="organizer-profile group relative w-full max-w-[580px] mx-auto lg:mx-0">
       {/* Portrait - anchored to left with 12px radius */}
-      <div
-        className="organizer-portrait relative overflow-hidden"
-        style={{
-          width: "clamp(280px, 38vw, 360px)",
-          height: "clamp(340px, 48vw, 440px)",
-          borderRadius: "12px",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-          background: "#111111",
-        }}
-      >
+      <div className="organizer-portrait relative overflow-hidden rounded-xl border border-white/[0.08] bg-[#111111]">
         <img
           src={photo}
           alt={alt}
@@ -33,20 +24,8 @@ function OrganizerProfile({ photo, alt, name, role, org, badge, accentClass, quo
       </div>
 
       {/* Information panel - solid #141414, 12px radius, zero glass */}
-      <div
-        className="organizer-panel absolute"
-        style={{
-          left: "clamp(90px, 16vw, 140px)",
-          bottom: "-clamp(70px, 10vw, 90px)",
-          width: "clamp(320px, 46vw, 460px)",
-          minHeight: "clamp(165px, 22vw, 200px)",
-          borderRadius: "12px",
-          background: "#141414",
-          border: "1px solid rgba(255, 255, 255, 0.08)",
-          boxShadow: "0 16px 32px rgba(0, 0, 0, 0.5)",
-        }}
-      >
-        <div className="relative h-full flex flex-col justify-center px-7 sm:px-9 py-6 sm:py-7">
+      <div className="organizer-panel absolute">
+        <div className="relative h-full flex flex-col justify-center px-6 sm:px-9 py-6 sm:py-7">
           {/* Badge */}
           <span className={`inline-flex self-start mb-3 font-mono text-[10px] sm:text-[11px] tracking-widest uppercase px-2.5 py-1 rounded-lg bg-[#1a1a1a] border border-white/[0.08] ${accentClass || "text-[#d4d4d4]"}`}>
             {badge}
@@ -73,12 +52,7 @@ function OrganizerProfile({ photo, alt, name, role, org, badge, accentClass, quo
       </div>
 
       {/* Spacer to account for absolutely positioned panel */}
-      <div
-        style={{
-          height: "clamp(140px, 18vw, 170px)",
-          marginTop: "clamp(80px, 12vw, 110px)",
-        }}
-      />
+      <div className="organizer-profile__spacer" />
 
       {/* Quote area */}
       {quote && (

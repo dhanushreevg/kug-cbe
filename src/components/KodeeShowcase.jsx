@@ -169,7 +169,7 @@ export default function KodeeShowcase() {
           </div>
 
           <div className="lg:col-span-7 flex flex-col justify-center">
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex flex-wrap items-center gap-3 mb-2">
               <span className="font-mono text-xs tracking-widest uppercase text-[#8a8a8a]">
                 {selectedExpression.tag}
               </span>
@@ -193,7 +193,7 @@ export default function KodeeShowcase() {
 
         {/* 15-Emotion Interactive Grid Selector */}
         <div className="mb-14">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
             <span className="font-mono text-xs tracking-widest uppercase text-[#666666]">
               All 15 Official Emoji States (Select to Inspect)
             </span>
@@ -202,7 +202,7 @@ export default function KodeeShowcase() {
             </span>
           </div>
 
-          <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-15 gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
             {KODEE_EXPRESSIONS.map((expr) => {
               const isActive = selectedExpression.id === expr.id
               return (

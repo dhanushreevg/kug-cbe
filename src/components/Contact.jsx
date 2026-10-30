@@ -37,14 +37,14 @@ export default function Contact() {
         <div className="mb-12">
           <a
             href="mailto:kugcoimbatore@gmail.com"
-            className="font-mono text-2xl sm:text-4xl md:text-5xl font-bold text-white hover:text-[#d4d4d4] transition-colors duration-150 select-all"
+            className="inline-block max-w-full break-words font-mono text-[clamp(1rem,5vw,3rem)] font-bold text-white hover:text-[#d4d4d4] transition-colors duration-150 select-all"
           >
             kugcoimbatore@gmail.com
           </a>
         </div>
 
         {/* Social / Ecosystem Links */}
-        <div className="flex flex-wrap justify-center items-center gap-8 border-t border-white/[0.08] pt-8">
+        <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-8 border-t border-white/[0.08] pt-8">
           <a
             href="https://kotlinlang.org/community/user-groups/"
             target="_blank"

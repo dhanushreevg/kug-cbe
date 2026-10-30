@@ -462,12 +462,23 @@ body {
 }
 
 .organizer-profile {
+  --portrait-w: clamp(280px, 38vw, 360px);
+  --portrait-h: clamp(340px, 48vw, 440px);
+  --panel-left: clamp(90px, 16vw, 140px);
+  --panel-width: min(
+    clamp(320px, 46vw, 460px),
+    calc(100% - var(--panel-left))
+  );
+  --panel-h: clamp(165px, 22vw, 200px);
+
   isolation: isolate;
 }
 
 .organizer-portrait {
   position: relative;
   z-index: 1;
+  width: var(--portrait-w);
+  height: var(--portrait-h);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
@@ -475,30 +486,49 @@ body {
 
 /* Glass backdrop-filter removed! Solid #141414 surface with 12px radius */
 .organizer-panel {
+  position: absolute;
+  left: var(--panel-left);
   z-index: 2;
+  width: var(--panel-width);
+  max-width: calc(100% - var(--panel-left));
+  min-height: var(--panel-h);
   background: #141414;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
 }
 
+.organizer-profile__spacer {
+  height: clamp(140px, 18vw, 170px);
+  margin-top: clamp(80px, 12vw, 110px);
+}
+
 @media (max-width: 1279px) {
-  .organizer-panel {
-    width: clamp(300px, 60vw, 440px);
-    left: clamp(70px, 14vw, 120px);
+  .organizer-profile {
+    --panel-left: clamp(70px, 14vw, 120px);
+    --panel-width: min(
+      clamp(300px, 60vw, 440px),
+      calc(100% - var(--panel-left))
+    );
   }
 }
 
 @media (max-width: 639px) {
-  .organizer-portrait {
-    width: clamp(260px, 80vw, 320px);
-    height: clamp(320px, 95vw, 380px);
+  .organizer-profile {
+    --portrait-w: clamp(220px, 72vw, 300px);
+    --portrait-h: clamp(300px, 92vw, 400px);
+    --panel-left: 1.5rem;
+    --panel-width: calc(100% - 1.5rem);
+    --panel-h: 10.5rem;
   }
+
   .organizer-panel {
-    left: clamp(50px, 18vw, 90px);
-    bottom: -clamp(60px, 16vw, 80px);
-    width: calc(100vw - 4rem);
-    max-width: 380px;
+    border-radius: 12px;
+  }
+
+  .organizer-profile__spacer {
+    height: 9rem;
+    margin-top: 4.5rem;
   }
 }
 

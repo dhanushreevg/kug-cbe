@@ -60,7 +60,7 @@ export default function Navbar() {
           </a>
 
           {/* Desktop Nav Links on the right */}
-          <nav className="hidden md:flex items-center gap-8">
+          <nav className="hidden md:flex items-center gap-5 lg:gap-8">
             {NAV_LINKS.map((link) => {
               const isActive = activeSection === link.href.replace("#", "")
               return (
@@ -83,7 +83,7 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             <a
               href="#community"
-              className="hidden sm:inline-flex px-4 py-2 rounded-xl font-body font-medium text-xs text-[#0a0a0a] bg-white hover:bg-[#e6e6e6] transition-all duration-150 active:scale-[0.98] select-none shadow-sm"
+              className="hidden lg:inline-flex px-4 py-2 rounded-xl font-body font-medium text-xs text-[#0a0a0a] bg-white hover:bg-[#e6e6e6] transition-all duration-150 active:scale-[0.98] select-none shadow-sm"
             >
               Join Group
             </a>
@@ -114,25 +114,27 @@ export default function Navbar() {
 
       {/* Mobile Full-Height Overlay (Solid #050506) */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-[#050506] flex flex-col items-start justify-center p-8 gap-6 md:hidden">
-          <div className="section-label mb-2">Navigation</div>
-          {NAV_LINKS.map((link) => (
+        <div className="fixed inset-0 z-40 overflow-y-auto bg-[#050506] md:hidden">
+          <div className="flex min-h-full flex-col items-start justify-center gap-6 p-8 pt-24">
+            <div className="section-label mb-2">Navigation</div>
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="font-display text-2xl font-bold text-white hover:text-[#d4d4d4] transition-colors"
+              >
+                {link.label}
+              </a>
+            ))}
             <a
-              key={link.label}
-              href={link.href}
+              href="#community"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="font-display text-2xl font-bold text-white hover:text-[#d4d4d4] transition-colors"
+              className="mt-4 px-6 py-3 rounded-xl font-body font-medium text-sm text-[#0a0a0a] bg-white select-none w-full text-center"
             >
-              {link.label}
+              Join the Group
             </a>
-          ))}
-          <a
-            href="#community"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="mt-4 px-6 py-3 rounded-xl font-body font-medium text-sm text-[#0a0a0a] bg-white select-none w-full text-center"
-          >
-            Join the Group
-          </a>
+          </div>
         </div>
       )}
     </>

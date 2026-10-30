@@ -16,10 +16,10 @@ export default function KodeeCompanion() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 select-none">
+    <div className="fixed bottom-20 right-4 z-30 select-none sm:bottom-6 sm:right-6">
       {/* Expanded Dialog Box */}
       {isOpen && (
-        <div className="mb-3 bg-[#111111] border border-white/[0.08] rounded-xl p-4 shadow-2xl w-72 flex flex-col gap-3">
+        <div className="mb-3 bg-[#111111] border border-white/[0.08] rounded-xl p-4 shadow-2xl w-72 max-w-[calc(100vw-2rem)] flex flex-col gap-3">
           <div className="flex items-center justify-between border-b border-white/[0.08] pb-2">
             <span className="font-mono text-xs uppercase tracking-wider text-[#8a8a8a]">
               Kodee Terminal
