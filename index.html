@@ -1,15 +1,31 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="/assets/kug-logo.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" href="/assets/kug-logo-256.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="description" content="Kotlin User Group Coimbatore — a community of developers, learners, and builders passionate about Kotlin in Coimbatore, Tamil Nadu." />
   <title>KUG Coimbatore | Kotlin User Group</title>
-  <!-- Google Fonts: Manrope (UI/body) + Space Grotesk (display) + JetBrains Mono (mono/stats) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <!-- Prevent a flash of the wrong theme: set data-theme before first paint.
+       First visit follows prefers-color-scheme; saved choices win forever. -->
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem("kug-cbe-theme")
+        var theme = stored === "light" || stored === "dark"
+          ? stored
+          : window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark"
+        document.documentElement.setAttribute("data-theme", theme)
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark")
+      }
+    })()
+  </script>
+  <!-- Fonts are self-hosted latin subsets (variable woff2, font-display:swap)
+       imported from src/assets/fonts/fonts.css — no render-blocking third-party
+       stylesheet, no FOIT. -->
 </head>
 <body>
   <div id="root"></div>

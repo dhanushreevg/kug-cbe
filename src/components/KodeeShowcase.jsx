@@ -98,20 +98,20 @@ const KODEE_EXPRESSIONS = [
     tag: "Legacy",
   },
   {
-    id: "sleepy",
-    name: "Sleepy",
-    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-sleepy.png",
-    scenario: "Late Night Release",
-    desc: "Pushing production artifacts at 2 AM after verifying automated coroutine benchmark tests.",
-    tag: "Release",
+    id: "frightened",
+    name: "Frightened",
+    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-frightened.png",
+    scenario: "Production On-Call Page",
+    desc: "A 3 AM pager alert reveals a latent race condition hiding deep inside an async pipeline.",
+    tag: "Reliability",
   },
   {
-    id: "cool",
-    name: "Cool",
-    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-cool.png",
-    scenario: "Zero Warning Build",
-    desc: "When -Werror is enabled and the entire multiplatform compilation passes flawlessly.",
-    tag: "Clean Code",
+    id: "broken-hearted",
+    name: "Heartbroken",
+    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-broken-hearted.png",
+    scenario: "Breaking API Change",
+    desc: "Your favourite experimental API was removed upstream in the latest Kotlin release without a migration path.",
+    tag: "Breaking Change",
   },
   {
     id: "sad",
@@ -145,19 +145,19 @@ export default function KodeeShowcase() {
   const [selectedExpression, setSelectedExpression] = useState(KODEE_EXPRESSIONS[0])
 
   return (
-    <section id="kodee" className="py-24 px-6 sm:px-10 lg:px-16 bg-[#050506]">
+    <section id="kodee" className="py-24 px-6 sm:px-10 lg:px-16 bg-void">
       <div className="max-w-7xl mx-auto">
         <div className="section-label">Mascot &amp; Architecture</div>
-        <h2 className="section-heading font-display font-bold text-white text-[clamp(1.8rem,4vw,3rem)] leading-none tracking-[-0.03em] mb-4">
+        <h2 className="section-heading font-display font-bold text-fg text-[clamp(1.8rem,4vw,3rem)] leading-none tracking-[-0.03em] mb-4">
           Meet Kodee &amp; Expression Matrix
         </h2>
-        <p className="font-body text-[#8a8a8a] text-base max-w-xl leading-relaxed mb-12">
+        <p className="font-body text-muted text-base max-w-xl leading-relaxed mb-12">
           JetBrains designed Kodee with geometric shapes directly sampled from the Kotlin language mark.
           Explore the official developer expression states below.
         </p>
 
         {/* Mascot Centerpiece Card — Solid #111111, 12px radius, no glass */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-[#111111] border border-white/[0.08] rounded-xl p-8 sm:p-12 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-surface border border-border rounded-xl p-8 sm:p-12 mb-12">
           <div className="lg:col-span-5 flex justify-center items-center">
             <div className="p-6 flex items-center justify-center">
               <img
@@ -170,21 +170,21 @@ export default function KodeeShowcase() {
 
           <div className="lg:col-span-7 flex flex-col justify-center">
             <div className="flex flex-wrap items-center gap-3 mb-2">
-              <span className="font-mono text-xs tracking-widest uppercase text-[#8a8a8a]">
+              <span className="font-mono text-xs tracking-widest uppercase text-muted">
                 {selectedExpression.tag}
               </span>
-              <span className="font-mono text-[10px] text-[#666666] border border-white/[0.08] px-2 py-0.5 rounded-md">
+              <span className="font-mono text-[11px] text-dim border border-border px-2 py-0.5 rounded-md">
                 Status: {selectedExpression.name}
               </span>
             </div>
-            <h3 className="font-display text-2xl sm:text-3xl font-bold text-white mb-4">
+            <h3 className="font-display text-2xl sm:text-3xl font-bold text-fg mb-4">
               {selectedExpression.scenario}
             </h3>
-            <p className="font-body text-[#8a8a8a] text-base leading-relaxed mb-6 max-w-lg">
+            <p className="font-body text-muted text-base leading-relaxed mb-6 max-w-lg">
               {selectedExpression.desc}
             </p>
             <div className="flex items-center gap-3">
-              <span className="font-mono text-xs text-[#666666]">
+              <span className="font-mono text-xs text-dim">
                 Official JetBrains Mascot Asset · KUG Coimbatore
               </span>
             </div>
@@ -194,10 +194,10 @@ export default function KodeeShowcase() {
         {/* 15-Emotion Interactive Grid Selector */}
         <div className="mb-14">
           <div className="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
-            <span className="font-mono text-xs tracking-widest uppercase text-[#666666]">
+            <span className="font-mono text-xs tracking-widest uppercase text-dim">
               All 15 Official Emoji States (Select to Inspect)
             </span>
-            <span className="font-mono text-xs text-[#d4d4d4]">
+            <span className="font-mono text-xs text-body">
               {selectedExpression.name} Active
             </span>
           </div>
@@ -209,10 +209,10 @@ export default function KodeeShowcase() {
                 <button
                   key={expr.id}
                   onClick={() => setSelectedExpression(expr)}
-                  className={`p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 transition-all duration-150 select-none ${
+                  className={`p-2.5 min-h-[52px] rounded-xl flex flex-col items-center justify-center gap-1.5 transition-all duration-150 active:scale-95 select-none ${
                     isActive
-                      ? "bg-[#1a1a1a] border border-white text-white"
-                      : "bg-[#141414] border border-white/[0.08] hover:border-white/[0.16] hover:bg-[#1a1a1a]"
+                      ? "bg-surface-3 border border-fg text-fg"
+                      : "bg-surface-2 border border-border hover:border-border-mid hover:bg-surface-3"
                   }`}
                   title={`${expr.name} - ${expr.scenario}`}
                 >
@@ -223,7 +223,7 @@ export default function KodeeShowcase() {
                       isActive ? "filter-none scale-105" : "grayscale opacity-70 hover:grayscale-0 hover:opacity-100"
                     }`}
                   />
-                  <span className="font-mono text-[9px] uppercase tracking-wider text-[#666666] truncate max-w-full">
+                  <span className="font-mono text-[11px] uppercase tracking-wider text-dim truncate max-w-full">
                     {expr.name}
                   </span>
                 </button>
@@ -236,13 +236,13 @@ export default function KodeeShowcase() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {TRIVIA_FACTS.map((fact, idx) => (
             <div key={idx} className="card-base p-6">
-              <div className="font-mono text-3xl font-bold text-white mb-2">
+              <div className="font-mono text-3xl font-bold text-fg mb-2">
                 {fact.number}
               </div>
-              <div className="font-mono text-xs tracking-widest uppercase text-[#8a8a8a] mb-3">
+              <div className="font-mono text-xs tracking-widest uppercase text-muted mb-3">
                 {fact.label}
               </div>
-              <p className="font-body text-sm text-[#8a8a8a] leading-relaxed">
+              <p className="font-body text-sm text-muted leading-relaxed">
                 {fact.detail}
               </p>
             </div>
