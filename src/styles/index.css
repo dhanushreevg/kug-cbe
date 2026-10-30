@@ -2,32 +2,30 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-/* ── CSS Custom Properties (Spectrum Dark) ── */
+/* ── CSS Custom Properties (Spectrum Dark - Solid Slate & Carbon Palette) ── */
 :root {
-  --gradient-kotlin:   linear-gradient(135deg, #C757BC, #9B59F5, #7F52FF);
-  --gradient-kotlin-h: linear-gradient(90deg,  #C757BC, #9B59F5, #7F52FF);
-  --gradient-vivid:    linear-gradient(135deg, #D512EE, #C727DE, #814DFE);
-  --gradient-text:     linear-gradient(110deg, #D512EE 0%, #C727DE 45%, #814DFE 100%);
-  --gradient-glow:     radial-gradient(ellipse at 50% 0%, rgba(155,89,245,0.18) 0%, transparent 65%);
+  --color-void:          #050506;
+  --color-surface:       #111111;
+  --color-surface-2:     #141414;
+  --color-surface-3:     #1a1a1a;
+  --color-border:        rgba(255, 255, 255, 0.08);
+  --color-border-mid:    rgba(255, 255, 255, 0.12);
+  --color-border-strong: rgba(255, 255, 255, 0.18);
 
-  --color-void:          #0A0A0F;
-  --color-surface:       #111119;
-  --color-surface-2:     #191924;
-  --color-surface-3:     #22222F;
-  --color-border:        #1C1C2A;
-  --color-border-mid:    #2A2A3C;
-  --color-border-strong: #3A3A52;
-
-  --color-pink:          #C757BC;
-  --color-violet:        #9B59F5;
-  --color-indigo:        #7F52FF;
-  --color-shape-grey:    #D8D8D8;
-  --color-shape-light:   #EBEBEB;
+  --color-purple:        #7F52FF;
+  --color-magenta:       #C811E1;
+  --color-coral:         #E44857;
+  --color-orange:        #F88A00;
+  --color-blue:          #0095D5;
 
   --color-text-primary:  #FFFFFF;
-  --color-text-body:     #E8E8F0;
-  --color-text-muted:    #8888A8;
-  --color-text-dim:      #55556A;
+  --color-text-body:     #D4D4D4;
+  --color-text-muted:    #8A8A8A;
+  --color-text-dim:      #666666;
+
+  --gradient-kotlin:     linear-gradient(135deg, #7F52FF, #C811E1, #0095D5);
+  --gradient-kotlin-h:   linear-gradient(90deg,  #7F52FF, #C811E1, #0095D5);
+  --gradient-text:       linear-gradient(110deg, #FFFFFF 0%, #E0E0E0 50%, #B0B0B0 100%);
 }
 
 /* ── Base Reset ── */
@@ -41,23 +39,23 @@ html {
 }
 
 body {
-  background-color: #0A0A0F;
-  color: #E8E8F0;
-  font-family: 'Inter', system-ui, sans-serif;
+  background-color: #050506;
+  color: #D4D4D4;
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
-/* ── Scrollbar ── */
-::-webkit-scrollbar        { width: 3px; }
-::-webkit-scrollbar-track  { background: #0A0A0F; }
-::-webkit-scrollbar-thumb  { background: #2A2A3C; border-radius: 0; }
-::-webkit-scrollbar-thumb:hover { background: #7F52FF; }
+/* ── Minimal Solid Scrollbar ── */
+::-webkit-scrollbar        { width: 4px; }
+::-webkit-scrollbar-track  { background: #050506; }
+::-webkit-scrollbar-thumb  { background: #222222; border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
 
 /* ── Text Selection ── */
 ::selection {
-  background: rgba(155, 89, 245, 0.28);
+  background: rgba(255, 255, 255, 0.20);
   color: #FFFFFF;
 }
 
@@ -69,32 +67,17 @@ body {
   background-clip: text;
 }
 
-/* ── Gradient Border (1px pseudo-element) ── */
+/* ── Solid 1px Border (Replaces glossy gradient borders) ── */
 .gradient-border {
   position: relative;
-  background-clip: padding-box;
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
-.gradient-border::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: var(--gradient-kotlin);
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-  opacity: 0.6;
-  transition: opacity 0.2s ease;
-}
-.gradient-border:hover::before {
-  opacity: 1;
+.gradient-border:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+  background: #161616;
 }
 
 /* ── Section Label (dot + mono uppercase) ── */
@@ -106,7 +89,7 @@ body {
   font-size: 0.68rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: #8888A8;
+  color: #8A8A8A;
   margin-bottom: 1.25rem;
 }
 .section-label::before {
@@ -115,28 +98,28 @@ body {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--gradient-vivid);
+  background: #8A8A8A;
   flex-shrink: 0;
 }
 
-/* ── Card Base ── */
+/* ── Solid Card Base (No glass, no blur, solid #111111, radius 12px) ── */
 .card-base {
-  background: #111119;
-  border: 1px solid #1C1C2A;
-  border-radius: 2px;
-  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
 }
 .card-base:hover {
-  border-color: #3A3A52;
-  transform: translateY(-3px);
-  box-shadow: 0 0 28px rgba(155, 89, 245, 0.1);
+  border-color: rgba(255, 255, 255, 0.16);
+  transform: translateY(-2px);
+  box-shadow: none;
 }
 
 /* ── Pinwheel Decorative Shapes ── */
 .pinwheel-deco {
   position: absolute;
   fill: #D8D8D8;
-  opacity: 0.04;
+  opacity: 0.03;
   pointer-events: none;
   user-select: none;
 }
@@ -153,77 +136,72 @@ body {
               transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ── Kodee Greyscale (developer-native interaction reward) ── */
+/* ── Kodee Greyscale Interaction ── */
 .kodee-img {
   filter: grayscale(0.85);
-  transition: filter 0.4s ease;
+  transition: filter 0.3s ease;
 }
 .kodee-img:hover,
 .kodee-img-active {
   filter: grayscale(0);
 }
 
-/* ── Primary Button ── */
+/* ── Plain Solid Primary Button (No glass, 12px radius, solid contrast) ── */
 .btn-primary {
   position: relative;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 0.75rem 1.75rem;
-  border-radius: 2px;
+  border-radius: 12px;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 0.875rem;
-  color: #FFFFFF;
-  background: var(--gradient-kotlin);
-  border: none;
+  color: #0A0A0A;
+  background: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   cursor: pointer;
   overflow: hidden;
-  transition: filter 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+  transition: background-color 0.15s ease, transform 0.1s ease;
   text-decoration: none;
   white-space: nowrap;
 }
 .btn-primary:hover {
-  filter: brightness(1.1);
-  box-shadow: 0 0 28px rgba(155, 89, 245, 0.25);
+  background: #E8E8E8;
+  box-shadow: none;
 }
 .btn-primary:active {
-  transform: scale(0.97);
-  filter: brightness(0.9);
+  transform: scale(0.98);
 }
 
-/* ── Secondary Button ── */
+/* ── Plain Solid Secondary Button (No glass, solid #141414, 12px radius) ── */
 .btn-secondary {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 0.75rem 1.75rem;
-  border-radius: 2px;
+  border-radius: 12px;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
   font-size: 0.875rem;
-  color: #E8E8F0;
-  background: #111119;
-  border: 1px solid #2A2A3C;
+  color: #D4D4D4;
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
   text-decoration: none;
   white-space: nowrap;
 }
 .btn-secondary:hover {
-  background: #191924;
+  background: #1A1A1A;
   color: #FFFFFF;
-  border-color: #3A3A52;
+  border-color: rgba(255, 255, 255, 0.16);
 }
 .btn-secondary:active {
-  transform: scale(0.97);
+  transform: scale(0.98);
 }
 
-/* ── Organizer Editorial Profiles ──────────────────────────────────────────
-   Geometry is intentionally percentage-driven so both compositions scale
-   identically inside their grid columns. The panel stays in normal flow with
-   a negative top margin, which guarantees the wrapper reserves its height.
-   ────────────────────────────────────────────────────────────────────────── */
+/* ── Organizer Editorial Profiles (Solid Dark Aesthetic, Zero Glass) ── */
 .organizer-card {
   --portrait-w: clamp(15rem, 62%, 22rem);
   --panel-left: clamp(1.25rem, 4.8%, 2rem);
@@ -249,37 +227,22 @@ body {
   }
 }
 
-/* Soft accent bloom behind the portrait */
+/* Aura bloom removed: zero blur highlights */
 .organizer-card__aura {
-  position: absolute;
-  z-index: 0;
-  top: 6%;
-  left: -10%;
-  width: 72%;
-  aspect-ratio: 1;
-  background: radial-gradient(
-    circle,
-    rgba(155, 89, 245, 0.16) 0%,
-    rgba(155, 89, 245, 0.05) 40%,
-    transparent 70%
-  );
-  filter: blur(18px);
-  pointer-events: none;
+  display: none !important;
 }
 
-/* Portrait — left anchor, generous 3:4 crop */
+/* Portrait — clean solid 12px radius, neutral border */
 .organizer-card__portrait {
   position: relative;
   z-index: 1;
   width: var(--portrait-w);
   aspect-ratio: 3 / 4;
   overflow: hidden;
-  border: 1px solid #2a2a3c;
-  border-radius: 1.75rem 1.75rem 2.5rem 1.75rem;
-  background: #111119;
-  box-shadow:
-    0 32px 70px -32px rgba(0, 0, 0, 0.95),
-    0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: #111111;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
 }
 
 .organizer-card__portrait img {
@@ -295,8 +258,8 @@ body {
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(10, 10, 15, 0.55) 60%,
-    rgba(10, 10, 15, 0.9) 100%
+    rgba(10, 10, 10, 0.6) 60%,
+    rgba(10, 10, 10, 0.95) 100%
   );
   pointer-events: none;
 }
@@ -305,16 +268,11 @@ body {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.07) 0%,
-    transparent 38%
-  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
   pointer-events: none;
 }
 
-/* Sculpted information panel — asymmetric radii + accent sheen */
+/* Solid information panel — solid #141414, 12px radius, no blur */
 .organizer-card__panel {
   position: relative;
   z-index: 2;
@@ -325,42 +283,20 @@ body {
   margin-top: calc(-1 * var(--overlap));
   margin-left: var(--panel-left);
   padding: clamp(1.35rem, 2.2vw, 1.85rem) clamp(1.4rem, 2.6vw, 2.15rem);
-  background:
-    radial-gradient(
-      120% 140% at 100% 0%,
-      rgba(155, 89, 245, 0.1) 0%,
-      transparent 55%
-    ),
-    linear-gradient(160deg, #191924 0%, #12121b 55%, #101018 100%);
-  border: 1px solid #2a2a3c;
-  border-radius: 2.25rem 3.75rem 1.75rem 2.75rem / 1.75rem 2.75rem 1.5rem
-    2.25rem;
-  box-shadow:
-    0 28px 60px -28px rgba(0, 0, 0, 0.95),
-    0 0 40px -18px rgba(155, 89, 245, 0.28);
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
   overflow: hidden;
-  transition: box-shadow 0.35s ease;
+  transition: border-color 0.2s ease;
 }
 
 .organizer-card__panel:hover {
-  box-shadow:
-    0 32px 70px -28px rgba(0, 0, 0, 0.95),
-    0 0 52px -16px rgba(155, 89, 245, 0.38);
+  border-color: rgba(255, 255, 255, 0.16);
 }
 
-/* Tinted sheen uses the per-organizer accent text colour */
 .organizer-card__panel::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(
-    85% 130% at 100% 100%,
-    currentColor 0%,
-    transparent 62%
-  );
-  opacity: 0.055;
-  pointer-events: none;
+  display: none !important;
 }
 
 .organizer-card__panel-body {
@@ -375,7 +311,7 @@ body {
   font-size: clamp(1.65rem, 2.6vw, 2.2rem);
   line-height: 1.05;
   letter-spacing: -0.02em;
-  color: #ffffff;
+  color: #FFFFFF;
 }
 
 .organizer-card__role {
@@ -383,7 +319,7 @@ body {
   font-family: Inter, sans-serif;
   font-size: clamp(1rem, 1.2vw, 1.15rem);
   line-height: 1.4;
-  color: #e8e8f0;
+  color: #D4D4D4;
 }
 
 .organizer-card__org {
@@ -391,7 +327,7 @@ body {
   font-family: "JetBrains Mono", monospace;
   font-size: 0.8125rem;
   line-height: 1.5;
-  color: #8888a8;
+  color: #8A8A8A;
 }
 
 .organizer-card__badge {
@@ -400,10 +336,10 @@ body {
   gap: 0.45rem;
   margin-top: 1.1rem;
   padding: 0.36rem 0.75rem;
-  border: 1px solid #2a2a3c;
-  border-radius: 999px;
-  background: rgba(34, 34, 47, 0.65);
-  color: currentColor;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: #1A1A1A;
+  color: #D4D4D4;
   font-family: "JetBrains Mono", monospace;
   font-size: 0.6875rem;
   font-weight: 500;
@@ -417,10 +353,10 @@ body {
   height: 5px;
   flex-shrink: 0;
   border-radius: 999px;
-  background: currentColor;
+  background: #8A8A8A;
 }
 
-/* Quote lives outside the primary panel so both panels stay aligned */
+/* Quote container */
 .organizer-card__quote {
   position: relative;
   width: var(--panel-w);
@@ -436,8 +372,7 @@ body {
   bottom: 0.15rem;
   left: 0;
   width: 1px;
-  background: var(--gradient-kotlin-v);
-  opacity: 0.7;
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .organizer-card__quote blockquote {
@@ -445,7 +380,7 @@ body {
   font-size: 0.875rem;
   font-style: italic;
   line-height: 1.65;
-  color: #8888a8;
+  color: #8A8A8A;
 }
 
 .organizer-card__quote figcaption {
@@ -454,29 +389,25 @@ body {
   font-size: 0.625rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #55556a;
+  color: #666666;
 }
 
-/* ── Kodee supporting feature ── */
+/* ── Kodee supporting feature (Solid card) ── */
 .organizer-mascot {
   display: flex;
   align-items: center;
   gap: 1rem;
   width: 100%;
   padding: 1.1rem 1.4rem;
-  border: 1px solid #1c1c2a;
-  border-radius: 1.25rem;
-  background: linear-gradient(
-    135deg,
-    rgba(25, 25, 36, 0.92) 0%,
-    rgba(17, 17, 25, 0.92) 100%
-  );
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: #141414;
+  transition: border-color 0.2s ease;
 }
 
 .organizer-mascot:hover {
-  border-color: #3a3a52;
-  box-shadow: 0 0 32px rgba(155, 89, 245, 0.08);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: none;
 }
 
 .organizer-mascot__mark {
@@ -485,9 +416,9 @@ body {
   width: 2.75rem;
   height: 2.75rem;
   flex-shrink: 0;
-  border-radius: 0.9rem;
-  background: var(--gradient-kotlin);
-  color: #ffffff;
+  border-radius: 8px;
+  background: #222222;
+  color: #FFFFFF;
   font-family: "JetBrains Mono", monospace;
   font-size: 1.3rem;
   font-weight: 700;
@@ -498,9 +429,9 @@ body {
   margin-left: auto;
   flex-shrink: 0;
   padding: 0.4rem 0.75rem;
-  border: 1px solid #2a2a3c;
-  border-radius: 999px;
-  color: #8888a8;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: #8A8A8A;
   font-family: "JetBrains Mono", monospace;
   font-size: 0.625rem;
   letter-spacing: 0.16em;
@@ -517,8 +448,7 @@ body {
   }
 
   .organizer-card__panel {
-    border-radius: 1.75rem 2.75rem 1.5rem 2.25rem / 1.5rem 2.25rem 1.35rem
-      1.9rem;
+    border-radius: 12px;
   }
 
   .organizer-mascot {
@@ -538,12 +468,18 @@ body {
 .organizer-portrait {
   position: relative;
   z-index: 1;
-  box-shadow: 0 60px 120px -60px rgba(127, 82, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
 }
 
+/* Glass backdrop-filter removed! Solid #141414 surface with 12px radius */
 .organizer-panel {
   z-index: 2;
-  backdrop-filter: blur(8px);
+  background: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
 }
 
 @media (max-width: 1279px) {
@@ -573,3 +509,183 @@ body {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   PARTICLE HERO — instrument UI
+   ---------------------------------------------------------------------------
+   No glass, no blur. Everything is flat type and a single hairline. Colour
+   comes from --hero-* variables set by the component so the ON WHITE colour
+   mode can flip the whole instrument to dark-on-light without new classes.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.hero-shell {
+  background: var(--hero-bg, #050506);
+  color: var(--hero-fg, #ffffff);
+  isolation: isolate;
+  transition: background-color 0.3s linear, color 0.3s linear;
+}
+
+.hero-ui-shadow {
+  text-shadow: var(--hero-shadow, 0 1px 8px rgba(0, 0, 0, 0.55));
+}
+
+.hero-muted {
+  color: var(--hero-muted, #8a8a8a);
+}
+
+/* Flat text button. The active state is a 1 px Kotlin-purple rule. */
+.hero-option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0 0 5px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--hero-muted, #8a8a8a);
+  font-family: "Manrope", system-ui, sans-serif;
+  line-height: 1;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.18s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hero-option::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: #7f52ff;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-option:hover:not(:disabled),
+.hero-option:focus-visible {
+  color: var(--hero-fg, #ffffff);
+}
+
+.hero-option.is-on {
+  color: var(--hero-fg, #ffffff);
+}
+
+.hero-option.is-on::after {
+  transform: scaleX(1);
+}
+
+.hero-option:disabled {
+  cursor: default;
+  opacity: 0.38;
+}
+
+.hero-option:disabled::after {
+  display: none;
+}
+
+/* Visible, non-glowing keyboard focus ring. */
+.hero-focus:focus-visible {
+  outline: 1px solid #7f52ff;
+  outline-offset: 4px;
+}
+
+.hero-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--hero-border, rgba(255, 255, 255, 0.08));
+}
+
+/* Welcome copy sits in the quiet left column, above the settings rail. */
+.hero-left-rail {
+  width: min(26.25rem, calc(100vw - 2rem));
+}
+
+.hero-welcome__title {
+  font-size: clamp(1.375rem, 2.8vw, 2.25rem);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.hero-welcome__body {
+  max-width: 26.25rem;
+  font-family: "Manrope", system-ui, sans-serif;
+  font-size: clamp(0.75rem, 0.55vw + 0.6rem, 0.875rem);
+  line-height: 1.6;
+  letter-spacing: 0.002em;
+}
+
+/* The CTA borrows the header's Join Group treatment, flat and compact. */
+.hero-welcome__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.25rem;
+  padding: 0.55rem 1rem;
+  border-radius: 0.75rem;
+  background: var(--hero-fg, #ffffff);
+  color: var(--hero-bg, #050506);
+  font-family: "Manrope", system-ui, sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hero-welcome__cta:hover {
+  opacity: 0.82;
+}
+
+.hero-welcome__cta:active {
+  transform: scale(0.98);
+}
+
+@media (min-width: 1024px) {
+  .hero-left-rail {
+    width: min(26.25rem, 24vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-welcome__cta {
+    transition: none;
+  }
+}
+
+/* Thin scrollbar for the settings rail, matching the page scrollbar. */
+#hero-settings {
+  max-height: calc(100% - 2rem);
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a2a transparent;
+}
+
+#hero-settings::-webkit-scrollbar {
+  width: 2px;
+}
+
+#hero-settings::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+}
+
+@media (max-width: 639px) {
+  .hero-option {
+    padding-bottom: 4px;
+  }
+
+  .hero-ui-shadow {
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-shell,
+  .hero-option,
+  .hero-option::after {
+    transition: none;
+  }
+}

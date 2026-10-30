@@ -6,7 +6,7 @@ import { useLenis } from "@/hooks/useLenis"
 import { useGsapReveal } from "@/hooks/useGsapReveal"
 
 import Navbar from "@/components/Navbar"
-import Hero from "@/components/Hero"
+import ParticleHero from "@/components/ParticleHero"
 import Events from "@/components/Events"
 import KodeeShowcase from "@/components/KodeeShowcase"
 import KodeeArcade from "@/components/KodeeArcade"
@@ -75,7 +75,7 @@ export default function App() {
 
     const anim = gsap.to(track, {
       xPercent: -50,
-      duration: 20,
+      duration: 25,
       ease: "none",
       repeat: -1,
     })
@@ -86,37 +86,38 @@ export default function App() {
   }, [])
 
   return (
-    <div className="relative min-h-screen bg-void text-text-body selection:bg-kotlin-violet/30 selection:text-white">
+    <div className="relative min-h-screen bg-[#050506] text-[#d4d4d4] selection:bg-white/20 selection:text-white">
       <PageLoader onFinish={() => ScrollTrigger.refresh()} />
       <Navbar />
 
       <main>
-        <Hero />
+        {/* Interactive Particle Dissolve Hero */}
+        <ParticleHero />
 
-        {/* Marquee divider — THE ONLY GRADIENT BACKGROUND ON THE SITE */}
-        <div className="overflow-hidden py-3 bg-gradient-kotlin select-none border-y border-border">
-          <div className="marquee-track flex whitespace-nowrap text-xs font-mono font-bold text-white/90 uppercase tracking-[0.15em]">
+        {/* Minimal Solid Marquee Divider */}
+        <div className="overflow-hidden py-3 bg-[#111111] select-none border-y border-white/[0.08]">
+          <div className="marquee-track flex whitespace-nowrap text-xs font-mono font-bold text-[#8a8a8a] uppercase tracking-[0.15em]">
             <span>{MARQUEE_TEXT.repeat(12)}</span>
           </div>
         </div>
 
         <Events />
-        <div className="border-t border-border" />
+        <div className="border-t border-white/[0.08]" />
 
         <KodeeShowcase />
-        <div className="border-t border-border" />
+        <div className="border-t border-white/[0.08]" />
 
         <KodeeArcade />
-        <div className="border-t border-border" />
+        <div className="border-t border-white/[0.08]" />
 
         <About />
-        <div className="border-t border-border" />
+        <div className="border-t border-white/[0.08]" />
 
         <Community />
-        <div className="border-t border-border" />
+        <div className="border-t border-white/[0.08]" />
 
         <Resources />
-        <div className="border-t border-border" />
+        <div className="border-t border-white/[0.08]" />
 
         <Contact />
       </main>

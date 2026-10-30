@@ -39,95 +39,68 @@ const EVENTS = [
 
 export default function Events() {
   return (
-    <section id="events" className="py-24 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-void">
+    <section id="events" className="py-24 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-[#050506]">
       {/* Title Header with staggered left edge: padding-left 8% */}
       <div className="mb-14 sm:pl-[8%]">
         <div className="section-label">Upcoming Events</div>
         <h2 className="section-heading font-display font-bold text-white text-[clamp(1.8rem,4vw,3rem)] leading-none tracking-[-0.03em] max-w-2xl mb-4">
-          Events &amp; <span className="gradient-text">Workshops</span>
+          Events &amp; Workshops
         </h2>
-        <p className="font-body text-text-muted text-base max-w-lg leading-relaxed">
+        <p className="font-body text-[#8a8a8a] text-base max-w-lg leading-relaxed">
           Technical sessions, live code labs, and architect breakdowns — free and open to everyone in Coimbatore.
         </p>
       </div>
 
-      {/* Grid: Gap is the Border rule (gap-px with bg-border-mid container) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border-mid rounded-sm overflow-hidden mb-12">
-        {EVENTS.map((event, idx) => {
-          if (event.featured) {
-            return (
-              <div
-                key={idx}
-                className="gradient-border bg-surface-2 p-6 flex flex-col justify-between group cursor-pointer"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="font-mono text-xs tracking-widest uppercase text-kotlin-pink">
-                      {event.category}
-                    </span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-gradient-vivid opacity-100 transition-opacity duration-300" />
-                  </div>
-                  <h3 className="font-display text-lg font-bold text-text-primary leading-snug mb-3">
-                    {event.title}
-                  </h3>
-                  <p className="font-body text-sm text-text-muted leading-relaxed mb-6">
-                    {event.description}
-                  </p>
-                </div>
-
-                <div className="flex items-center justify-between border-t border-border pt-4 mt-auto">
-                  <span className="font-mono text-xs text-text-dim">{event.date}</span>
-                  <ArrowRight className="w-4 h-4 text-kotlin-indigo group-hover:translate-x-1 transition-transform duration-200" />
-                </div>
+      {/* Grid: 3 cards, solid surfaces, 12px radius, 1px border rgba(255,255,255,0.08) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        {EVENTS.map((event, idx) => (
+          <div
+            key={idx}
+            className={`p-7 rounded-xl flex flex-col justify-between group cursor-pointer transition-all duration-200 border ${
+              event.featured
+                ? "bg-[#141414] border-white/[0.14] hover:border-white/[0.25]"
+                : "bg-[#111111] border-white/[0.08] hover:border-white/[0.16]"
+            }`}
+          >
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="font-mono text-xs tracking-widest uppercase text-[#8a8a8a]">
+                  {event.category}
+                </span>
+                <span className="w-1.5 h-1.5 rounded-full bg-white opacity-40 group-hover:opacity-100 transition-opacity duration-200" />
               </div>
-            )
-          }
-
-          return (
-            <div
-              key={idx}
-              className="card-base bg-surface p-6 flex flex-col justify-between group cursor-pointer"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="font-mono text-xs tracking-widest uppercase text-text-dim">
-                    {event.category}
-                  </span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-gradient-vivid opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </div>
-                <h3 className="font-display text-lg font-bold text-text-primary leading-snug mb-3">
-                  {event.title}
-                </h3>
-                <p className="font-body text-sm text-text-muted leading-relaxed mb-6">
-                  {event.description}
-                </p>
-              </div>
-
-              <div className="flex items-center justify-between border-t border-border pt-4 mt-auto">
-                <span className="font-mono text-xs text-text-dim">{event.date}</span>
-                <ArrowRight className="w-4 h-4 text-text-dim group-hover:text-kotlin-indigo group-hover:translate-x-1 transition-all duration-200" />
-              </div>
+              <h3 className="font-display text-lg font-bold text-white leading-snug mb-3">
+                {event.title}
+              </h3>
+              <p className="font-body text-sm text-[#8a8a8a] leading-relaxed mb-6">
+                {event.description}
+              </p>
             </div>
-          )
-        })}
+
+            <div className="flex items-center justify-between border-t border-white/[0.08] pt-4 mt-auto">
+              <span className="font-mono text-xs text-[#666666]">{event.date}</span>
+              <ArrowRight className="w-4 h-4 text-[#8a8a8a] group-hover:text-white group-hover:translate-x-1 transition-all duration-200" />
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* Call for Speakers Banner: full-width, bg-surface, border border-border, CTA right-aligned */}
-      <div className="bg-surface border border-border rounded-sm p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+      {/* Call for Speakers Banner: solid #111111, 12px radius, 1px border */}
+      <div className="bg-[#111111] border border-white/[0.08] rounded-xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
-          <span className="font-mono text-xs tracking-widest uppercase text-text-dim block mb-1">
+          <span className="font-mono text-xs tracking-widest uppercase text-[#666666] block mb-1">
             Community CFP
           </span>
-          <h3 className="font-display text-xl font-bold text-text-primary">
+          <h3 className="font-display text-xl font-bold text-white">
             Have a Kotlin project or case study to share?
           </h3>
-          <p className="font-body text-sm text-text-muted mt-1 max-w-xl">
+          <p className="font-body text-sm text-[#8a8a8a] mt-1 max-w-xl">
             Whether it&apos;s a 15-minute lightning talk or a deep architectural breakdown, we welcome first-time and seasoned speakers alike.
           </p>
         </div>
         <a
           href="mailto:kugcoimbatore@gmail.com?subject=Call%20for%20Speakers%20-%20KUG%20Coimbatore"
-          className="gradient-border px-7 py-3.5 rounded-sm font-body font-medium text-sm text-text-body bg-surface transition-all duration-200 hover:bg-surface-2 hover:text-white active:scale-[0.97] select-none inline-flex items-center justify-center shrink-0"
+          className="px-6 py-3 rounded-xl font-body font-medium text-sm text-[#d4d4d4] hover:text-white bg-[#141414] hover:bg-[#1a1a1a] border border-white/[0.08] transition-all duration-150 active:scale-[0.98] select-none inline-flex items-center justify-center shrink-0"
         >
           Submit a Talk
         </a>
