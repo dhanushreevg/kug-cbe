@@ -185,10 +185,10 @@ export default function KodeeArcade() {
         </div>
 
         {/* Game Mode Switcher */}
-        <div className="flex items-center gap-2 bg-[#141414] p-1.5 border border-white/[0.08] rounded-xl self-start md:self-auto">
+        <div className="flex w-full items-center gap-2 bg-[#141414] p-1.5 border border-white/[0.08] rounded-xl self-start sm:w-auto md:self-auto md:shrink-0">
           <button
             onClick={() => setActiveTab("memory")}
-            className={`font-mono text-xs uppercase px-4 py-2 rounded-lg transition-all duration-150 select-none ${
+            className={`flex-1 justify-center whitespace-nowrap font-mono text-[10px] sm:text-xs uppercase px-2 sm:px-4 py-2 rounded-lg transition-all duration-150 select-none ${
               activeTab === "memory"
                 ? "bg-[#222222] text-white font-semibold"
                 : "text-[#8a8a8a] hover:text-white"
@@ -198,7 +198,7 @@ export default function KodeeArcade() {
           </button>
           <button
             onClick={() => setActiveTab("quiz")}
-            className={`font-mono text-xs uppercase px-4 py-2 rounded-lg transition-all duration-150 select-none ${
+            className={`flex-1 justify-center whitespace-nowrap font-mono text-[10px] sm:text-xs uppercase px-2 sm:px-4 py-2 rounded-lg transition-all duration-150 select-none ${
               activeTab === "quiz"
                 ? "bg-[#222222] text-white font-semibold"
                 : "text-[#8a8a8a] hover:text-white"
@@ -214,18 +214,18 @@ export default function KodeeArcade() {
         <div className="bg-[#111111] border border-white/[0.08] rounded-xl p-6 sm:p-10">
           {/* Monospace HUD Bar */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-6 mb-8">
-            <div className="flex items-center gap-6 font-mono text-sm">
+            <div className="flex flex-wrap items-center gap-4 sm:gap-6 font-mono text-sm">
               <div>
                 <span className="text-[#666666] uppercase text-xs block">Timer</span>
                 <span className="text-white font-bold tabular-nums">
                   {String(Math.floor(timer / 60)).padStart(2, "0")}:{String(timer % 60).padStart(2, "0")}
                 </span>
               </div>
-              <div className="border-l border-white/[0.08] pl-6">
+              <div className="border-l border-white/[0.08] pl-4 sm:pl-6">
                 <span className="text-[#666666] uppercase text-xs block">Moves</span>
                 <span className="text-white font-bold tabular-nums">{moves}</span>
               </div>
-              <div className="border-l border-white/[0.08] pl-6">
+              <div className="border-l border-white/[0.08] pl-4 sm:pl-6">
                 <span className="text-[#666666] uppercase text-xs block">Matches</span>
                 <span className="text-white font-bold tabular-nums">
                   {matched.length} / {MEMORY_MASCOTS.length}
@@ -276,7 +276,7 @@ export default function KodeeArcade() {
                   <div
                     key={card.instanceId}
                     onClick={() => handleCardClick(idx)}
-                    className={`h-32 sm:h-36 rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer transition-all duration-200 select-none ${
+                    className={`h-32 sm:h-36 rounded-xl p-2 sm:p-3 flex flex-col items-center justify-center cursor-pointer transition-all duration-200 select-none ${
                       isMatched
                         ? "bg-[#1a1a1a] border border-white"
                         : isFlipped
@@ -289,7 +289,7 @@ export default function KodeeArcade() {
                         <img
                           src={card.src}
                           alt={card.name}
-                          className="w-14 h-14 object-contain select-none"
+                          className="w-11 h-11 sm:w-14 sm:h-14 object-contain select-none"
                         />
                         <span className="font-mono text-[10px] uppercase tracking-wider text-[#d4d4d4] font-semibold">
                           {card.name}
@@ -346,26 +346,26 @@ export default function KodeeArcade() {
           ) : (
             <div>
               {/* Header HUD */}
-              <div className="flex items-center justify-between border-b border-white/[0.08] pb-5 mb-8">
-                <div className="flex items-center gap-6 font-mono text-xs">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.08] pb-5 mb-8">
+                <div className="flex flex-wrap items-center gap-4 sm:gap-6 font-mono text-xs">
                   <div>
                     <span className="text-[#666666] uppercase block">Question</span>
                     <span className="text-white font-bold">
                       {String(currentQ + 1).padStart(2, "0")} / {String(QUIZ_QUESTIONS.length).padStart(2, "0")}
                     </span>
                   </div>
-                  <div className="border-l border-white/[0.08] pl-6">
+                  <div className="border-l border-white/[0.08] pl-4 sm:pl-6">
                     <span className="text-[#666666] uppercase block">Score</span>
                     <span className="text-white font-bold tabular-nums">{score} XP</span>
                   </div>
-                  <div className="border-l border-white/[0.08] pl-6">
+                  <div className="border-l border-white/[0.08] pl-4 sm:pl-6">
                     <span className="text-[#666666] uppercase block">Streak</span>
                     <span className="text-white font-bold tabular-nums">x{streak}</span>
                   </div>
                 </div>
 
                 {/* Live Kodee Reaction Badge */}
-                <div className="flex items-center gap-2.5 bg-[#141414] px-3 py-1.5 border border-white/[0.08] rounded-xl">
+                <div className="flex shrink-0 items-center gap-2.5 bg-[#141414] px-3 py-1.5 border border-white/[0.08] rounded-xl">
                   <img
                     src={quizMascot}
                     alt="Kodee Mood"

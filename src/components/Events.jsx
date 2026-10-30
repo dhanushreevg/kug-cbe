@@ -100,7 +100,7 @@ export default function Events() {
         </div>
         <a
           href="mailto:kugcoimbatore@gmail.com?subject=Call%20for%20Speakers%20-%20KUG%20Coimbatore"
-          className="px-6 py-3 rounded-xl font-body font-medium text-sm text-[#d4d4d4] hover:text-white bg-[#141414] hover:bg-[#1a1a1a] border border-white/[0.08] transition-all duration-150 active:scale-[0.98] select-none inline-flex items-center justify-center shrink-0"
+          className="w-full sm:w-auto px-6 py-3 rounded-xl font-body font-medium text-sm text-[#d4d4d4] hover:text-white bg-[#141414] hover:bg-[#1a1a1a] border border-white/[0.08] transition-all duration-150 active:scale-[0.98] select-none inline-flex items-center justify-center shrink-0"
         >
           Submit a Talk
         </a>

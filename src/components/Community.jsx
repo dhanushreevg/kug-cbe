@@ -21,8 +21,15 @@ export default function Community() {
       {/* 4-column Stats Grid with solid dividers on solid #111111 */}
       <div className="bg-[#111111] grid grid-cols-2 lg:grid-cols-4 border border-white/[0.08] mb-16 rounded-xl overflow-hidden">
         {STATS.map((stat, i) => (
-          <div key={i} className="border-r border-b lg:border-b-0 border-white/[0.08] p-8 flex flex-col justify-center last:border-r-0">
-            <div className="font-mono text-4xl sm:text-5xl font-bold text-white mb-2 tabular-nums">
+          <div
+            key={i}
+            className={`p-5 sm:p-8 flex flex-col justify-center border-white/[0.08] ${
+              i < 2 ? "border-b" : ""
+            } ${i % 2 === 0 ? "border-r" : ""} lg:border-b-0 ${
+              i < STATS.length - 1 ? "lg:border-r" : ""
+            }`}
+          >
+            <div className="font-mono text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2 tabular-nums">
               {stat.number}
             </div>
             <div className="font-mono text-xs tracking-widest uppercase text-[#8a8a8a]">

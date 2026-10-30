@@ -81,7 +81,7 @@ export default function Resources() {
               className="border-b border-white/[0.08] py-4 px-4 flex items-center justify-between hover:bg-[#141414] group transition-colors duration-150 no-underline"
             >
               <div className="flex flex-col pr-4">
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   <span className="font-display font-medium text-[#d4d4d4] group-hover:text-white transition-colors duration-150 text-base">
                     {r.title}
                   </span>
