@@ -60,14 +60,11 @@ export default function KodeeArcade() {
   const [gameStarted, setGameStarted] = useState(false)
   const [memoryWon, setMemoryWon] = useState(false)
 
-  // Initialize Memory Game
   const startMemoryGame = () => {
     const deck = [...MEMORY_MASCOTS, ...MEMORY_MASCOTS]
       .sort(() => Math.random() - 0.5)
-      .map((item, index) => ({
-        instanceId: index,
-        ...item,
-      }))
+      .map((item, idx) => ({ ...item, instanceId: `${item.id}-${idx}` }))
+
     setCards(deck)
     setFlipped([])
     setMatched([])
@@ -81,12 +78,13 @@ export default function KodeeArcade() {
     startMemoryGame()
   }, [])
 
-  // Memory Timer
   useEffect(() => {
-    if (!gameStarted || memoryWon) return
-    const interval = setInterval(() => {
-      setTimer((t) => t + 1)
-    }, 1000)
+    let interval = null
+    if (gameStarted && !memoryWon) {
+      interval = setInterval(() => {
+        setTimer((t) => t + 1)
+      }, 1000)
+    }
     return () => clearInterval(interval)
   }, [gameStarted, memoryWon])
 
@@ -160,7 +158,6 @@ export default function KodeeArcade() {
       setQuizMascot("/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-pleased.png")
     } else {
       setQuizFinished(true)
-      setQuizMascot("/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-loving.png")
     }
   }
 
@@ -175,36 +172,36 @@ export default function KodeeArcade() {
   }
 
   return (
-    <section id="arcade" className="py-24 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-void">
+    <section id="arcade" className="py-24 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-[#050506]">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
         <div>
           <div className="section-label">Developer Playground</div>
           <h2 className="section-heading font-display font-bold text-white text-[clamp(1.8rem,4vw,3rem)] leading-none tracking-[-0.03em] mb-4">
-            Kodee <span className="gradient-text">Arcade</span> &amp; Challenges
+            Kodee Arcade &amp; Challenges
           </h2>
-          <p className="font-body text-text-muted text-base max-w-xl leading-relaxed">
+          <p className="font-body text-[#8a8a8a] text-base max-w-xl leading-relaxed">
             Test your memory and technical Kotlin reflexes. Powered by the official Kodee emoji expression library.
           </p>
         </div>
 
         {/* Game Mode Switcher */}
-        <div className="flex items-center gap-2 bg-surface p-1.5 border border-border rounded-sm self-start md:self-auto">
+        <div className="flex items-center gap-2 bg-[#141414] p-1.5 border border-white/[0.08] rounded-xl self-start md:self-auto">
           <button
             onClick={() => setActiveTab("memory")}
-            className={`font-mono text-xs uppercase px-4 py-2 rounded-sm transition-all duration-150 select-none ${
+            className={`font-mono text-xs uppercase px-4 py-2 rounded-lg transition-all duration-150 select-none ${
               activeTab === "memory"
-                ? "bg-surface-3 text-white border-b-2 border-kotlin-pink font-semibold"
-                : "text-text-muted hover:text-white"
+                ? "bg-[#222222] text-white font-semibold"
+                : "text-[#8a8a8a] hover:text-white"
             }`}
           >
             [01] Memory Matrix
           </button>
           <button
             onClick={() => setActiveTab("quiz")}
-            className={`font-mono text-xs uppercase px-4 py-2 rounded-sm transition-all duration-150 select-none ${
+            className={`font-mono text-xs uppercase px-4 py-2 rounded-lg transition-all duration-150 select-none ${
               activeTab === "quiz"
-                ? "bg-surface-3 text-white border-b-2 border-kotlin-indigo font-semibold"
-                : "text-text-muted hover:text-white"
+                ? "bg-[#222222] text-white font-semibold"
+                : "text-[#8a8a8a] hover:text-white"
             }`}
           >
             [02] Syntax Sprint
@@ -214,23 +211,23 @@ export default function KodeeArcade() {
 
       {/* ── Mode 1: Memory Matrix ── */}
       {activeTab === "memory" && (
-        <div className="card-base p-6 sm:p-10">
+        <div className="bg-[#111111] border border-white/[0.08] rounded-xl p-6 sm:p-10">
           {/* Monospace HUD Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-6 mb-8">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-6 mb-8">
             <div className="flex items-center gap-6 font-mono text-sm">
               <div>
-                <span className="text-text-dim uppercase text-xs block">Timer</span>
+                <span className="text-[#666666] uppercase text-xs block">Timer</span>
                 <span className="text-white font-bold tabular-nums">
                   {String(Math.floor(timer / 60)).padStart(2, "0")}:{String(timer % 60).padStart(2, "0")}
                 </span>
               </div>
-              <div className="border-l border-border pl-6">
-                <span className="text-text-dim uppercase text-xs block">Moves</span>
+              <div className="border-l border-white/[0.08] pl-6">
+                <span className="text-[#666666] uppercase text-xs block">Moves</span>
                 <span className="text-white font-bold tabular-nums">{moves}</span>
               </div>
-              <div className="border-l border-border pl-6">
-                <span className="text-text-dim uppercase text-xs block">Matches</span>
-                <span className="text-kotlin-pink font-bold tabular-nums">
+              <div className="border-l border-white/[0.08] pl-6">
+                <span className="text-[#666666] uppercase text-xs block">Matches</span>
+                <span className="text-white font-bold tabular-nums">
                   {matched.length} / {MEMORY_MASCOTS.length}
                 </span>
               </div>
@@ -238,7 +235,7 @@ export default function KodeeArcade() {
 
             <button
               onClick={startMemoryGame}
-              className="gradient-border px-5 py-2.5 rounded-sm font-mono text-xs uppercase text-text-body bg-surface hover:bg-surface-2 hover:text-white active:scale-95 transition-all select-none"
+              className="px-5 py-2.5 rounded-xl font-mono text-xs uppercase text-[#d4d4d4] hover:text-white bg-[#141414] hover:bg-[#1a1a1a] border border-white/[0.08] active:scale-95 transition-all select-none"
             >
               Reset Matrix
             </button>
@@ -252,24 +249,24 @@ export default function KodeeArcade() {
                 alt="Kodee Excited"
                 className="w-24 h-24 object-contain mb-4 select-none"
               />
-              <span className="font-mono text-xs uppercase tracking-widest text-kotlin-pink mb-2">
+              <span className="font-mono text-xs uppercase tracking-widest text-[#8a8a8a] mb-2">
                 Compilation Succeeded
               </span>
               <h3 className="font-display text-3xl font-bold text-white mb-2">
                 All Memory Segments Paired!
               </h3>
-              <p className="font-body text-text-muted text-sm max-w-md mb-6 leading-relaxed">
+              <p className="font-body text-[#8a8a8a] text-sm max-w-md mb-6 leading-relaxed">
                 Completed in {timer} seconds with {moves} moves. Zero memory leaks detected!
               </p>
               <button
                 onClick={startMemoryGame}
-                className="relative px-7 py-3 rounded-sm font-body font-medium text-sm text-white bg-gradient-kotlin transition-all duration-200 hover:brightness-110 active:scale-95 select-none"
+                className="px-7 py-3 rounded-xl font-body font-medium text-sm text-[#0a0a0a] bg-white hover:bg-[#e6e6e6] transition-all duration-150 active:scale-95 select-none"
               >
                 Play Again
               </button>
             </div>
           ) : (
-            /* Cards Grid: 12 cards (4 cols on desktop, 3 cols on mobile) */
+            /* Cards Grid: 12 cards with 12px radius, solid backgrounds */
             <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
               {cards.map((card, idx) => {
                 const isFlipped = flipped.includes(idx) || matched.includes(card.id)
@@ -279,12 +276,12 @@ export default function KodeeArcade() {
                   <div
                     key={card.instanceId}
                     onClick={() => handleCardClick(idx)}
-                    className={`h-32 sm:h-36 rounded-sm p-3 flex flex-col items-center justify-center cursor-pointer transition-all duration-200 select-none ${
+                    className={`h-32 sm:h-36 rounded-xl p-3 flex flex-col items-center justify-center cursor-pointer transition-all duration-200 select-none ${
                       isMatched
-                        ? "bg-surface-3 border-2 border-kotlin-indigo/60 shadow-kotlin-sm"
+                        ? "bg-[#1a1a1a] border border-white"
                         : isFlipped
-                        ? "bg-surface-2 border border-border-strong"
-                        : "bg-surface border border-border hover:border-border-mid hover:bg-surface-2"
+                        ? "bg-[#161616] border border-white/[0.2]"
+                        : "bg-[#141414] border border-white/[0.08] hover:border-white/[0.16] hover:bg-[#181818]"
                     }`}
                   >
                     {isFlipped ? (
@@ -294,16 +291,16 @@ export default function KodeeArcade() {
                           alt={card.name}
                           className="w-14 h-14 object-contain select-none"
                         />
-                        <span className="font-mono text-[10px] uppercase tracking-wider text-text-body font-semibold">
+                        <span className="font-mono text-[10px] uppercase tracking-wider text-[#d4d4d4] font-semibold">
                           {card.name}
                         </span>
                       </div>
                     ) : (
                       <div className="flex flex-col items-center justify-center gap-1.5 opacity-40 hover:opacity-80 transition-opacity">
                         <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none">
-                          <path d="M24 24H0V0h24L12 12Z" fill="#7F52FF" />
+                          <path d="M24 24H0V0h24L12 12Z" fill="#888888" />
                         </svg>
-                        <span className="font-mono text-[9px] uppercase tracking-widest text-text-dim">
+                        <span className="font-mono text-[9px] uppercase tracking-widest text-[#666666]">
                           #{String(idx + 1).padStart(2, "0")}
                         </span>
                       </div>
@@ -318,7 +315,7 @@ export default function KodeeArcade() {
 
       {/* ── Mode 2: Syntax Sprint Quiz ── */}
       {activeTab === "quiz" && (
-        <div className="card-base p-6 sm:p-10">
+        <div className="bg-[#111111] border border-white/[0.08] rounded-xl p-6 sm:p-10">
           {quizFinished ? (
             <div className="py-12 flex flex-col items-center justify-center text-center">
               <img
@@ -326,13 +323,13 @@ export default function KodeeArcade() {
                 alt="Quiz Result"
                 className="w-28 h-28 object-contain mb-4 select-none"
               />
-              <span className="font-mono text-xs uppercase tracking-widest text-kotlin-pink mb-1">
+              <span className="font-mono text-xs uppercase tracking-widest text-[#8a8a8a] mb-1">
                 Challenge Complete
               </span>
               <h3 className="font-display text-3xl font-bold text-white mb-2">
-                Final Score: <span className="gradient-text">{score} XP</span>
+                Final Score: <span className="text-white">{score} XP</span>
               </h3>
-              <p className="font-body text-text-muted text-sm max-w-md mb-8 leading-relaxed">
+              <p className="font-body text-[#8a8a8a] text-sm max-w-md mb-8 leading-relaxed">
                 {score >= 600
                   ? "Rank: Senior Kotlin Architect. Flawless syntax mastery!"
                   : score >= 400
@@ -341,7 +338,7 @@ export default function KodeeArcade() {
               </p>
               <button
                 onClick={restartQuiz}
-                className="relative px-7 py-3 rounded-sm font-body font-medium text-sm text-white bg-gradient-kotlin transition-all duration-200 hover:brightness-110 active:scale-95 select-none"
+                className="px-7 py-3 rounded-xl font-body font-medium text-sm text-[#0a0a0a] bg-white hover:bg-[#e6e6e6] transition-all duration-150 active:scale-95 select-none"
               >
                 Restart Sprint
               </button>
@@ -349,32 +346,32 @@ export default function KodeeArcade() {
           ) : (
             <div>
               {/* Header HUD */}
-              <div className="flex items-center justify-between border-b border-border pb-5 mb-8">
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-5 mb-8">
                 <div className="flex items-center gap-6 font-mono text-xs">
                   <div>
-                    <span className="text-text-dim uppercase block">Question</span>
+                    <span className="text-[#666666] uppercase block">Question</span>
                     <span className="text-white font-bold">
                       {String(currentQ + 1).padStart(2, "0")} / {String(QUIZ_QUESTIONS.length).padStart(2, "0")}
                     </span>
                   </div>
-                  <div className="border-l border-border pl-6">
-                    <span className="text-text-dim uppercase block">Score</span>
-                    <span className="text-kotlin-pink font-bold tabular-nums">{score} XP</span>
+                  <div className="border-l border-white/[0.08] pl-6">
+                    <span className="text-[#666666] uppercase block">Score</span>
+                    <span className="text-white font-bold tabular-nums">{score} XP</span>
                   </div>
-                  <div className="border-l border-border pl-6">
-                    <span className="text-text-dim uppercase block">Streak</span>
-                    <span className="text-kotlin-indigo font-bold tabular-nums">x{streak}</span>
+                  <div className="border-l border-white/[0.08] pl-6">
+                    <span className="text-[#666666] uppercase block">Streak</span>
+                    <span className="text-white font-bold tabular-nums">x{streak}</span>
                   </div>
                 </div>
 
                 {/* Live Kodee Reaction Badge */}
-                <div className="flex items-center gap-2.5 bg-surface-2 px-3 py-1.5 border border-border rounded-sm">
+                <div className="flex items-center gap-2.5 bg-[#141414] px-3 py-1.5 border border-white/[0.08] rounded-xl">
                   <img
                     src={quizMascot}
                     alt="Kodee Mood"
                     className="w-7 h-7 object-contain select-none"
                   />
-                  <span className="font-mono text-[10px] uppercase text-text-muted">
+                  <span className="font-mono text-[10px] uppercase text-[#8a8a8a]">
                     {streak >= 3 ? "⚡ Overclocked" : "Kodee Live"}
                   </span>
                 </div>
@@ -390,14 +387,14 @@ export default function KodeeArcade() {
               {/* Options Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
                 {QUIZ_QUESTIONS[currentQ].options.map((opt, i) => {
-                  let optStyle = "bg-surface border-border hover:border-border-mid hover:bg-surface-2 text-text-body"
+                  let optStyle = "bg-[#141414] border-white/[0.08] hover:border-white/[0.18] hover:bg-[#181818] text-[#d4d4d4]"
                   if (isAnswerChecked) {
                     if (i === QUIZ_QUESTIONS[currentQ].answer) {
                       optStyle = "bg-emerald-950/40 border-emerald-500 text-emerald-300 font-semibold"
                     } else if (i === selectedOption) {
                       optStyle = "bg-rose-950/40 border-rose-500 text-rose-300"
                     } else {
-                      optStyle = "bg-surface border-border text-text-dim opacity-50"
+                      optStyle = "bg-[#141414] border-white/[0.08] text-[#666666] opacity-50"
                     }
                   }
 
@@ -406,10 +403,10 @@ export default function KodeeArcade() {
                       key={i}
                       disabled={isAnswerChecked}
                       onClick={() => handleAnswer(i)}
-                      className={`p-4 border rounded-sm font-mono text-sm text-left transition-all duration-150 flex items-center justify-between select-none ${optStyle}`}
+                      className={`p-4 border rounded-xl font-mono text-sm text-left transition-all duration-150 flex items-center justify-between select-none ${optStyle}`}
                     >
                       <span>{opt}</span>
-                      <span className="font-mono text-xs text-text-dim">[{String.fromCharCode(65 + i)}]</span>
+                      <span className="font-mono text-xs text-[#666666]">[{String.fromCharCode(65 + i)}]</span>
                     </button>
                   )
                 })}
@@ -417,13 +414,13 @@ export default function KodeeArcade() {
 
               {/* Tip & Next button */}
               {isAnswerChecked && (
-                <div className="border-t border-border pt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <p className="font-body text-xs text-text-muted leading-relaxed max-w-lg">
+                <div className="border-t border-white/[0.08] pt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <p className="font-body text-xs text-[#8a8a8a] leading-relaxed max-w-lg">
                     💡 <span className="text-white font-medium">Insight:</span> {QUIZ_QUESTIONS[currentQ].tip}
                   </p>
                   <button
                     onClick={handleNextQuestion}
-                    className="relative px-6 py-2.5 rounded-sm font-body font-medium text-xs uppercase tracking-wider text-white bg-gradient-kotlin transition-all duration-200 hover:brightness-110 active:scale-95 select-none shrink-0"
+                    className="px-6 py-2.5 rounded-xl font-body font-medium text-xs uppercase tracking-wider text-[#0a0a0a] bg-white hover:bg-[#e6e6e6] transition-all duration-150 active:scale-95 select-none shrink-0"
                   >
                     Next Question &rarr;
                   </button>

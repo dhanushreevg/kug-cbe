@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="bg-surface border-t border-border py-14 px-6 sm:px-10 lg:px-16">
+    <footer className="bg-[#050506] border-t border-white/[0.08] py-14 px-6 sm:px-10 lg:px-16">
       <div className="max-w-7xl mx-auto flex flex-col gap-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
           {/* Left: Logo & description */}
@@ -15,13 +15,13 @@ export default function Footer() {
                 KUG Coimbatore
               </span>
             </div>
-            <p className="font-body text-xs text-text-muted leading-relaxed">
+            <p className="font-body text-xs text-[#8a8a8a] leading-relaxed">
               Official JetBrains Kotlin User Group in Coimbatore, Tamil Nadu. Dedicated to modern, pragmatic software engineering.
             </p>
           </div>
 
           {/* Right: Nav Links */}
-          <div className="flex flex-wrap gap-8 text-sm font-body text-text-muted">
+          <div className="flex flex-wrap gap-8 text-sm font-body text-[#8a8a8a]">
             <a
               href="https://kotlinlang.org"
               target="_blank"
@@ -57,10 +57,10 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom row: © 2024 KUG Coimbatore in font-mono text-xs text-text-dim */}
-        <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-text-dim">
+        {/* Bottom row: © 2024 KUG Coimbatore */}
+        <div className="border-t border-white/[0.08] pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#666666]">
           <span>&copy; 2024 KUG Coimbatore. All rights reserved.</span>
-          <span>Spectrum Dark Design System</span>
+          <span>Solid Slate &amp; Dust Aesthetic</span>
         </div>
       </div>
     </footer>

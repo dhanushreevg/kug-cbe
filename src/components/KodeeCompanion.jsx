@@ -19,14 +19,14 @@ export default function KodeeCompanion() {
     <div className="fixed bottom-6 right-6 z-40 select-none">
       {/* Expanded Dialog Box */}
       {isOpen && (
-        <div className="mb-3 bg-surface border border-border-strong rounded-sm p-4 shadow-kotlin-md w-72 flex flex-col gap-3">
-          <div className="flex items-center justify-between border-b border-border pb-2">
-            <span className="font-mono text-xs uppercase tracking-wider text-text-muted">
+        <div className="mb-3 bg-[#111111] border border-white/[0.08] rounded-xl p-4 shadow-2xl w-72 flex flex-col gap-3">
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-2">
+            <span className="font-mono text-xs uppercase tracking-wider text-[#8a8a8a]">
               Kodee Terminal
             </span>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-text-dim hover:text-white font-mono text-xs p-1"
+              className="text-[#666666] hover:text-white font-mono text-xs p-1"
               aria-label="Close Companion"
             >
               [esc]
@@ -35,12 +35,12 @@ export default function KodeeCompanion() {
 
           <div
             onClick={cycleTip}
-            className="cursor-pointer bg-surface-2 border border-border rounded-sm p-3 hover:border-border-strong transition-colors"
+            className="cursor-pointer bg-[#141414] border border-white/[0.08] rounded-xl p-3 hover:border-white/[0.18] transition-colors"
           >
-            <p className="font-body text-xs text-text-body leading-relaxed">
+            <p className="font-body text-xs text-[#d4d4d4] leading-relaxed">
               {QUICK_TIPS[tipIndex]}
             </p>
-            <span className="font-mono text-[10px] text-kotlin-pink block mt-2">
+            <span className="font-mono text-[10px] text-[#8a8a8a] block mt-2">
               Next insight &gt;
             </span>
           </div>
@@ -49,7 +49,7 @@ export default function KodeeCompanion() {
             <a
               href="#events"
               onClick={() => setIsOpen(false)}
-              className="py-1 px-2 text-text-muted hover:text-white hover:bg-surface-2 rounded-sm transition-colors flex justify-between"
+              className="py-1 px-2 text-[#8a8a8a] hover:text-white hover:bg-[#1a1a1a] rounded-lg transition-colors flex justify-between"
             >
               <span>01. Events</span>
               <span>&rarr;</span>
@@ -57,7 +57,7 @@ export default function KodeeCompanion() {
             <a
               href="#kodee"
               onClick={() => setIsOpen(false)}
-              className="py-1 px-2 text-text-muted hover:text-white hover:bg-surface-2 rounded-sm transition-colors flex justify-between"
+              className="py-1 px-2 text-[#8a8a8a] hover:text-white hover:bg-[#1a1a1a] rounded-lg transition-colors flex justify-between"
             >
               <span>02. Mascot Spec</span>
               <span>&rarr;</span>
@@ -65,7 +65,7 @@ export default function KodeeCompanion() {
             <a
               href="#arcade"
               onClick={() => setIsOpen(false)}
-              className="py-1 px-2 text-kotlin-pink hover:text-white hover:bg-surface-2 rounded-sm transition-colors flex justify-between"
+              className="py-1 px-2 text-[#8a8a8a] hover:text-white hover:bg-[#1a1a1a] rounded-lg transition-colors flex justify-between"
             >
               <span>03. Kodee Arcade 🎮</span>
               <span>&rarr;</span>
@@ -73,7 +73,7 @@ export default function KodeeCompanion() {
             <a
               href="#community"
               onClick={() => setIsOpen(false)}
-              className="py-1 px-2 text-kotlin-indigo hover:text-white hover:bg-surface-2 rounded-sm transition-colors flex justify-between"
+              className="py-1 px-2 text-[#8a8a8a] hover:text-white hover:bg-[#1a1a1a] rounded-lg transition-colors flex justify-between"
             >
               <span>04. Join Chapter</span>
               <span>&rarr;</span>
@@ -82,10 +82,10 @@ export default function KodeeCompanion() {
         </div>
       )}
 
-      {/* Floating square trigger: w-10 h-10 bg-surface border border-border-mid rounded-sm hover:border-border-strong shadow-kotlin-sm */}
+      {/* Floating trigger with 12px radius */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-10 h-10 bg-surface border border-border-mid rounded-sm flex items-center justify-center hover:border-border-strong hover:shadow-kotlin-sm active:scale-95 transition-all duration-200 group"
+        className="w-11 h-11 bg-[#141414] border border-white/[0.08] rounded-xl flex items-center justify-center hover:border-white/[0.2] hover:bg-[#1a1a1a] active:scale-95 transition-all duration-200 group shadow-lg"
         aria-label="Kodee Companion Toggle"
       >
         <img

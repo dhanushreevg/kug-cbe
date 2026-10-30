@@ -98,25 +98,25 @@ const KODEE_EXPRESSIONS = [
     tag: "Legacy",
   },
   {
+    id: "sleepy",
+    name: "Sleepy",
+    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-sleepy.png",
+    scenario: "Late Night Release",
+    desc: "Pushing production artifacts at 2 AM after verifying automated coroutine benchmark tests.",
+    tag: "Release",
+  },
+  {
+    id: "cool",
+    name: "Cool",
+    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-cool.png",
+    scenario: "Zero Warning Build",
+    desc: "When -Werror is enabled and the entire multiplatform compilation passes flawlessly.",
+    tag: "Clean Code",
+  },
+  {
     id: "sad",
     name: "Sad",
     src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-sad.png",
-    scenario: "Network Timeout",
-    desc: "Ktor client request timed out while fetching remote endpoints during a demo presentation.",
-    tag: "Networking",
-  },
-  {
-    id: "frightened",
-    name: "Frightened",
-    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-frightened.png",
-    scenario: "OutOfMemoryError",
-    desc: "Heap limit exceeded during large parallel bitmap transformations without proper downsampling.",
-    tag: "Memory",
-  },
-  {
-    id: "broken-hearted",
-    name: "Broken Hearted",
-    src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-broken-hearted.png",
     scenario: "Deprecated API",
     desc: "When your favorite experimental coroutine operator is deprecated in the latest release.",
     tag: "Deprecation",
@@ -145,22 +145,21 @@ export default function KodeeShowcase() {
   const [selectedExpression, setSelectedExpression] = useState(KODEE_EXPRESSIONS[0])
 
   return (
-    <section id="kodee" className="py-24 px-6 sm:px-10 lg:px-16 bg-surface">
+    <section id="kodee" className="py-24 px-6 sm:px-10 lg:px-16 bg-[#050506]">
       <div className="max-w-7xl mx-auto">
         <div className="section-label">Mascot &amp; Architecture</div>
         <h2 className="section-heading font-display font-bold text-white text-[clamp(1.8rem,4vw,3rem)] leading-none tracking-[-0.03em] mb-4">
-          Meet <span className="gradient-text">Kodee</span> &amp; Expression Matrix
+          Meet Kodee &amp; Expression Matrix
         </h2>
-        <p className="font-body text-text-muted text-base max-w-xl leading-relaxed mb-12">
+        <p className="font-body text-[#8a8a8a] text-base max-w-xl leading-relaxed mb-12">
           JetBrains designed Kodee with geometric shapes directly sampled from the Kotlin language mark.
           Explore the official developer expression states below.
         </p>
 
-        {/* Mascot Centerpiece Card — No bouncing float animation */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-void border border-border rounded-sm p-8 sm:p-12 mb-12">
+        {/* Mascot Centerpiece Card — Solid #111111, 12px radius, no glass */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-[#111111] border border-white/[0.08] rounded-xl p-8 sm:p-12 mb-12">
           <div className="lg:col-span-5 flex justify-center items-center">
             <div className="p-6 flex items-center justify-center">
-              {/* Kodee PNG: Static, crisp, greyscale by default, hover to reveal full color */}
               <img
                 src={selectedExpression.src}
                 alt={selectedExpression.name}
@@ -171,21 +170,21 @@ export default function KodeeShowcase() {
 
           <div className="lg:col-span-7 flex flex-col justify-center">
             <div className="flex items-center gap-3 mb-2">
-              <span className="font-mono text-xs tracking-widest uppercase text-kotlin-pink">
+              <span className="font-mono text-xs tracking-widest uppercase text-[#8a8a8a]">
                 {selectedExpression.tag}
               </span>
-              <span className="font-mono text-[10px] text-text-dim border border-border px-2 py-0.5 rounded-sm">
+              <span className="font-mono text-[10px] text-[#666666] border border-white/[0.08] px-2 py-0.5 rounded-md">
                 Status: {selectedExpression.name}
               </span>
             </div>
             <h3 className="font-display text-2xl sm:text-3xl font-bold text-white mb-4">
               {selectedExpression.scenario}
             </h3>
-            <p className="font-body text-text-muted text-base leading-relaxed mb-6 max-w-lg">
+            <p className="font-body text-[#8a8a8a] text-base leading-relaxed mb-6 max-w-lg">
               {selectedExpression.desc}
             </p>
             <div className="flex items-center gap-3">
-              <span className="font-mono text-xs text-text-dim">
+              <span className="font-mono text-xs text-[#666666]">
                 Official JetBrains Mascot Asset · KUG Coimbatore
               </span>
             </div>
@@ -195,10 +194,10 @@ export default function KodeeShowcase() {
         {/* 15-Emotion Interactive Grid Selector */}
         <div className="mb-14">
           <div className="flex items-center justify-between mb-4">
-            <span className="font-mono text-xs tracking-widest uppercase text-text-dim">
+            <span className="font-mono text-xs tracking-widest uppercase text-[#666666]">
               All 15 Official Emoji States (Select to Inspect)
             </span>
-            <span className="font-mono text-xs text-kotlin-indigo">
+            <span className="font-mono text-xs text-[#d4d4d4]">
               {selectedExpression.name} Active
             </span>
           </div>
@@ -210,21 +209,21 @@ export default function KodeeShowcase() {
                 <button
                   key={expr.id}
                   onClick={() => setSelectedExpression(expr)}
-                  className={`p-2.5 rounded-sm flex flex-col items-center justify-center gap-1.5 transition-all duration-150 select-none ${
+                  className={`p-2.5 rounded-xl flex flex-col items-center justify-center gap-1.5 transition-all duration-150 select-none ${
                     isActive
-                      ? "bg-surface-3 border-2 border-kotlin-indigo shadow-kotlin-sm"
-                      : "bg-surface-2 border border-border hover:border-border-strong hover:bg-surface-3"
+                      ? "bg-[#1a1a1a] border border-white text-white"
+                      : "bg-[#141414] border border-white/[0.08] hover:border-white/[0.16] hover:bg-[#1a1a1a]"
                   }`}
                   title={`${expr.name} - ${expr.scenario}`}
                 >
                   <img
                     src={expr.src}
                     alt={expr.name}
-                    className={`w-9 h-9 object-contain select-none transition-all duration-200 ${
-                      isActive ? "filter-none scale-105" : "grayscale opacity-75 hover:grayscale-0 hover:opacity-100"
+                    className={`w-9 h-9 object-contain select-none transition-all duration-150 ${
+                      isActive ? "filter-none scale-105" : "grayscale opacity-70 hover:grayscale-0 hover:opacity-100"
                     }`}
                   />
-                  <span className="font-mono text-[9px] uppercase tracking-wider text-text-dim truncate max-w-full">
+                  <span className="font-mono text-[9px] uppercase tracking-wider text-[#666666] truncate max-w-full">
                     {expr.name}
                   </span>
                 </button>
@@ -233,17 +232,17 @@ export default function KodeeShowcase() {
           </div>
         </div>
 
-        {/* Trivia Cards in card-base with stat numbers in gradient-text */}
+        {/* Trivia Cards in card-base with solid white numbers */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {TRIVIA_FACTS.map((fact, idx) => (
             <div key={idx} className="card-base p-6">
-              <div className="font-mono text-3xl font-bold gradient-text mb-2">
+              <div className="font-mono text-3xl font-bold text-white mb-2">
                 {fact.number}
               </div>
-              <div className="font-mono text-xs tracking-widest uppercase text-text-dim mb-3">
+              <div className="font-mono text-xs tracking-widest uppercase text-[#8a8a8a] mb-3">
                 {fact.label}
               </div>
-              <p className="font-body text-sm text-text-muted leading-relaxed">
+              <p className="font-body text-sm text-[#8a8a8a] leading-relaxed">
                 {fact.detail}
               </p>
             </div>

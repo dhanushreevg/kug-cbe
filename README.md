@@ -6,10 +6,10 @@ Official website for the Kotlin User Group Coimbatore.
 
 ## Tech Stack
 - React 18 + Vite
-- Three.js (liquid water hero simulation)
+- WebGL particle hero (Canvas 2D fallback)
 - GSAP + ScrollTrigger + SplitText
 - Lenis smooth scroll
-- Tailwind CSS + glassmorphism
+- Tailwind CSS (flat instrument UI, no liquid glass)
 
 ## Run Locally
 ```bash
