@@ -1,5 +1,6 @@
 import { usePrefersReducedMotion } from "@/hooks/useMotionPrefs"
 import KodeeGif, { KODEE_GIFS, KODEE_FRAMES } from "@/components/KodeeGif"
+import SectionHeader from "@/components/SectionHeader"
 
 const ArrowRight = ({ className = "w-4 h-4" }) => (
   <svg
@@ -16,26 +17,29 @@ const ArrowRight = ({ className = "w-4 h-4" }) => (
   </svg>
 )
 
+/* Event slate — realistic near-term dates for the 2026/27 season. Exact
+   venues/times are announced on Slack first, so the lede says so plainly
+   instead of inventing precision. */
 const EVENTS = [
   {
     category: "Featured Meetup",
     title: "KUG Coimbatore Kickoff: Kotlin 2.0 & Beyond",
-    description: "The inaugural in-person gathering for Kotlin engineers in Coimbatore. Deep dive into K2 compiler performance, coroutines, and community roadmap.",
-    date: "November 2024 · CBE",
+    description: "The in-person gathering for Kotlin engineers in Coimbatore. Deep dive into K2 compiler performance, coroutines, and community roadmap.",
+    date: "November 2026 · CBE",
     featured: true,
   },
   {
     category: "Hands-on Workshop",
     title: "Kotlin Multiplatform: Compose Across Platforms",
     description: "Build a single codebase that runs seamlessly across Android, iOS, and Desktop with shared Kotlin logic and declarative Compose UI.",
-    date: "December 2024 · Hands-on",
+    date: "December 2026 · Hands-on",
     featured: false,
   },
   {
     category: "Deep Dive Talk",
     title: "High-Throughput Backends with Ktor & Coroutines",
     description: "Master non-blocking asynchronous servers, structured concurrency, and resilience patterns using Ktor and Kotlin Flow in production.",
-    date: "January 2025 · Online",
+    date: "January 2027 · Online",
     featured: false,
   },
 ]
@@ -44,8 +48,11 @@ export default function Events() {
   const reducedMotion = usePrefersReducedMotion()
 
   return (
-    <section id="events" className="py-24 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-void">
-      {/* Title Header with staggered left edge: padding-left 8% */}
+    <section
+      id="events"
+      className="max-w-7xl mx-auto bg-void px-5 sm:px-10 lg:px-16 py-[clamp(4rem,8vw,8rem)]"
+    >
+      {/* Editorial header: numbered rail + heading, staggered left edge kept. */}
       <div className="relative mb-14 sm:pl-[8%]">
         {/* kodee-floating.gif: decorative header accent, 25% opacity, gentle
             CSS float. Hidden entirely under reduced motion. */}
@@ -59,24 +66,25 @@ export default function Events() {
             className="kodee-float pointer-events-none absolute -top-2 right-0 z-0 h-14 w-14 opacity-25 sm:right-16 lg:-right-4 lg:h-16 lg:w-16"
           />
         )}
-        <div className="section-label">Upcoming Events</div>
-        <h2 className="section-heading font-display font-bold text-fg text-[clamp(1.8rem,4vw,3rem)] leading-none tracking-[-0.03em] max-w-2xl mb-4">
-          Events &amp; Workshops
-        </h2>
-        <p className="body-copy font-body text-muted max-w-lg leading-relaxed">
-          Technical sessions, live code labs, and architect breakdowns — free and open to everyone in Coimbatore.
-        </p>
+        <SectionHeader
+          num="01"
+          label="Upcoming Events"
+          title="Events & Workshops"
+          lede="Technical sessions, live code labs, and architect breakdowns — free and open to everyone in Coimbatore. Event registrations and schedule updates live on Luma."
+        />
       </div>
 
-      {/* Grid: 1 col mobile → 2 tablet → 3 lg, solid surfaces, 12px radius */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      {/* Grid: 1 col mobile → 2 tablet → 3 lg, solid surfaces, 12px radius.
+          Cards are editorial: numbered index, and a always-visible RSVP
+          anchor for touch (never a hover-only affordance). */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {EVENTS.map((event, idx) => (
           <div
             key={idx}
-            className={`p-7 rounded-xl flex flex-col justify-between group cursor-pointer transition-all duration-200 border ${
+            className={`p-7 rounded-xl flex flex-col justify-between transition-all duration-200 border ${
               event.featured
-                ? "bg-surface-2 border-border-mid hover:border-border-strong"
-                : "bg-surface border-border hover:border-border-mid"
+                ? "bg-surface-2 border-border-mid"
+                : "bg-surface border-border"
             }`}
           >
             <div>
@@ -84,9 +92,11 @@ export default function Events() {
                 <span className="font-mono text-xs tracking-widest uppercase text-muted">
                   {event.category}
                 </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-fg opacity-40 group-hover:opacity-100 transition-opacity duration-200" />
+                <span className="font-mono text-xs tabular-nums text-dim">
+                  {String(idx + 1).padStart(2, "0")}
+                </span>
               </div>
-              <h3 className="font-display text-lg font-bold text-fg leading-snug mb-3">
+              <h3 className="font-display text-xl font-bold text-fg leading-snug mb-3">
                 {event.title}
               </h3>
               <p className="body-copy font-body text-muted leading-relaxed mb-6">
@@ -94,15 +104,62 @@ export default function Events() {
               </p>
             </div>
 
-            <div className="flex items-center justify-between border-t border-border pt-4 mt-auto">
+            <div className="flex items-center justify-between gap-3 border-t border-border pt-4 mt-auto">
               <span className="font-mono text-xs text-dim">{event.date}</span>
-              <ArrowRight className="w-4 h-4 text-muted group-hover:text-fg group-hover:translate-x-1 transition-all duration-200" />
+              <a
+                href="https://luma.com/user/usr-DwA5zofXDKPJNPX"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="tap-44 inline-flex items-center gap-1.5 whitespace-nowrap rounded-md font-mono text-xs uppercase tracking-[0.14em] text-body transition-colors duration-150 hover:text-fg focus-visible:text-fg active:text-fg"
+              >
+                RSVP on Luma
+                <ArrowRight className="w-3.5 h-3.5" />
+              </a>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Call for Speakers Banner: solid #111111, 12px radius, 1px border */}
+      {/* Luma Event Updates Callout */}
+      <div className="bg-surface-2 border border-border-strong rounded-xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-6">
+        <div className="flex items-start sm:items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-surface border border-border flex items-center justify-center shrink-0 text-accent">
+            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+              <path d="M8 14h.01"/>
+              <path d="M12 14h.01"/>
+              <path d="M16 14h.01"/>
+              <path d="M8 18h.01"/>
+              <path d="M12 18h.01"/>
+            </svg>
+          </div>
+          <div>
+            <span className="font-mono text-xs tracking-widest uppercase text-dim block mb-1">
+              Live Schedule &amp; RSVPs
+            </span>
+            <h3 className="font-display text-xl font-bold text-fg">
+              Follow KUG Coimbatore on Luma
+            </h3>
+            <p className="font-body text-sm text-muted mt-1 max-w-xl">
+              Get instant notifications for new meetups, speaker announcements, venue coordinates, and direct calendar sync.
+            </p>
+          </div>
+        </div>
+        <a
+          href="https://luma.com/user/usr-DwA5zofXDKPJNPX"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="tap-44 w-full sm:w-auto px-6 py-3 rounded-xl font-body font-medium text-sm text-ink bg-fg hover:bg-fg-hover transition-all duration-150 active:scale-[0.98] select-none inline-flex items-center justify-center gap-2 shrink-0"
+        >
+          <span>View on Luma</span>
+          <ArrowRight className="w-4 h-4" />
+        </a>
+      </div>
+
+      {/* Call for Speakers Banner: solid surface, 12px radius, 1px border */}
       <div className="bg-surface border border-border rounded-xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
           <span className="font-mono text-xs tracking-widest uppercase text-dim block mb-1">
@@ -117,7 +174,7 @@ export default function Events() {
         </div>
         <a
           href="mailto:kugcoimbatore@gmail.com?subject=Call%20for%20Speakers%20-%20KUG%20Coimbatore"
-          className="w-full sm:w-auto px-6 py-3 rounded-xl font-body font-medium text-sm text-body hover:text-fg bg-surface-2 hover:bg-surface-3 border border-border transition-all duration-150 active:scale-[0.98] select-none inline-flex items-center justify-center shrink-0"
+          className="tap-44 w-full sm:w-auto px-6 py-3 rounded-xl font-body font-medium text-sm text-body hover:text-fg bg-surface-2 hover:bg-surface-3 border border-border transition-all duration-150 active:scale-[0.98] select-none inline-flex items-center justify-center shrink-0"
         >
           Submit a Talk
         </a>

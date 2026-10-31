@@ -77,7 +77,7 @@ export default function KodeeCompanion() {
               onClick={() => setIsOpen(false)}
               className="py-1 px-2 text-muted hover:text-fg hover:bg-surface-3 rounded-lg transition-colors flex justify-between"
             >
-              <span>03. Kodee Arcade 🎮</span>
+              <span>03. Kodee Arcade</span>
               <span>&rarr;</span>
             </a>
             <a

@@ -85,7 +85,7 @@ export default function PageLoader({ onFinish }) {
           offscreenPause={false}
           width={128}
           height={128}
-          className="relative z-10 w-24 h-24 sm:w-28 sm:h-28 object-contain pointer-events-none filter grayscale opacity-90"
+          className="relative z-10 w-24 h-24 sm:w-28 sm:h-28 object-contain pointer-events-none"
         />
       </div>
 

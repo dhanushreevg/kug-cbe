@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import KodeeGif, { KODEE_GIFS, KODEE_FRAMES } from "@/components/KodeeGif"
+import SectionHeader from "@/components/SectionHeader"
 
 const MEMORY_MASCOTS = [
   { id: "electrified", name: "Electrified", src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-electrified.png" },
@@ -202,23 +203,28 @@ export default function KodeeArcade() {
       : KODEE_QUIZ.sad
 
   return (
-    <section id="arcade" className="py-24 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-void">
+    <section
+      id="arcade"
+      className="max-w-7xl mx-auto bg-void px-5 sm:px-10 lg:px-16 py-[clamp(4rem,8vw,8rem)]"
+    >
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-        <div>
-          <div className="section-label">Developer Playground</div>
-          <h2 className="section-heading font-display font-bold text-fg text-[clamp(1.8rem,4vw,3rem)] leading-none tracking-[-0.03em] mb-4">
-            Kodee Arcade &amp; Challenges
-          </h2>
-          <p className="font-body text-muted text-base max-w-xl leading-relaxed">
+        <div className="min-w-0">
+          <SectionHeader
+            num="03"
+            label="Developer Playground"
+            title="Kodee Arcade & Challenges"
+          />
+          <p className="font-body text-muted text-base max-w-xl leading-relaxed mt-1">
             Test your memory and technical Kotlin reflexes. Powered by the official Kodee emoji expression library.
           </p>
         </div>
 
-        {/* Game Mode Switcher */}
+        {/* Game Mode Switcher — 44px on touch via .tap-44 */}
         <div className="flex w-full items-center gap-2 bg-surface-2 p-1.5 border border-border rounded-xl self-start sm:w-auto md:self-auto md:shrink-0">
           <button
             onClick={() => setActiveTab("memory")}
-            className={`flex-1 justify-center whitespace-nowrap font-mono text-[11px] sm:text-xs uppercase px-2 sm:px-4 py-2 rounded-lg transition-all duration-150 select-none ${
+            aria-pressed={activeTab === "memory"}
+            className={`tap-44 flex-1 justify-center whitespace-nowrap font-mono text-[11px] sm:text-xs uppercase px-2 sm:px-4 py-2 rounded-lg transition-all duration-150 select-none ${
               activeTab === "memory"
                 ? "bg-surface-4 text-fg font-semibold"
                 : "text-muted hover:text-fg"
@@ -228,7 +234,8 @@ export default function KodeeArcade() {
           </button>
           <button
             onClick={() => setActiveTab("quiz")}
-            className={`flex-1 justify-center whitespace-nowrap font-mono text-[11px] sm:text-xs uppercase px-2 sm:px-4 py-2 rounded-lg transition-all duration-150 select-none ${
+            aria-pressed={activeTab === "quiz"}
+            className={`tap-44 flex-1 justify-center whitespace-nowrap font-mono text-[11px] sm:text-xs uppercase px-2 sm:px-4 py-2 rounded-lg transition-all duration-150 select-none ${
               activeTab === "quiz"
                 ? "bg-surface-4 text-fg font-semibold"
                 : "text-muted hover:text-fg"
@@ -265,7 +272,7 @@ export default function KodeeArcade() {
 
             <button
               onClick={startMemoryGame}
-              className="px-5 py-2.5 rounded-xl font-mono text-xs uppercase text-body hover:text-fg bg-surface-2 hover:bg-surface-3 border border-border active:scale-95 transition-all select-none"
+              className="tap-44 px-5 py-2.5 rounded-xl font-mono text-xs uppercase text-body hover:text-fg bg-surface-2 hover:bg-surface-3 border border-border active:scale-95 transition-all select-none"
             >
               Reset Matrix
             </button>
@@ -294,7 +301,7 @@ export default function KodeeArcade() {
               </p>
               <button
                 onClick={startMemoryGame}
-                className="px-7 py-3 rounded-xl font-body font-medium text-sm text-ink bg-fg hover:bg-fg-hover transition-all duration-150 active:scale-95 select-none"
+                className="tap-44 px-7 py-3 rounded-xl font-body font-medium text-sm text-ink bg-fg hover:bg-fg-hover transition-all duration-150 active:scale-95 select-none"
               >
                 Play Again
               </button>
@@ -404,7 +411,7 @@ export default function KodeeArcade() {
               </p>
               <button
                 onClick={restartQuiz}
-                className="px-7 py-3 rounded-xl font-body font-medium text-sm text-ink bg-fg hover:bg-fg-hover transition-all duration-150 active:scale-95 select-none"
+                className="tap-44 px-7 py-3 rounded-xl font-body font-medium text-sm text-ink bg-fg hover:bg-fg-hover transition-all duration-150 active:scale-95 select-none"
               >
                 Restart Sprint
               </button>
@@ -438,7 +445,7 @@ export default function KodeeArcade() {
                     className="w-7 h-7 object-contain select-none"
                   />
                   <span className="font-mono text-[11px] uppercase text-muted">
-                    {streak >= 3 ? "⚡ Overclocked" : "Kodee Live"}
+                    {streak >= 3 ? ">> Overclocked" : "Kodee Live"}
                   </span>
                 </div>
               </div>
@@ -450,15 +457,20 @@ export default function KodeeArcade() {
                 </h3>
               </div>
 
-              {/* Options Grid */}
+              {/* Options Grid — answer feedback is colour PLUS glyph PLUS
+                  text, never colour alone (✓ on the correct option, ✕ on the
+                  picked wrong one). */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
                 {QUIZ_QUESTIONS[currentQ].options.map((opt, i) => {
                   let optStyle = "bg-surface-2 border-border hover:border-border-strong hover:bg-surface-3 text-body"
+                  let feedbackGlyph = null
                   if (isAnswerChecked) {
                     if (i === QUIZ_QUESTIONS[currentQ].answer) {
                       optStyle = "bg-correct-bg border-correct-line text-correct-text font-semibold"
+                      feedbackGlyph = "✓"
                     } else if (i === selectedOption) {
                       optStyle = "bg-wrong-bg border-wrong-line text-wrong-text"
+                      feedbackGlyph = "✕"
                     } else {
                       optStyle = "bg-surface-2 border-border text-dim opacity-60"
                     }
@@ -469,24 +481,62 @@ export default function KodeeArcade() {
                       key={i}
                       disabled={isAnswerChecked}
                       onClick={() => handleAnswer(i)}
-                      className={`p-4 border rounded-xl font-mono text-sm text-left transition-all duration-150 flex items-center justify-between select-none ${optStyle}`}
+                      aria-label={
+                        isAnswerChecked && feedbackGlyph
+                          ? `${feedbackGlyph === "✓" ? "Correct answer" : "Wrong answer"}: ${opt}`
+                          : undefined
+                      }
+                      className={`min-h-[44px] p-4 border rounded-xl font-mono text-sm text-left transition-all duration-150 flex items-center justify-between select-none ${optStyle}`}
                     >
-                      <span>{opt}</span>
-                      <span className="font-mono text-xs text-dim">[{String.fromCharCode(65 + i)}]</span>
+                      <span>
+                        {feedbackGlyph && (
+                          <span
+                            aria-hidden="true"
+                            className="font-bold mr-2"
+                          >
+                            {feedbackGlyph}
+                          </span>
+                        )}
+                        {opt}
+                      </span>
+                      {feedbackGlyph ? (
+                        <span className="font-mono text-xs font-bold">
+                          {feedbackGlyph}
+                        </span>
+                      ) : (
+                        <span className="font-mono text-xs text-dim">[{String.fromCharCode(65 + i)}]</span>
+                      )}
                     </button>
                   )
                 })}
               </div>
 
+              {/* Answer status: icon + words, not just a colour change. Also
+                  an aria-live region so the outcome is announced. */}
+              {isAnswerChecked && (
+                <p
+                  role="status"
+                  className={`mb-6 font-mono text-xs uppercase tracking-[0.14em] ${
+                    selectedOption === QUIZ_QUESTIONS[currentQ].answer
+                      ? "text-correct-text"
+                      : "text-wrong-text"
+                  }`}
+                >
+                  {selectedOption === QUIZ_QUESTIONS[currentQ].answer
+                    ? "✓ Correct — one for the streak."
+                    : "✕ Not quite — read the insight below."}
+                </p>
+              )}
+
               {/* Tip & Next button */}
               {isAnswerChecked && (
                 <div className="border-t border-border pt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <p className="font-body text-xs text-muted leading-relaxed max-w-lg">
-                    💡 <span className="text-fg font-medium">Insight:</span> {QUIZ_QUESTIONS[currentQ].tip}
+                    <span className="text-fg font-medium">Insight:</span> {QUIZ_QUESTIONS[currentQ].tip}
                   </p>
                   <button
                     onClick={handleNextQuestion}
-                    className="px-6 py-2.5 rounded-xl font-body font-medium text-xs uppercase tracking-wider text-ink bg-fg hover:bg-fg-hover transition-all duration-150 active:scale-95 select-none shrink-0"
+                    className="tap-44 px-6 py-2.5 rounded-xl font-body font-medium text-xs uppercase tracking-wider text-ink bg-fg hover:bg-fg-hover transition-all duration-150 active:scale-95 select-none shrink-0"
                   >
                     Next Question &rarr;
                   </button>

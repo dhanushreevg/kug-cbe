@@ -1,3 +1,5 @@
+import SectionHeader from "@/components/SectionHeader"
+
 const ArrowRight = ({ className = "w-4 h-4" }) => (
   <svg
     className={className}
@@ -54,17 +56,23 @@ const RESOURCES = [
 
 export default function Resources() {
   return (
-    <section id="resources" className="py-24 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-void">
+    <section
+      id="resources"
+      className="max-w-7xl mx-auto bg-void px-5 sm:px-10 lg:px-16 py-[clamp(4rem,8vw,8rem)]"
+    >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-        {/* Left Column: Heading with staggered left edge: padding-left 4% */}
+        {/* Left Column: numbered rail + heading. Below 1024px the heading
+            column stacks above the list (already the natural order here). */}
         <div className="lg:col-span-5 sm:pl-[4%]">
-          <div className="flex items-start justify-between gap-5">
+          <SectionHeader
+            num="06"
+            label="Developer Index"
+            title="Essential Resources"
+            className="mb-4"
+          />
+          <div className="flex items-start justify-between gap-4 mt-2">
             <div className="min-w-0">
-              <div className="section-label">Developer Index</div>
-              <h2 className="section-heading font-display font-bold text-fg text-[clamp(1.8rem,4vw,3rem)] leading-none tracking-[-0.03em] mb-4">
-                Essential Resources
-              </h2>
-              <p className="font-body text-muted text-base leading-relaxed max-w-sm mb-6">
+              <p className="font-body text-muted text-base leading-relaxed max-w-sm mb-4">
                 Curated references, interactive sandboxes, and engineering documentation for building production Kotlin systems.
               </p>
               <div className="font-mono text-xs text-dim">
@@ -72,21 +80,21 @@ export default function Resources() {
               </div>
             </div>
 
-            {/* kodee-sharing.png beside the Essential Resources heading */}
+            {/* Kodee sharing mascot cleanly placed beside description, never overlapping heading */}
             <img
               src="/assets/kotlin_mascot_2/Digital/PNG/Kodee-sharing-96.png"
-              alt=""
+              alt="Kodee sharing resources"
               loading="lazy"
               decoding="async"
               aria-hidden="true"
               width={96}
               height={96}
-              className="kodee-img h-12 w-12 sm:h-14 sm:w-14 shrink-0 object-contain select-none"
+              className="kodee-img h-12 w-12 sm:h-14 sm:w-14 shrink-0 object-contain select-none mt-1"
             />
           </div>
         </div>
 
-        {/* Right Column: 6 resource rows with solid borders */}
+        {/* Right Column: 6 resource rows — ≥56px tap targets on touch. */}
         <div className="lg:col-span-7 border-t border-border">
           {RESOURCES.map((r, i) => (
             <a
@@ -94,7 +102,7 @@ export default function Resources() {
               href={r.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="border-b border-border py-4 px-4 flex items-center justify-between hover:bg-surface-2 group transition-colors duration-150 no-underline"
+              className="min-h-[56px] border-b border-border py-4 px-4 sm:px-5 flex items-center justify-between hover:bg-surface-2 group transition-colors duration-150 no-underline"
             >
               <div className="flex flex-col pr-4">
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">

@@ -28,6 +28,9 @@ export default {
         muted:    'var(--color-text-muted)',
         dim:      'var(--color-text-dim)',
 
+        // The single brand accent token (--accent, #7F52FF both themes)
+        accent: 'var(--accent)',
+
         // Quiz correctness states
         correct: {
           bg:   'var(--state-correct-bg)',

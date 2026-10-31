@@ -1,13 +1,13 @@
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { SplitText } from "gsap/SplitText"
 import { useLenis } from "@/hooks/useLenis"
 import { useGsapReveal } from "@/hooks/useGsapReveal"
-import { usePrefersReducedMotion } from "@/hooks/useMotionPrefs"
 
 import Navbar from "@/components/Navbar"
 import ParticleHero from "@/components/ParticleHero"
+import KodeeStage from "@/components/KodeeStage"
 import Events from "@/components/Events"
 import KodeeShowcase from "@/components/KodeeShowcase"
 import KodeeArcade from "@/components/KodeeArcade"
@@ -18,68 +18,14 @@ import Contact from "@/components/Contact"
 import Footer from "@/components/Footer"
 import KodeeCompanion from "@/components/KodeeCompanion"
 import PageLoader from "@/components/PageLoader"
-import KodeeGif, { KODEE_GIFS, KODEE_FRAMES } from "@/components/KodeeGif"
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
 const MARQUEE_TEXT = "KOTLIN · COIMBATORE · LEARN · BUILD · SHARE · CONNECT · "
 
-/* ─── Walking Kodee ────────────────────────────────────────────────────────
-   Kodee walks along the marquee divider under the hero. The x position is
-   scrubbed by ScrollTrigger while the divider travels between "just entered
-   the viewport" and "pinned at the top" — one full viewport of scroll.
-   On mobile the Kodee renders at 64px; under reduced motion it becomes a
-   static frame leaning at the left edge (no scrub). */
-function WalkingKodee() {
-  const walkerRef = useRef(null)
-  const reducedMotion = usePrefersReducedMotion()
-
-  useEffect(() => {
-    if (reducedMotion) return undefined
-    const el = walkerRef.current
-    if (!el) return undefined
-
-    const tween = gsap.fromTo(
-      el,
-      { x: -72 },
-      {
-        x: () => (el.parentElement ? el.parentElement.offsetWidth + 72 : window.innerWidth + 72),
-        ease: "none",
-        scrollTrigger: {
-          trigger: el,
-          start: "top bottom",
-          end: "top top",
-          scrub: 0.4,
-          invalidateOnRefresh: true,
-        },
-      }
-    )
-
-    return () => {
-      if (tween.scrollTrigger) tween.scrollTrigger.kill()
-      tween.kill()
-      gsap.set(el, { clearProps: "x" })
-    }
-  }, [reducedMotion])
-
-  return (
-    <span
-      ref={walkerRef}
-      className={`pointer-events-none absolute bottom-1.5 z-10 select-none ${
-        reducedMotion ? "left-[8%]" : "left-0 will-change-transform"
-      }`}
-      aria-hidden="true"
-    >
-      <KodeeGif
-        gif={KODEE_GIFS.walking}
-        frame={KODEE_FRAMES.petite}
-        alt=""
-        eager
-        className="h-16 w-16 sm:h-14 sm:w-14 object-contain"
-      />
-    </span>
-  )
-}
+/* The walking Kodee now lives in <KodeeStage /> — its own clipped-proof lane
+   between the hero and this marquee band — so the band's overflow-hidden
+   (required for the seamless looping track) can never clip the mascot. */
 
 export default function App() {
   useLenis()
@@ -136,13 +82,15 @@ export default function App() {
         {/* Interactive Particle Dissolve Hero */}
         <ParticleHero />
 
-        {/* Minimal Solid Marquee Divider + walking Kodee */}
+        {/* The mascot's own lane — walker is never clipped here. */}
+        <KodeeStage />
+
+        {/* Minimal Solid Marquee Divider (track only; the walker runs above). */}
         <div className="relative overflow-hidden py-3 bg-surface select-none border-y border-border marquee-band">
-          <div className="marquee-track motion-safe:animate-marquee flex w-max whitespace-nowrap text-xs font-mono font-bold text-muted uppercase tracking-[0.15em]">
+          <div className="marquee-track motion-safe:animate-marquee flex w-max whitespace-nowrap font-mono font-bold text-muted uppercase tracking-[0.15em] text-[11px] sm:text-xs">
             <span>{MARQUEE_TEXT.repeat(6)}</span>
             <span aria-hidden="true">{MARQUEE_TEXT.repeat(6)}</span>
           </div>
-          <WalkingKodee />
         </div>
 
         <Events />
