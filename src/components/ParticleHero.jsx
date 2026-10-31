@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from "react"
+import { getSiteTheme, subscribeTheme } from "@/hooks/useTheme"
+import { loaderDone } from "@/lib/loaderSignal"
+import KodeeGif, { KODEE_GIFS, KODEE_FRAMES } from "@/components/KodeeGif"
 
 /* ═══════════════════════════════════════════════════════════════════════════
    PARTICLE HERO — constants
@@ -24,6 +27,21 @@ export const HERO_BG = "#050506"
 export const HERO_BG_RGB = [5, 5, 6]
 export const PAPER_BG = "#f5f5f5"
 export const PAPER_BG_RGB = [245, 245, 245]
+
+/* Hero instrument + canvas scene constants. These are the hero's OWN scene
+   values (the WebGL cloud and offline-instrument canvases need literal
+   colour strings); they mirror the theme tokens and stay identical across
+   colour modes — the only theme coupling is the ON WHITE flip, below. */
+export const HERO_INK_LIGHT = "#101012" // instrument fg in ON WHITE (mirrors --color-ink)
+export const HERO_INK_DARK = "#ffffff"  // instrument fg in Carbon (mirrors --color-text-primary)
+export const HERO_INK_MUTED_LIGHT = "rgba(16,16,18,0.72)"
+export const HERO_INK_MUTED_DARK = "#8a8a8a"
+export const HERO_INK_FAINT_LIGHT = "rgba(16,16,18,0.62)"
+export const HERO_INK_FAINT_DARK = "#7D7D7D"
+export const CANVAS_INK_SOFT = "#d4d4d4" // offline wordmark body (mirrors --color-text-body)
+export const CANVAS_INK_FAINT = "#8a8a8a" // offline wordmark detail (mirrors --color-text-muted)
+export const CANVAS_LINK_INK_LIGHT = "rgba(16,16,18,0.16)" // ON WHITE link ink
+export const CANVAS_LINK_INK_DARK = "rgba(255,255,255,0.11)" // Carbon link ink
 
 export const DENSITY_PRESETS = {
   SPARSE: {
@@ -66,8 +84,46 @@ export const LINKS_LIMIT = 4000
 export const MOTION_MODES = ["DRIFT", "SPLASH", "GATHER", "SWARM", "MELT"]
 export const COLOR_MODES = ["TRUE", "LIGHT", "NEGATIVE", "ON WHITE"]
 
+/* Touch devices get a lower DPR ceiling (battery + fill rate) and never
+   enable the LINKS layer. */
+export const DPR_CAP_TOUCH = 1.5
+
+const isTouchDevice = () =>
+  typeof window !== "undefined" &&
+  (window.matchMedia("(pointer: coarse)").matches ||
+    (navigator.maxTouchPoints && navigator.maxTouchPoints > 0))
+
+/* Touch devices start on the lighter presets; the mobile particle targets
+   make the hero affordable on phones = SPARSE, tablets = MEDIUM. */
+const initialDensity = () => {
+  if (typeof window === "undefined" || !isTouchDevice()) return "DENSE"
+  return window.innerWidth < 768 ? "SPARSE" : "MEDIUM"
+}
+
+/* Hero follows the site theme by default: Paper → ON WHITE, Carbon → TRUE.
+   The user can still override it with the Colour control. */
+const initialColorMode = () => (getSiteTheme() === "light" ? "ON WHITE" : "TRUE")
+
 const TAU = Math.PI * 2
 const PALETTE_RGB = PALETTE.map((item) => hexToRgb(item.hex))
+
+/* Fast sine/cosine for the hot particle loop.
+   The idle/orbit motion is strictly periodic, so a 1024-step fundamental
+   wave table replaces two Math trig calls per particle per frame. The
+   quantisation error is < 0.4% of the amplitude — sub-pixel at every radius
+   the simulation uses (2.4 px micro-drift up to 50 px stray orbits). */
+const WAVE_N = 1024
+const WAVE_MASK = WAVE_N - 1
+const WAVE_K = WAVE_N / TAU
+const SIN_WAVE = new Float32Array(WAVE_N)
+const COS_WAVE = new Float32Array(WAVE_N)
+for (let i = 0; i < WAVE_N; i += 1) {
+  SIN_WAVE[i] = Math.sin((i / WAVE_N) * TAU)
+  COS_WAVE[i] = Math.cos((i / WAVE_N) * TAU)
+}
+/* Angle → table index; `& MASK` wraps negatives as well. */
+const fsin = (a) => SIN_WAVE[((a * WAVE_K) | 0) & WAVE_MASK]
+const fcos = (a) => COS_WAVE[((a * WAVE_K) | 0) & WAVE_MASK]
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Small math / colour helpers
@@ -400,10 +456,10 @@ function OptionButton({ active, disabled, onClick, children, className = "" }) {
 function ControlGroup({ label, children }) {
   return (
     <div className="space-y-2.5">
-      <div className="hero-muted text-[8px] font-medium uppercase tracking-[0.3em]">
+      <div className="hero-muted text-[11px] font-medium uppercase tracking-[0.3em]">
         {label}
       </div>
-      <div className="flex flex-wrap items-center gap-x-3.5 gap-y-2 text-[10px] font-medium uppercase tracking-[0.2em]">
+      <div className="flex flex-wrap items-center gap-x-3.5 gap-y-2 text-[11px] font-medium uppercase tracking-[0.2em]">
         {children}
       </div>
     </div>
@@ -425,9 +481,9 @@ export default function ParticleHero() {
   const [engine, setEngine] = useState("pending")
   const [particleCount, setParticleCount] = useState(0)
 
-  const [density, setDensity] = useState("DENSE")
+  const [density, setDensity] = useState(initialDensity)
   const [motion, setMotion] = useState("DRIFT")
-  const [colorMode, setColorMode] = useState("TRUE")
+  const [colorMode, setColorMode] = useState(initialColorMode)
   const [trails, setTrails] = useState(true)
   const [links, setLinks] = useState(false)
   const [panelOpen, setPanelOpen] = useState(() => {
@@ -435,16 +491,34 @@ export default function ParticleHero() {
     return window.innerWidth >= 1024
   })
 
-  // Mutable copy of settings read by the animation loop. React state changes
-  // do not restart the simulation.
+  /* Mutable copy of settings read by the animation loop. React state changes
+     do not restart the simulation. */
   const settingsRef = useRef({
-    density: "DENSE",
+    density: initialDensity(),
     motion: "DRIFT",
-    colorMode: "TRUE",
+    colorMode: initialColorMode(),
     trails: true,
     links: false,
     meltStart: 0,
   })
+
+  /* Touch-first devices: lower DPR ceiling + no LINKS layer. */
+  const touchDeviceRef = useRef(isTouchDevice())
+
+  /* Once the visitor picks a colour mode by hand, the hero stops following
+     the site theme (the control stays fully functional). */
+  const userColorLockRef = useRef(false)
+
+  /* Sync hero colour mode with the site theme until overridden. */
+  useEffect(() => {
+    const unsubscribe = subscribeTheme((nextTheme) => {
+      if (userColorLockRef.current) return
+      const next = nextTheme === "light" ? "ON WHITE" : "TRUE"
+      settingsRef.current.colorMode = next
+      setColorMode(next)
+    })
+    return unsubscribe
+  }, [])
 
   /* ── Reduced motion preference ─────────────────────────────────────────── */
   useEffect(() => {
@@ -481,6 +555,7 @@ export default function ParticleHero() {
   }
 
   const selectColorMode = (next) => {
+    userColorLockRef.current = true
     settingsRef.current.colorMode = next
     setColorMode(next)
   }
@@ -500,6 +575,7 @@ export default function ParticleHero() {
 
   const linksSupported =
     !reducedMotion &&
+    !touchDeviceRef.current && // LINKS stays off on touch devices
     engine === "2d" &&
     particleCount > 0 &&
     particleCount < LINKS_LIMIT
@@ -668,7 +744,11 @@ export default function ParticleHero() {
     const buildParticles = ({ animate }) => {
       const width = Math.max(1, container.clientWidth || window.innerWidth)
       const height = Math.max(1, container.clientHeight || window.innerHeight)
-      const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP)
+      // Touch devices run cheaper: 1.5 DPR ceiling instead of 2.
+      const dpr = Math.min(
+        window.devicePixelRatio || 1,
+        touchDeviceRef.current ? DPR_CAP_TOUCH : DPR_CAP
+      )
       const isMobile = width < 768
       const preset =
         DENSITY_PRESETS[settingsRef.current.density] || DENSITY_PRESETS.DENSE
@@ -773,11 +853,11 @@ export default function ParticleHero() {
         const lineTwoTop = lineOneTop + sizeOne * 1.12
 
         offCtx.font = `700 ${sizeOne}px ${displayFont}Manrope, sans-serif`
-        offCtx.fillStyle = "#d4d4d4"
+        offCtx.fillStyle = CANVAS_INK_SOFT
         offCtx.fillText(lineOne, compositionWidth / 2, lineOneTop)
 
         offCtx.font = `700 ${sizeTwo}px ${displayFont}Manrope, sans-serif`
-        offCtx.fillStyle = "#8a8a8a"
+        offCtx.fillStyle = CANVAS_INK_FAINT
         offCtx.fillText(lineTwo, compositionWidth / 2, lineTwoTop)
       }
 
@@ -1185,6 +1265,13 @@ export default function ParticleHero() {
       const count = sim.count
       const pos = sim.pos
 
+      /* Time steps are invariant across the particle loop — hoist them. */
+      const swarmSin = isSwarming ? now * 0.0004 : 0
+      const swarmCos = isSwarming ? now * 0.00033 : 0
+      const driftSin = isDrifting || assembling ? now * 0.00045 : 0
+      const driftCos = isDrifting || assembling ? now * 0.00038 : 0
+      const meltSin = isMelting ? now * 0.002 : 0
+
       for (let i = 0; i < count; i += 1) {
         const stray = sim.isStray[i] === 1
         const phase = sim.phase[i]
@@ -1193,22 +1280,20 @@ export default function ParticleHero() {
 
         // Idle motion ------------------------------------------------------
         if (isSwarming) {
-          targetX +=
-            Math.sin(now * 0.0004 + sim.homeY[i] * 0.012 + phase) * 24
+          targetX += fsin(swarmSin + sim.homeY[i] * 0.012 + phase) * 24
           targetY +=
-            Math.cos(now * 0.00033 + sim.homeX[i] * 0.012 + phase * 1.7) * 20
+            fcos(swarmCos + sim.homeX[i] * 0.012 + phase * 1.7) * 20
         } else if (isDrifting || assembling) {
           const amplitude = stray ? 16 : 2.4
-          targetX += Math.sin(now * 0.00045 + phase) * amplitude
-          targetY +=
-            Math.cos(now * 0.00038 + phase * 1.35) * amplitude * 0.72
+          targetX += fsin(driftSin + phase) * amplitude
+          targetY += fcos(driftCos + phase * 1.35) * amplitude * 0.72
         }
 
         // Stray dust keeps a wider, slower orbit than the logo cloud.
         if (stray && !isGathering && !isMelting) {
           const orbitAngle = now * sim.speed[i] + phase
-          targetX += Math.cos(orbitAngle) * sim.orbit[i]
-          targetY += Math.sin(orbitAngle * 0.86 + phase) * sim.orbit[i] * 0.7
+          targetX += fcos(orbitAngle) * sim.orbit[i]
+          targetY += fsin(orbitAngle * 0.86 + phase) * sim.orbit[i] * 0.7
         }
 
         // Load animation ---------------------------------------------------
@@ -1259,7 +1344,7 @@ export default function ParticleHero() {
         } else {
           // MELT: lose the spring, sag downward, then reform.
           sim.vy[i] += MELT_GRAVITY * dtScale
-          sim.vx[i] += Math.sin(now * 0.002 + phase) * 0.025 * dtScale
+          sim.vx[i] += fsin(meltSin + phase) * 0.025 * dtScale
         }
 
         sim.vx[i] *= friction
@@ -1429,7 +1514,12 @@ export default function ParticleHero() {
       }
 
       const maxDistanceSq = 34 * 34
-      ctx2d.strokeStyle = "rgba(255,255,255,0.11)"
+      /* Ink follows the colour mode: in ON WHITE the links must be dark on
+         paper — white links would be invisible on the light canvas. */
+      ctx2d.strokeStyle =
+        settingsNow.colorMode === "ON WHITE"
+          ? CANVAS_LINK_INK_LIGHT
+          : CANVAS_LINK_INK_DARK
       ctx2d.lineWidth = 0.5
       ctx2d.beginPath()
 
@@ -1516,6 +1606,12 @@ export default function ParticleHero() {
 
     /* ── RAF loop ───────────────────────────────────────────────────────── */
 
+    /* Mobile scaling: touch devices settle at ≤30 simulated FPS. The reduced
+       particle count and DPR already come from the preset; this thirds the
+       per-second physics cost on the same-heavy frames (every untouched
+       effect keeps running, it just steps at half the refresh rate). */
+    const SIM_FRAME_MS = touchDeviceRef.current ? 33 : 0
+
     const render = (now) => {
       if (!running) return
       if (!simRef.current) {
@@ -1524,6 +1620,12 @@ export default function ParticleHero() {
       }
 
       const delta = lastFrameTime ? Math.min(now - lastFrameTime, 40) : 16.667
+
+      if (now - lastSimTime < SIM_FRAME_MS) {
+        animationId = requestAnimationFrame(render)
+        return
+      }
+      lastSimTime = now
       lastFrameTime = now
 
       integrate(now, delta)
@@ -1543,6 +1645,8 @@ export default function ParticleHero() {
 
       animationId = requestAnimationFrame(render)
     }
+
+    let lastSimTime = performance.now()
 
     const start = () => {
       if (running) return
@@ -1627,6 +1731,16 @@ export default function ParticleHero() {
         }
       }
 
+      /* Defer the heavy first build (sampling + WebGL upload) until the
+         PageLoader has lifted, instead of competing with it for the main
+         thread in the FCP/LCP window. The assembly fly-in then also plays
+         in view. The fallback guarantees the hero never stalls if the
+         loader is gone. */
+      await Promise.race([
+        loaderDone(),
+        new Promise((resolve) => setTimeout(resolve, 4200)),
+      ])
+
       if (disposed) return
 
       logoImage = logo.complete && logo.naturalWidth > 0 ? logo : null
@@ -1689,17 +1803,18 @@ export default function ParticleHero() {
   const themeStyle = lightMode
     ? {
         "--hero-bg": PAPER_BG,
-        "--hero-fg": "#101012",
-        "--hero-muted": "rgba(16,16,18,0.66)",
-        "--hero-faint": "rgba(16,16,18,0.44)",
+        "--hero-fg": HERO_INK_LIGHT,
+        "--hero-muted": HERO_INK_MUTED_LIGHT,
+        "--hero-faint": HERO_INK_FAINT_LIGHT,
         "--hero-border": "rgba(16,16,18,0.16)",
         "--hero-shadow": "none",
       }
     : {
         "--hero-bg": HERO_BG,
-        "--hero-fg": "#ffffff",
-        "--hero-muted": "#8a8a8a",
-        "--hero-faint": "#666666",
+        "--hero-fg": HERO_INK_DARK,
+        "--hero-muted": HERO_INK_MUTED_DARK,
+        /* #666666 failed AA (~3.5:1); #7D7D7D clears 4.5:1 on #050506 */
+        "--hero-faint": HERO_INK_FAINT_DARK,
         "--hero-border": "rgba(255,255,255,0.08)",
         "--hero-shadow": "0 1px 8px rgba(0,0,0,0.55)",
       }
@@ -1714,12 +1829,9 @@ export default function ParticleHero() {
       id="hero"
       ref={containerRef}
       style={themeStyle}
-      className="hero-shell relative h-[100svh] min-h-[600px] w-full select-none overflow-hidden"
+      className="hero-shell relative w-full select-none overflow-hidden"
       aria-label="Kotlin User Group Coimbatore particle cloud"
     >
-      {/* The headline is present for search engines and screen readers. */}
-      <h1 className="sr-only">Kotlin User Group Coimbatore</h1>
-
       {/* WebGL points, or the 2D-canvas fallback. */}
       <canvas
         ref={canvasRef}
@@ -1741,59 +1853,101 @@ export default function ParticleHero() {
         </div>
       )}
 
-      {/* Top-left instrument label. */}
-      <div className="hero-ui-shadow pointer-events-none absolute left-4 top-20 z-20 sm:left-8 lg:left-12">
-        <p className="text-[10px] font-medium uppercase leading-none tracking-[0.24em] text-[color:var(--hero-muted)] sm:text-[11px]">
-          Kotlin User Group
-        </p>
-        <p className="mt-2 text-[9px] uppercase leading-none tracking-[0.3em] text-[color:var(--hero-faint)] sm:text-[10px]">
-          Coimbatore
-        </p>
+      {/* Top-left mark is now a NON-TEXT indicator. The brand name on this
+          screen lives exactly once (the H1 below); repeating it here was
+          duplication. Three Kotlin-brand dots keep the instrument corner
+          populated without any words. */}
+      {/* Top-left mark is now a NON-TEXT indicator (desktop instrument corner). */}
+      <div
+        className="hero-ui-shadow pointer-events-none absolute left-4 top-20 z-20 hidden items-center gap-1.5 sm:flex sm:left-8 lg:left-12"
+        aria-hidden="true"
+      >
+        {[
+          { name: "Kotlin purple", hex: "#7F52FF" },
+          { name: "Magenta", hex: "#C811E1" },
+          { name: "Orange", hex: "#F88A00" },
+        ].map((dot) => (
+          <span
+            key={dot.name}
+            className="block h-1.5 w-1.5 rounded-full"
+            style={{ backgroundColor: dot.hex }}
+          />
+        ))}
       </div>
 
       {/* Live count / FPS readout, intentionally hidden on mobile. */}
-      <div className="hero-ui-shadow pointer-events-none absolute right-8 top-20 z-20 hidden text-right font-mono text-[9px] uppercase leading-relaxed tracking-[0.24em] text-[color:var(--hero-faint)] md:block lg:right-12">
+      <div className="hero-ui-shadow pointer-events-none absolute right-8 top-20 z-20 hidden text-right font-mono text-[11px] uppercase leading-relaxed tracking-[0.24em] text-[color:var(--hero-faint)] md:block lg:right-12">
         <div>{countLabel}</div>
         <div>
           <span ref={fpsRef}>60</span> FPS
         </div>
       </div>
 
-      {/* Welcome copy and the settings rail share one quiet left column. */}
-      <div className="hero-left-rail pointer-events-none absolute bottom-14 left-4 top-[7.5rem] z-20 flex flex-col sm:bottom-20 sm:left-8 lg:left-12">
+      {/* Welcome copy and the settings rail share one quiet left column.
+          Exactly one H1 on the page, one welcome sentence, no duplicate
+          eyebrow. Mascot greetings chip introduces Kodee with high polish. */}
+      <div className="hero-left-rail pointer-events-none absolute left-4 right-4 sm:right-auto top-[4.75rem] sm:top-[7.5rem] sm:bottom-8 z-20 flex flex-col sm:left-8 lg:left-12">
         <div className="hero-welcome hero-ui-shadow pointer-events-none shrink-0">
-          <p className="text-[9px] font-medium uppercase leading-none tracking-[0.3em] text-[color:var(--hero-faint)] sm:text-[10px]">
-            Welcome
+          <div className="hero-eyebrow-chip pointer-events-auto inline-flex items-center gap-2 self-start rounded-full border border-border bg-surface-2/90 px-2.5 py-1 backdrop-blur-md mb-2 sm:mb-3">
+            <KodeeGif
+              gif={KODEE_GIFS.greetings}
+              frame={KODEE_FRAMES.welcoming}
+              alt=""
+              staticBelowNarrow
+              eager
+              className="h-4 w-4 shrink-0 object-contain"
+            />
+            <span className="font-mono text-[11px] font-semibold tracking-wider text-muted uppercase">
+              Coimbatore Chapter
+            </span>
+          </div>
+          <h1 className="hero-welcome__title font-display font-bold text-[color:var(--hero-fg)]">
+            Kotlin User Group Coimbatore
+          </h1>
+          <p className="hero-welcome__body mt-2.5 sm:mt-3 text-[color:var(--hero-muted)]">
+            A community of developers, learners, and builders who love Kotlin
+            in Coimbatore — from your first line of code to production apps.
           </p>
-          <h2 className="hero-welcome__title mt-3 font-display font-bold text-[color:var(--hero-fg)]">
-            Welcome to Kotlin User Group Coimbatore
-          </h2>
-          <p className="hero-welcome__body mt-4 text-[color:var(--hero-muted)]">
-            We are a community of developers, learners, and builders who love
-            Kotlin. Whether you are writing your first line of code or shipping
-            production apps, you are in the right place. Explore our events,
-            meet the community, and build something with us.
-          </p>
-          <a
-            href="#community"
-            className="hero-welcome__cta hero-focus pointer-events-auto"
-          >
-            Join Group
-          </a>
+          <div className="hero-welcome__actions">
+            <a
+              href="#community"
+              className="hero-welcome__cta hero-focus pointer-events-auto"
+            >
+              Join the group
+            </a>
+            <a
+              href="#events"
+              className="hero-welcome__cta hero-welcome__cta--ghost hero-focus pointer-events-auto"
+            >
+              Explore events
+            </a>
+          </div>
         </div>
 
-        {/* Collapsible settings. No panel fill, no blur. */}
-        <aside className="pointer-events-none mt-6 flex min-h-0 w-[214px] max-w-full flex-1 flex-col">
+        {/* One compact, labelled control toolbar. All four groups — Density,
+            Motion, Colour, Scene — live here; the former duplicate bottom
+            motion bar is gone, so each control appears exactly once. On
+            mobile it is collapsed by default and expands in the rail with
+            44px touch targets (scrollable if the panel is long). */}
+        <aside className="pointer-events-none mt-4 sm:mt-6 flex min-h-0 w-[240px] max-w-full flex-col">
           <button
             type="button"
             onClick={() => setPanelOpen((open) => !open)}
             aria-expanded={panelOpen}
             aria-controls="hero-settings"
-            className="hero-option hero-focus hero-ui-shadow pointer-events-auto flex items-center gap-2 text-[9px] font-medium uppercase tracking-[0.3em] text-[color:var(--hero-muted)]"
+            aria-label="Toggle hero controls"
+            className="hero-option hero-control-pill hero-focus hero-ui-shadow pointer-events-auto inline-flex items-center gap-2 self-start rounded-full border border-border bg-surface-2/90 px-3.5 py-1.5 text-[11px] font-mono uppercase tracking-[0.2em] text-[color:var(--hero-muted)] hover:border-border-strong hover:text-[color:var(--hero-fg)] transition-all active:scale-95"
           >
-            Settings
-            <span aria-hidden="true" className="text-[11px] leading-none">
-              {panelOpen ? "−" : "+"}
+            <span className="flex items-center gap-1.5 font-medium text-[color:var(--hero-fg)]">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+              Controls
+            </span>
+            <span className="h-3 w-px bg-border" />
+            <span className="text-[10px] tracking-[0.16em] text-[color:var(--hero-faint)]">
+              {motion}
+            </span>
+            <span aria-hidden="true" className="text-[10px] leading-none text-[color:var(--hero-faint)]">
+              {panelOpen ? "▲" : "▼"}
             </span>
           </button>
 
@@ -1866,7 +2020,7 @@ export default function ParticleHero() {
               </ControlGroup>
 
               {/* A tiny note explains why LINKS is usually unavailable. */}
-              <p className="text-[8px] uppercase leading-relaxed tracking-[0.22em] text-[color:var(--hero-faint)]">
+              <p className="text-[11px] uppercase leading-relaxed tracking-[0.22em] text-[color:var(--hero-faint)]">
                 Links draw below {LINKS_LIMIT.toLocaleString()} points
               </p>
             </div>
@@ -1874,26 +2028,9 @@ export default function ParticleHero() {
         </aside>
       </div>
 
-      {/* Bottom motion mode bar. Active state is a 1 px Kotlin-purple rule. */}
-      <nav
-        aria-label="Motion mode"
-        className="absolute bottom-4 left-1/2 z-20 flex w-full -translate-x-1/2 flex-wrap items-center justify-center gap-x-3.5 gap-y-2 px-4 sm:bottom-7 sm:gap-x-5"
-      >
-        {MOTION_MODES.map((mode) => (
-          <OptionButton
-            key={mode}
-            active={motion === mode}
-            disabled={motionDisabled}
-            onClick={() => selectMotion(mode)}
-            className="hero-ui-shadow text-[9px] tracking-[0.22em] sm:text-[10px] sm:tracking-[0.26em]"
-          >
-            {mode}
-          </OptionButton>
-        ))}
-      </nav>
-
-      {/* Quiet interaction hint, desktop only. */}
-      <p className="hero-ui-shadow pointer-events-none absolute bottom-7 left-8 z-20 hidden text-[8px] uppercase tracking-[0.28em] text-[color:var(--hero-faint)] sm:block lg:left-12">
+      {/* Quiet interaction hint, desktop only, anchored bottom-right with
+          enough clearance that the companion FAB never covers it. */}
+      <p className="hero-ui-shadow pointer-events-none absolute bottom-7 right-36 z-20 hidden text-[11px] uppercase tracking-[0.28em] text-[color:var(--hero-faint)] sm:block lg:right-44">
         Move to disturb <span aria-hidden="true">·</span> click to splash
       </p>
     </section>

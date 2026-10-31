@@ -1,0 +1,16 @@
+import puppeteer from "puppeteer-core"
+const browser = await puppeteer.launch({ executablePath: "/usr/bin/google-chrome", headless: true, args: ["--no-sandbox","--disable-gpu","--disable-dev-shm-usage","--hide-scrollbars"] })
+const page = await browser.newPage()
+await page.evaluateOnNewDocument(() => localStorage.setItem("kug-cbe-theme", "light"))
+await page.setViewport({ width: 1440, height: 1100, deviceScaleFactor: 1 })
+await page.goto("http://localhost:5173/", { waitUntil: "networkidle0" })
+await new Promise(r => setTimeout(r, 1200))
+await page.evaluate(() => {
+  const img = document.querySelector('.org-card img[src*="dhanuu"]')
+  if (img) img.src = "/assets/dhanuu-test-aligned.png"
+})
+await page.evaluate(() => document.getElementById("about")?.scrollIntoView({ behavior: "instant" }))
+await new Promise(r => setTimeout(r, 2000))
+const el = await page.$(".org-card-grid")
+await el.screenshot({ path: "/tmp/opencode/grid-aligned.png" })
+await browser.close()

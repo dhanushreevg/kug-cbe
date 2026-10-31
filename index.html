@@ -1,15 +1,59 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="/assets/kug-logo.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Kotlin User Group Coimbatore — a community of developers, learners, and builders passionate about Kotlin in Coimbatore, Tamil Nadu." />
-  <title>KUG Coimbatore | Kotlin User Group</title>
-  <!-- Google Fonts: Manrope (UI/body) + Space Grotesk (display) + JetBrains Mono (mono/stats) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="/assets/kug-logo-256.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Kotlin User Group Coimbatore</title>
+  <meta name="description" content="Learn Kotlin. Build Together. Grow Together." />
+  <meta name="keywords" content="Kotlin, KUG Coimbatore, Android, JetBrains, Kotlin User Group, Coimbatore, Tamil Nadu, Jetpack Compose, Kotlin Multiplatform, Developer Community" />
+  <meta name="author" content="KUG Coimbatore" />
+  <meta name="theme-color" content="#050506" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.kotlincoimbatore.live" />
+  <link rel="apple-touch-icon" href="/assets/kug-logo-256.png" />
+
+  <!-- Open Graph / Facebook / WhatsApp -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.kotlincoimbatore.live" />
+  <meta property="og:title" content="Kotlin User Group Coimbatore" />
+  <meta property="og:description" content="Learn Kotlin. Build Together. Grow Together." />
+  <meta property="og:image" content="https://www.kotlincoimbatore.live/assets/meta-tag.png" />
+  <meta property="og:image:secure_url" content="https://www.kotlincoimbatore.live/assets/meta-tag.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Kotlin User Group Coimbatore — Learn Kotlin. Build Together. Grow Together." />
+  <meta property="og:site_name" content="Kotlin User Group Coimbatore" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://www.kotlincoimbatore.live" />
+  <meta name="twitter:title" content="Kotlin User Group Coimbatore" />
+  <meta name="twitter:description" content="Learn Kotlin. Build Together. Grow Together." />
+  <meta name="twitter:image" content="https://www.kotlincoimbatore.live/assets/meta-tag.png" />
+  <meta name="twitter:image:alt" content="Kotlin User Group Coimbatore — Learn Kotlin. Build Together. Grow Together." />
+  <!-- Prevent a flash of the wrong theme: set data-theme before first paint.
+       First visit follows prefers-color-scheme; saved choices win forever. -->
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem("kug-cbe-theme")
+        var theme = stored === "light" || stored === "dark"
+          ? stored
+          : window.matchMedia("(prefers-color-scheme: light)").matches
+            ? "light"
+            : "dark"
+        document.documentElement.setAttribute("data-theme", theme)
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark")
+      }
+    })()
+  </script>
+  <!-- Fonts are self-hosted latin subsets (variable woff2, font-display:swap)
+       imported from src/assets/fonts/fonts.css — no render-blocking third-party
+       stylesheet, no FOIT. -->
 </head>
 <body>
   <div id="root"></div>

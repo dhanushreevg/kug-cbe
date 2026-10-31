@@ -7,6 +7,7 @@ import { useGsapReveal } from "@/hooks/useGsapReveal"
 
 import Navbar from "@/components/Navbar"
 import ParticleHero from "@/components/ParticleHero"
+import KodeeStage from "@/components/KodeeStage"
 import Events from "@/components/Events"
 import KodeeShowcase from "@/components/KodeeShowcase"
 import KodeeArcade from "@/components/KodeeArcade"
@@ -21,6 +22,10 @@ import PageLoader from "@/components/PageLoader"
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
 const MARQUEE_TEXT = "KOTLIN · COIMBATORE · LEARN · BUILD · SHARE · CONNECT · "
+
+/* The walking Kodee now lives in <KodeeStage /> — its own clipped-proof lane
+   between the hero and this marquee band — so the band's overflow-hidden
+   (required for the seamless looping track) can never clip the mascot. */
 
 export default function App() {
   useLenis()
@@ -63,30 +68,13 @@ export default function App() {
     }
   }, [])
 
-  // Marquee animation
-  useEffect(() => {
-    const reduceMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    if (reduceMotion) return
-
-    const track = document.querySelector(".marquee-track")
-    if (!track) return
-
-    const anim = gsap.to(track, {
-      xPercent: -50,
-      duration: 25,
-      ease: "none",
-      repeat: -1,
-    })
-
-    return () => {
-      anim.kill()
-    }
-  }, [])
+  // Marquee: the track loops with the compositor-run `animate-marquee`
+  // keyframe (translateX 0 → -50%, identical seam math to the former GSAP
+  // tween) instead of a 25 s main-thread style write every frame. Reduced
+  // motion leaves it static via motion-safe.
 
   return (
-    <div className="relative min-h-screen bg-[#050506] text-[#d4d4d4] selection:bg-white/20 selection:text-white">
+    <div className="relative min-h-screen bg-void text-body">
       <PageLoader onFinish={() => ScrollTrigger.refresh()} />
       <Navbar />
 
@@ -94,31 +82,34 @@ export default function App() {
         {/* Interactive Particle Dissolve Hero */}
         <ParticleHero />
 
-        {/* Minimal Solid Marquee Divider */}
-        <div className="overflow-hidden py-3 bg-[#111111] select-none border-y border-white/[0.08]">
-          <div className="marquee-track flex w-max whitespace-nowrap text-xs font-mono font-bold text-[#8a8a8a] uppercase tracking-[0.15em]">
+        {/* The mascot's own lane — walker is never clipped here. */}
+        <KodeeStage />
+
+        {/* Minimal Solid Marquee Divider (track only; the walker runs above). */}
+        <div className="relative overflow-hidden py-3 bg-surface select-none border-y border-border marquee-band">
+          <div className="marquee-track motion-safe:animate-marquee flex w-max whitespace-nowrap font-mono font-bold text-muted uppercase tracking-[0.15em] text-[11px] sm:text-xs">
             <span>{MARQUEE_TEXT.repeat(6)}</span>
             <span aria-hidden="true">{MARQUEE_TEXT.repeat(6)}</span>
           </div>
         </div>
 
         <Events />
-        <div className="border-t border-white/[0.08]" />
+        <div className="border-t border-border" />
 
         <KodeeShowcase />
-        <div className="border-t border-white/[0.08]" />
+        <div className="border-t border-border" />
 
         <KodeeArcade />
-        <div className="border-t border-white/[0.08]" />
+        <div className="border-t border-border" />
 
         <About />
-        <div className="border-t border-white/[0.08]" />
+        <div className="border-t border-border" />
 
         <Community />
-        <div className="border-t border-white/[0.08]" />
+        <div className="border-t border-border" />
 
         <Resources />
-        <div className="border-t border-white/[0.08]" />
+        <div className="border-t border-border" />
 
         <Contact />
       </main>

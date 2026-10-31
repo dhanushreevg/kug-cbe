@@ -1,32 +1,50 @@
+import KugLogo from "@/components/KugLogo"
+
 export default function Footer() {
   return (
-    <footer className="bg-[#050506] border-t border-white/[0.08] py-14 px-6 sm:px-10 lg:px-16">
+    <footer id="footer" className="bg-void border-t border-border px-6 sm:px-10 lg:px-16 py-[clamp(4rem,8vw,8rem)]">
       <div className="max-w-7xl mx-auto flex flex-col gap-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
           {/* Left: Logo & description */}
-          <div className="flex flex-col gap-2 max-w-sm">
+          <div className="flex flex-col gap-2 max-w-sm min-w-0">
             <div className="flex items-center gap-2.5">
-              <img
-                src="/assets/kug-logo.png"
-                alt="KUG Coimbatore Logo"
-                className="w-6 h-6 object-contain shrink-0"
+              <KugLogo
+                alt=""
+                aria-hidden="true"
+                className="w-7 h-7 shrink-0"
               />
-              <span className="font-display font-bold text-lg text-white tracking-tight">
+              <span className="font-display font-bold text-lg text-fg tracking-tight">
                 KUG Coimbatore
               </span>
             </div>
-            <p className="font-body text-xs text-[#8a8a8a] leading-relaxed">
+            <p className="font-body text-xs text-muted leading-relaxed">
               Official JetBrains Kotlin User Group in Coimbatore, Tamil Nadu. Dedicated to modern, pragmatic software engineering.
             </p>
           </div>
 
-          {/* Right: Nav Links */}
-          <div className="flex flex-wrap gap-x-6 gap-y-3 sm:gap-8 text-sm font-body text-[#8a8a8a]">
+          {/* Right: Nav Links — wrap cleanly into rows at tablet width */}
+          <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm font-body text-muted">
+            <a
+              href="https://www.linkedin.com/groups/42835384/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-fg active:text-fg transition-colors duration-150 inline-flex items-center py-1.5"
+            >
+              LinkedIn Group
+            </a>
+            <a
+              href="https://luma.com/user/usr-DwA5zofXDKPJNPX"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-fg active:text-fg transition-colors duration-150 inline-flex items-center py-1.5"
+            >
+              Luma Events
+            </a>
             <a
               href="https://kotlinlang.org"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-white transition-colors duration-150"
+              className="hover:text-fg active:text-fg transition-colors duration-150 inline-flex items-center py-1.5"
             >
               kotlinlang.org
             </a>
@@ -34,7 +52,7 @@ export default function Footer() {
               href="https://www.jetbrains.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-white transition-colors duration-150"
+              className="hover:text-fg active:text-fg transition-colors duration-150 inline-flex items-center py-1.5"
             >
               JetBrains
             </a>
@@ -42,7 +60,7 @@ export default function Footer() {
               href="https://kotlinlang.org/docs/kug-guidelines.html"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-white transition-colors duration-150"
+              className="hover:text-fg active:text-fg transition-colors duration-150 inline-flex items-center py-1.5"
             >
               KUG Guidelines
             </a>
@@ -50,16 +68,16 @@ export default function Footer() {
               href="https://play.kotlinlang.org/"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-white transition-colors duration-150"
+              className="hover:text-fg active:text-fg transition-colors duration-150 inline-flex items-center py-1.5"
             >
               Playground
             </a>
           </div>
         </div>
 
-        {/* Bottom row: © 2024 KUG Coimbatore */}
-        <div className="border-t border-white/[0.08] pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#666666]">
-          <span>&copy; 2024 KUG Coimbatore. All rights reserved.</span>
+        {/* Bottom row — copyright year is computed so it never goes stale. */}
+        <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-dim">
+          <span>&copy; {new Date().getFullYear()} KUG Coimbatore. All rights reserved.</span>
           <span>Solid Slate &amp; Dust Aesthetic</span>
         </div>
       </div>

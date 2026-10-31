@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react"
+import KodeeGif, { KODEE_GIFS, KODEE_FRAMES } from "@/components/KodeeGif"
+import SectionHeader from "@/components/SectionHeader"
 
 const MEMORY_MASCOTS = [
   { id: "electrified", name: "Electrified", src: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-electrified.png" },
@@ -48,6 +50,17 @@ const QUIZ_QUESTIONS = [
   },
 ]
 
+/* Kodee reactions + game feedback assets */
+const KODEE_QUIZ = {
+  pleased: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-pleased.png",
+  excited: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-excited.png",
+  electrified: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-electrified.png",
+  frightened: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-frightened.png",
+  brokenHearted: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-broken-hearted.png",
+  sad: "/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-sad.png",
+}
+const KODEE_JUMPING = "/assets/kotlin_mascot_2/Digital/PNG/Kodee-jumping-96.png"
+
 export default function KodeeArcade() {
   const [activeTab, setActiveTab] = useState("memory") // "memory" | "quiz"
 
@@ -59,6 +72,7 @@ export default function KodeeArcade() {
   const [timer, setTimer] = useState(0)
   const [gameStarted, setGameStarted] = useState(false)
   const [memoryWon, setMemoryWon] = useState(false)
+  const [justMatched, setJustMatched] = useState(null) // id → pop kodee-jumping
 
   const startMemoryGame = () => {
     const deck = [...MEMORY_MASCOTS, ...MEMORY_MASCOTS]
@@ -72,6 +86,7 @@ export default function KodeeArcade() {
     setTimer(0)
     setGameStarted(true)
     setMemoryWon(false)
+    setJustMatched(null)
   }
 
   useEffect(() => {
@@ -103,10 +118,12 @@ export default function KodeeArcade() {
       const second = cards[newFlipped[1]]
 
       if (first.id === second.id) {
-        // Matched
+        // Matched — jump feedback flashes on the pair once per match
         const newMatched = [...matched, first.id]
         setMatched(newMatched)
         setFlipped([])
+        setJustMatched(first.id)
+        window.setTimeout(() => setJustMatched((current) => (current === first.id ? null : current)), 1100)
         if (newMatched.length === MEMORY_MASCOTS.length) {
           setMemoryWon(true)
         }
@@ -123,10 +140,11 @@ export default function KodeeArcade() {
   const [currentQ, setCurrentQ] = useState(0)
   const [score, setScore] = useState(0)
   const [streak, setStreak] = useState(0)
+  const [correctCount, setCorrectCount] = useState(0)
   const [quizFinished, setQuizFinished] = useState(false)
   const [selectedOption, setSelectedOption] = useState(null)
   const [isAnswerChecked, setIsAnswerChecked] = useState(false)
-  const [quizMascot, setQuizMascot] = useState("/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-pleased.png")
+  const [quizMascot, setQuizMascot] = useState(KODEE_QUIZ.pleased)
 
   const handleAnswer = (optionIdx) => {
     if (isAnswerChecked) return
@@ -138,15 +156,18 @@ export default function KodeeArcade() {
       const nextStreak = streak + 1
       const points = 100 + nextStreak * 25
       setScore((s) => s + points)
+      setCorrectCount((c) => c + 1)
       setStreak(nextStreak)
       if (nextStreak >= 3) {
-        setQuizMascot("/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-electrified.png")
+        setQuizMascot(KODEE_QUIZ.electrified)
       } else {
-        setQuizMascot("/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-excited.png")
+        setQuizMascot(KODEE_QUIZ.excited)
       }
     } else {
+      // Wrong answer: a broken streak over 2 gives the heartbroken Kodee,
+      // otherwise the frightened one.
       setStreak(0)
-      setQuizMascot("/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-shocked.png")
+      setQuizMascot(streak >= 2 ? KODEE_QUIZ.brokenHearted : KODEE_QUIZ.frightened)
     }
   }
 
@@ -155,7 +176,7 @@ export default function KodeeArcade() {
       setCurrentQ((q) => q + 1)
       setSelectedOption(null)
       setIsAnswerChecked(false)
-      setQuizMascot("/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-pleased.png")
+      setQuizMascot(KODEE_QUIZ.pleased)
     } else {
       setQuizFinished(true)
     }
@@ -165,43 +186,59 @@ export default function KodeeArcade() {
     setCurrentQ(0)
     setScore(0)
     setStreak(0)
+    setCorrectCount(0)
     setQuizFinished(false)
     setSelectedOption(null)
     setIsAnswerChecked(false)
-    setQuizMascot("/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-pleased.png")
+    setQuizMascot(KODEE_QUIZ.pleased)
   }
 
+  /* Final-result mascot: 4–5 correct answers out of 6 earn kodee-happy.gif;
+     a perfect run keeps the electrified Kodee, ≤3 stays crestfallen. */
+  const finalQuizMascot =
+    correctCount >= QUIZ_QUESTIONS.length
+      ? KODEE_QUIZ.electrified
+      : correctCount >= 4
+      ? "HAPPY_GIF"
+      : KODEE_QUIZ.sad
+
   return (
-    <section id="arcade" className="py-24 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto bg-[#050506]">
+    <section
+      id="arcade"
+      className="max-w-7xl mx-auto bg-void px-5 sm:px-10 lg:px-16 py-[clamp(4rem,8vw,8rem)]"
+    >
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-        <div>
-          <div className="section-label">Developer Playground</div>
-          <h2 className="section-heading font-display font-bold text-white text-[clamp(1.8rem,4vw,3rem)] leading-none tracking-[-0.03em] mb-4">
-            Kodee Arcade &amp; Challenges
-          </h2>
-          <p className="font-body text-[#8a8a8a] text-base max-w-xl leading-relaxed">
+        <div className="min-w-0">
+          <SectionHeader
+            num="03"
+            label="Developer Playground"
+            title="Kodee Arcade & Challenges"
+          />
+          <p className="font-body text-muted text-base max-w-xl leading-relaxed mt-1">
             Test your memory and technical Kotlin reflexes. Powered by the official Kodee emoji expression library.
           </p>
         </div>
 
-        {/* Game Mode Switcher */}
-        <div className="flex w-full items-center gap-2 bg-[#141414] p-1.5 border border-white/[0.08] rounded-xl self-start sm:w-auto md:self-auto md:shrink-0">
+        {/* Game Mode Switcher — 44px on touch via .tap-44 */}
+        <div className="flex w-full items-center gap-2 bg-surface-2 p-1.5 border border-border rounded-xl self-start sm:w-auto md:self-auto md:shrink-0">
           <button
             onClick={() => setActiveTab("memory")}
-            className={`flex-1 justify-center whitespace-nowrap font-mono text-[10px] sm:text-xs uppercase px-2 sm:px-4 py-2 rounded-lg transition-all duration-150 select-none ${
+            aria-pressed={activeTab === "memory"}
+            className={`tap-44 flex-1 justify-center whitespace-nowrap font-mono text-[11px] sm:text-xs uppercase px-2 sm:px-4 py-2 rounded-lg transition-all duration-150 select-none ${
               activeTab === "memory"
-                ? "bg-[#222222] text-white font-semibold"
-                : "text-[#8a8a8a] hover:text-white"
+                ? "bg-surface-4 text-fg font-semibold"
+                : "text-muted hover:text-fg"
             }`}
           >
             [01] Memory Matrix
           </button>
           <button
             onClick={() => setActiveTab("quiz")}
-            className={`flex-1 justify-center whitespace-nowrap font-mono text-[10px] sm:text-xs uppercase px-2 sm:px-4 py-2 rounded-lg transition-all duration-150 select-none ${
+            aria-pressed={activeTab === "quiz"}
+            className={`tap-44 flex-1 justify-center whitespace-nowrap font-mono text-[11px] sm:text-xs uppercase px-2 sm:px-4 py-2 rounded-lg transition-all duration-150 select-none ${
               activeTab === "quiz"
-                ? "bg-[#222222] text-white font-semibold"
-                : "text-[#8a8a8a] hover:text-white"
+                ? "bg-surface-4 text-fg font-semibold"
+                : "text-muted hover:text-fg"
             }`}
           >
             [02] Syntax Sprint
@@ -211,23 +248,23 @@ export default function KodeeArcade() {
 
       {/* ── Mode 1: Memory Matrix ── */}
       {activeTab === "memory" && (
-        <div className="bg-[#111111] border border-white/[0.08] rounded-xl p-6 sm:p-10">
+        <div className="bg-surface border border-border rounded-xl p-6 sm:p-10">
           {/* Monospace HUD Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-6 mb-8">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-6 mb-8">
             <div className="flex flex-wrap items-center gap-4 sm:gap-6 font-mono text-sm">
               <div>
-                <span className="text-[#666666] uppercase text-xs block">Timer</span>
-                <span className="text-white font-bold tabular-nums">
+                <span className="text-dim uppercase text-xs block">Timer</span>
+                <span className="text-fg font-bold tabular-nums">
                   {String(Math.floor(timer / 60)).padStart(2, "0")}:{String(timer % 60).padStart(2, "0")}
                 </span>
               </div>
-              <div className="border-l border-white/[0.08] pl-4 sm:pl-6">
-                <span className="text-[#666666] uppercase text-xs block">Moves</span>
-                <span className="text-white font-bold tabular-nums">{moves}</span>
+              <div className="border-l border-border pl-4 sm:pl-6">
+                <span className="text-dim uppercase text-xs block">Moves</span>
+                <span className="text-fg font-bold tabular-nums">{moves}</span>
               </div>
-              <div className="border-l border-white/[0.08] pl-4 sm:pl-6">
-                <span className="text-[#666666] uppercase text-xs block">Matches</span>
-                <span className="text-white font-bold tabular-nums">
+              <div className="border-l border-border pl-4 sm:pl-6">
+                <span className="text-dim uppercase text-xs block">Matches</span>
+                <span className="text-fg font-bold tabular-nums">
                   {matched.length} / {MEMORY_MASCOTS.length}
                 </span>
               </div>
@@ -235,32 +272,36 @@ export default function KodeeArcade() {
 
             <button
               onClick={startMemoryGame}
-              className="px-5 py-2.5 rounded-xl font-mono text-xs uppercase text-[#d4d4d4] hover:text-white bg-[#141414] hover:bg-[#1a1a1a] border border-white/[0.08] active:scale-95 transition-all select-none"
+              className="tap-44 px-5 py-2.5 rounded-xl font-mono text-xs uppercase text-body hover:text-fg bg-surface-2 hover:bg-surface-3 border border-border active:scale-95 transition-all select-none"
             >
               Reset Matrix
             </button>
           </div>
 
-          {/* Victory Modal Overlay */}
+          {/* Victory Modal Overlay — kodee-happy.gif revealed once per win */}
           {memoryWon ? (
             <div className="py-12 flex flex-col items-center justify-center text-center">
-              <img
-                src="/assets/kotlin_mascot_2/Digital/Emoji/png/kodee-excited.png"
-                alt="Kodee Excited"
-                className="w-24 h-24 object-contain mb-4 select-none"
-              />
-              <span className="font-mono text-xs uppercase tracking-widest text-[#8a8a8a] mb-2">
+              <div className="win-reveal">
+                <KodeeGif
+                  gif={KODEE_GIFS.happy}
+                  frame={KODEE_FRAMES.excited}
+                  alt="Kodee happy about the completed memory matrix"
+                  eager
+                  className="w-24 h-24 object-contain mb-4"
+                />
+              </div>
+              <span className="font-mono text-xs uppercase tracking-widest text-muted mb-2">
                 Compilation Succeeded
               </span>
-              <h3 className="font-display text-3xl font-bold text-white mb-2">
+              <h3 className="font-display text-3xl font-bold text-fg mb-2">
                 All Memory Segments Paired!
               </h3>
-              <p className="font-body text-[#8a8a8a] text-sm max-w-md mb-6 leading-relaxed">
+              <p className="font-body text-muted text-sm max-w-md mb-6 leading-relaxed">
                 Completed in {timer} seconds with {moves} moves. Zero memory leaks detected!
               </p>
               <button
                 onClick={startMemoryGame}
-                className="px-7 py-3 rounded-xl font-body font-medium text-sm text-[#0a0a0a] bg-white hover:bg-[#e6e6e6] transition-all duration-150 active:scale-95 select-none"
+                className="tap-44 px-7 py-3 rounded-xl font-body font-medium text-sm text-ink bg-fg hover:bg-fg-hover transition-all duration-150 active:scale-95 select-none"
               >
                 Play Again
               </button>
@@ -276,31 +317,50 @@ export default function KodeeArcade() {
                   <div
                     key={card.instanceId}
                     onClick={() => handleCardClick(idx)}
-                    className={`h-32 sm:h-36 rounded-xl p-2 sm:p-3 flex flex-col items-center justify-center cursor-pointer transition-all duration-200 select-none ${
+                    className={`group h-32 sm:h-36 rounded-xl p-2 sm:p-3 flex flex-col items-center justify-center cursor-pointer transition-all duration-200 select-none ${
                       isMatched
-                        ? "bg-[#1a1a1a] border border-white"
+                        ? "bg-surface-3 border border-fg"
                         : isFlipped
-                        ? "bg-[#161616] border border-white/[0.2]"
-                        : "bg-[#141414] border border-white/[0.08] hover:border-white/[0.16] hover:bg-[#181818]"
+                        ? "bg-surface-2 border border-border-strong"
+                        : "bg-surface-2 border border-border hover:border-border-mid hover:bg-surface-3"
                     }`}
                   >
                     {isFlipped ? (
-                      <div className="flex flex-col items-center justify-center gap-2">
+                      <div className="relative flex flex-col items-center justify-center gap-2">
                         <img
                           src={card.src}
                           alt={card.name}
                           className="w-11 h-11 sm:w-14 sm:h-14 object-contain select-none"
                         />
-                        <span className="font-mono text-[10px] uppercase tracking-wider text-[#d4d4d4] font-semibold">
+                        {/* Match feedback: kodee-jumping pops once per match */}
+                        {isMatched && justMatched === card.id && (
+                          <img
+                            src={KODEE_JUMPING}
+                            alt=""
+                            aria-hidden="true"
+                            className="match-pop absolute -right-3 -top-3 h-8 w-8 object-contain z-10 select-none"
+                          />
+                        )}
+                        <span className="font-mono text-[11px] uppercase tracking-wider text-body font-semibold">
                           {card.name}
                         </span>
                       </div>
                     ) : (
-                      <div className="flex flex-col items-center justify-center gap-1.5 opacity-40 hover:opacity-80 transition-opacity">
-                        <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none">
-                          <path d="M24 24H0V0h24L12 12Z" fill="#888888" />
+                      /* Face-down cards: dimmed by ink colour, never by opacity
+                         (an opacity wrapper failed WCAG AA ≥4.5:1). Both the
+                         glyph and the number sit at text-dim, which clears 4.5:1
+                         on every themed surface. The hover hint is a scale on
+                         the glyph instead of a fade. */
+                      <div className="flex flex-col items-center justify-center gap-1.5 text-dim">
+                        <svg
+                          className="w-6 h-6 transition-transform duration-150 group-hover:scale-110"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          aria-hidden="true"
+                        >
+                          <path d="M24 24H0V0h24L12 12Z" fill="currentColor" />
                         </svg>
-                        <span className="font-mono text-[9px] uppercase tracking-widest text-[#666666]">
+                        <span className="font-mono text-[11px] uppercase tracking-widest text-dim">
                           #{String(idx + 1).padStart(2, "0")}
                         </span>
                       </div>
@@ -315,22 +375,35 @@ export default function KodeeArcade() {
 
       {/* ── Mode 2: Syntax Sprint Quiz ── */}
       {activeTab === "quiz" && (
-        <div className="bg-[#111111] border border-white/[0.08] rounded-xl p-6 sm:p-10">
+        <div className="bg-surface border border-border rounded-xl p-6 sm:p-10">
           {quizFinished ? (
             <div className="py-12 flex flex-col items-center justify-center text-center">
-              <img
-                src={quizMascot}
-                alt="Quiz Result"
-                className="w-28 h-28 object-contain mb-4 select-none"
-              />
-              <span className="font-mono text-xs uppercase tracking-widest text-[#8a8a8a] mb-1">
+              {finalQuizMascot === "HAPPY_GIF" ? (
+                <div className="win-reveal">
+                  <KodeeGif
+                    gif={KODEE_GIFS.happy}
+                    frame={KODEE_FRAMES.excited}
+                    alt="Kodee is happy with the quiz score"
+                    eager
+                    className="w-28 h-28 object-contain mb-4"
+                  />
+                </div>
+              ) : (
+                <img
+                  src={finalQuizMascot}
+                  alt={correctCount >= QUIZ_QUESTIONS.length ? "Kodee electrified — perfect score" : "Kodee crestfallen after the quiz"}
+                  className="w-28 h-28 object-contain mb-4 select-none"
+                />
+              )}
+              <span className="font-mono text-xs uppercase tracking-widest text-muted mb-1">
                 Challenge Complete
               </span>
-              <h3 className="font-display text-3xl font-bold text-white mb-2">
-                Final Score: <span className="text-white">{score} XP</span>
+              <h3 className="font-display text-3xl font-bold text-fg mb-2">
+                Final Score: <span className="text-fg">{score} XP</span>
               </h3>
-              <p className="font-body text-[#8a8a8a] text-sm max-w-md mb-8 leading-relaxed">
-                {score >= 600
+              <p className="font-body text-muted text-sm max-w-md mb-8 leading-relaxed">
+                {correctCount}/{QUIZ_QUESTIONS.length} correct.{" "}
+                {correctCount >= QUIZ_QUESTIONS.length
                   ? "Rank: Senior Kotlin Architect. Flawless syntax mastery!"
                   : score >= 400
                   ? "Rank: Certified Coroutines Specialist. Solid engineering base!"
@@ -338,7 +411,7 @@ export default function KodeeArcade() {
               </p>
               <button
                 onClick={restartQuiz}
-                className="px-7 py-3 rounded-xl font-body font-medium text-sm text-[#0a0a0a] bg-white hover:bg-[#e6e6e6] transition-all duration-150 active:scale-95 select-none"
+                className="tap-44 px-7 py-3 rounded-xl font-body font-medium text-sm text-ink bg-fg hover:bg-fg-hover transition-all duration-150 active:scale-95 select-none"
               >
                 Restart Sprint
               </button>
@@ -346,55 +419,60 @@ export default function KodeeArcade() {
           ) : (
             <div>
               {/* Header HUD */}
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.08] pb-5 mb-8">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-5 mb-8">
                 <div className="flex flex-wrap items-center gap-4 sm:gap-6 font-mono text-xs">
                   <div>
-                    <span className="text-[#666666] uppercase block">Question</span>
-                    <span className="text-white font-bold">
+                    <span className="text-dim uppercase block">Question</span>
+                    <span className="text-fg font-bold">
                       {String(currentQ + 1).padStart(2, "0")} / {String(QUIZ_QUESTIONS.length).padStart(2, "0")}
                     </span>
                   </div>
-                  <div className="border-l border-white/[0.08] pl-4 sm:pl-6">
-                    <span className="text-[#666666] uppercase block">Score</span>
-                    <span className="text-white font-bold tabular-nums">{score} XP</span>
+                  <div className="border-l border-border pl-4 sm:pl-6">
+                    <span className="text-dim uppercase block">Score</span>
+                    <span className="text-fg font-bold tabular-nums">{score} XP</span>
                   </div>
-                  <div className="border-l border-white/[0.08] pl-4 sm:pl-6">
-                    <span className="text-[#666666] uppercase block">Streak</span>
-                    <span className="text-white font-bold tabular-nums">x{streak}</span>
+                  <div className="border-l border-border pl-4 sm:pl-6">
+                    <span className="text-dim uppercase block">Streak</span>
+                    <span className="text-fg font-bold tabular-nums">x{streak}</span>
                   </div>
                 </div>
 
                 {/* Live Kodee Reaction Badge */}
-                <div className="flex shrink-0 items-center gap-2.5 bg-[#141414] px-3 py-1.5 border border-white/[0.08] rounded-xl">
+                <div className="flex shrink-0 items-center gap-2.5 bg-surface-2 px-3 py-1.5 border border-border rounded-xl">
                   <img
                     src={quizMascot}
                     alt="Kodee Mood"
                     className="w-7 h-7 object-contain select-none"
                   />
-                  <span className="font-mono text-[10px] uppercase text-[#8a8a8a]">
-                    {streak >= 3 ? "⚡ Overclocked" : "Kodee Live"}
+                  <span className="font-mono text-[11px] uppercase text-muted">
+                    {streak >= 3 ? ">> Overclocked" : "Kodee Live"}
                   </span>
                 </div>
               </div>
 
               {/* Question Text */}
               <div className="mb-8">
-                <h3 className="font-display text-xl sm:text-2xl font-bold text-white leading-snug">
+                <h3 className="font-display text-xl sm:text-2xl font-bold text-fg leading-snug">
                   {QUIZ_QUESTIONS[currentQ].q}
                 </h3>
               </div>
 
-              {/* Options Grid */}
+              {/* Options Grid — answer feedback is colour PLUS glyph PLUS
+                  text, never colour alone (✓ on the correct option, ✕ on the
+                  picked wrong one). */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
                 {QUIZ_QUESTIONS[currentQ].options.map((opt, i) => {
-                  let optStyle = "bg-[#141414] border-white/[0.08] hover:border-white/[0.18] hover:bg-[#181818] text-[#d4d4d4]"
+                  let optStyle = "bg-surface-2 border-border hover:border-border-strong hover:bg-surface-3 text-body"
+                  let feedbackGlyph = null
                   if (isAnswerChecked) {
                     if (i === QUIZ_QUESTIONS[currentQ].answer) {
-                      optStyle = "bg-emerald-950/40 border-emerald-500 text-emerald-300 font-semibold"
+                      optStyle = "bg-correct-bg border-correct-line text-correct-text font-semibold"
+                      feedbackGlyph = "✓"
                     } else if (i === selectedOption) {
-                      optStyle = "bg-rose-950/40 border-rose-500 text-rose-300"
+                      optStyle = "bg-wrong-bg border-wrong-line text-wrong-text"
+                      feedbackGlyph = "✕"
                     } else {
-                      optStyle = "bg-[#141414] border-white/[0.08] text-[#666666] opacity-50"
+                      optStyle = "bg-surface-2 border-border text-dim opacity-60"
                     }
                   }
 
@@ -403,24 +481,62 @@ export default function KodeeArcade() {
                       key={i}
                       disabled={isAnswerChecked}
                       onClick={() => handleAnswer(i)}
-                      className={`p-4 border rounded-xl font-mono text-sm text-left transition-all duration-150 flex items-center justify-between select-none ${optStyle}`}
+                      aria-label={
+                        isAnswerChecked && feedbackGlyph
+                          ? `${feedbackGlyph === "✓" ? "Correct answer" : "Wrong answer"}: ${opt}`
+                          : undefined
+                      }
+                      className={`min-h-[44px] p-4 border rounded-xl font-mono text-sm text-left transition-all duration-150 flex items-center justify-between select-none ${optStyle}`}
                     >
-                      <span>{opt}</span>
-                      <span className="font-mono text-xs text-[#666666]">[{String.fromCharCode(65 + i)}]</span>
+                      <span>
+                        {feedbackGlyph && (
+                          <span
+                            aria-hidden="true"
+                            className="font-bold mr-2"
+                          >
+                            {feedbackGlyph}
+                          </span>
+                        )}
+                        {opt}
+                      </span>
+                      {feedbackGlyph ? (
+                        <span className="font-mono text-xs font-bold">
+                          {feedbackGlyph}
+                        </span>
+                      ) : (
+                        <span className="font-mono text-xs text-dim">[{String.fromCharCode(65 + i)}]</span>
+                      )}
                     </button>
                   )
                 })}
               </div>
 
+              {/* Answer status: icon + words, not just a colour change. Also
+                  an aria-live region so the outcome is announced. */}
+              {isAnswerChecked && (
+                <p
+                  role="status"
+                  className={`mb-6 font-mono text-xs uppercase tracking-[0.14em] ${
+                    selectedOption === QUIZ_QUESTIONS[currentQ].answer
+                      ? "text-correct-text"
+                      : "text-wrong-text"
+                  }`}
+                >
+                  {selectedOption === QUIZ_QUESTIONS[currentQ].answer
+                    ? "✓ Correct — one for the streak."
+                    : "✕ Not quite — read the insight below."}
+                </p>
+              )}
+
               {/* Tip & Next button */}
               {isAnswerChecked && (
-                <div className="border-t border-white/[0.08] pt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <p className="font-body text-xs text-[#8a8a8a] leading-relaxed max-w-lg">
-                    💡 <span className="text-white font-medium">Insight:</span> {QUIZ_QUESTIONS[currentQ].tip}
+                <div className="border-t border-border pt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <p className="font-body text-xs text-muted leading-relaxed max-w-lg">
+                    <span className="text-fg font-medium">Insight:</span> {QUIZ_QUESTIONS[currentQ].tip}
                   </p>
                   <button
                     onClick={handleNextQuestion}
-                    className="px-6 py-2.5 rounded-xl font-body font-medium text-xs uppercase tracking-wider text-[#0a0a0a] bg-white hover:bg-[#e6e6e6] transition-all duration-150 active:scale-95 select-none shrink-0"
+                    className="tap-44 px-6 py-2.5 rounded-xl font-body font-medium text-xs uppercase tracking-wider text-ink bg-fg hover:bg-fg-hover transition-all duration-150 active:scale-95 select-none shrink-0"
                   >
                     Next Question &rarr;
                   </button>
