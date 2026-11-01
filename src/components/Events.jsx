@@ -27,6 +27,7 @@ const EVENTS = [
     description: "The in-person gathering for Kotlin engineers in Coimbatore. Deep dive into K2 compiler performance, coroutines, and community roadmap.",
     date: "November 2026 · CBE",
     featured: true,
+    rsvpStatus: "coming_soon",
   },
   {
     category: "Hands-on Workshop",
@@ -34,6 +35,7 @@ const EVENTS = [
     description: "Build a single codebase that runs seamlessly across Android, iOS, and Desktop with shared Kotlin logic and declarative Compose UI.",
     date: "December 2026 · Hands-on",
     featured: false,
+    rsvpStatus: "coming_soon",
   },
   {
     category: "Deep Dive Talk",
@@ -41,6 +43,7 @@ const EVENTS = [
     description: "Master non-blocking asynchronous servers, structured concurrency, and resilience patterns using Ktor and Kotlin Flow in production.",
     date: "January 2027 · Online",
     featured: false,
+    rsvpStatus: "coming_soon",
   },
 ]
 
@@ -75,8 +78,9 @@ export default function Events() {
       </div>
 
       {/* Grid: 1 col mobile → 2 tablet → 3 lg, solid surfaces, 12px radius.
-          Cards are editorial: numbered index, and a always-visible RSVP
-          anchor for touch (never a hover-only affordance). */}
+          Cards are editorial: numbered index, and an always-visible RSVP
+          affordance for touch. rsvpStatus drives whether that affordance is
+          the live Luma link or an inactive "Coming Soon" label. */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {EVENTS.map((event, idx) => (
           <div
@@ -106,15 +110,21 @@ export default function Events() {
 
             <div className="flex items-center justify-between gap-3 border-t border-border pt-4 mt-auto">
               <span className="font-mono text-xs text-dim">{event.date}</span>
-              <a
-                href="https://luma.com/user/usr-DwA5zofXDKPJNPX"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="tap-44 inline-flex items-center gap-1.5 whitespace-nowrap rounded-md font-mono text-xs uppercase tracking-[0.14em] text-body transition-colors duration-150 hover:text-fg focus-visible:text-fg active:text-fg"
-              >
-                RSVP on Luma
-                <ArrowRight className="w-3.5 h-3.5" />
-              </a>
+              {event.rsvpStatus === "coming_soon" ? (
+                <span className="inline-flex items-center whitespace-nowrap rounded-md font-mono text-xs uppercase tracking-[0.14em] text-muted select-none">
+                  Coming Soon
+                </span>
+              ) : (
+                <a
+                  href="https://luma.com/user/usr-DwA5zofXDKPJNPX"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="tap-44 inline-flex items-center gap-1.5 whitespace-nowrap rounded-md font-mono text-xs uppercase tracking-[0.14em] text-body transition-colors duration-150 hover:text-fg focus-visible:text-fg active:text-fg"
+                >
+                  RSVP on Luma
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </a>
+              )}
             </div>
           </div>
         ))}
