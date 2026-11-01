@@ -471,7 +471,7 @@ function ControlGroup({ label, children }) {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 export default function ParticleHero() {
-  const containerRef = useRef(null)
+  const stageRef = useRef(null)
   const canvasRef = useRef(null)
   const fpsRef = useRef(null)
   const rebuildRef = useRef(null)
@@ -480,6 +480,9 @@ export default function ParticleHero() {
   const [reducedMotion, setReducedMotion] = useState(false)
   const [engine, setEngine] = useState("pending")
   const [particleCount, setParticleCount] = useState(0)
+  // Stays false until the first simulation frame has actually painted, so the
+  // canvas never flashes blank or half-sampled while the logo is decoded.
+  const [canvasReady, setCanvasReady] = useState(false)
 
   const [density, setDensity] = useState(initialDensity)
   const [motion, setMotion] = useState("DRIFT")
@@ -589,12 +592,14 @@ export default function ParticleHero() {
      Main lifecycle — runs once per reduced-motion state.
      ═════════════════════════════════════════════════════════════════════════ */
   useEffect(() => {
+    setCanvasReady(false)
+
     if (reducedMotion) {
       setEngine("static")
       return undefined
     }
 
-    const container = containerRef.current
+    const container = stageRef.current
     const canvas = canvasRef.current
     if (!container || !canvas) return undefined
 
@@ -607,6 +612,7 @@ export default function ParticleHero() {
     let fpsLast = performance.now()
     let fpsFrames = 0
     let ready = false
+    let revealed = false
     let logoImage = null
 
     const settings = settingsRef.current
@@ -744,12 +750,13 @@ export default function ParticleHero() {
     const buildParticles = ({ animate }) => {
       const width = Math.max(1, container.clientWidth || window.innerWidth)
       const height = Math.max(1, container.clientHeight || window.innerHeight)
-      // Touch devices run cheaper: 1.5 DPR ceiling instead of 2.
-      const dpr = Math.min(
-        window.devicePixelRatio || 1,
-        touchDeviceRef.current ? DPR_CAP_TOUCH : DPR_CAP
-      )
-      const isMobile = width < 768
+      // Cap at 2× DPR for both touch and pointer devices; the bitmap is sized
+      // from the container, never from a hardcoded desktop value.
+      const dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP)
+      // Below the lg breakpoint the canvas lives in its own compact stage and
+      // the logo is fitted to that box. At 1024px and up the original desktop
+      // composition below is untouched.
+      const isStacked = width < 1024
       const preset =
         DENSITY_PRESETS[settingsRef.current.density] || DENSITY_PRESETS.DENSE
 
@@ -765,12 +772,12 @@ export default function ParticleHero() {
         }
       }
 
+      // Keep the CSS box in sync with the backing bitmap on every rebuild.
+      canvas.style.width = `${width}px`
+      canvas.style.height = `${height}px`
+
       if (ctx2d) ctx2d.setTransform(dpr, 0, 0, dpr, 0, 0)
 
-      // The mark is composed at ~50% of the viewport width on desktop and
-      // ~80% on mobile. A smaller composition is not sampled densely enough
-      // to reach the mobile target at the requested grid, so the sampler
-      // solves the effective step (see solveSampleStep).
       const aspect =
         logoImage && logoImage.naturalWidth
           ? logoImage.naturalHeight / logoImage.naturalWidth
@@ -779,28 +786,51 @@ export default function ParticleHero() {
       const hasWords = hasImage ? imageHasWordmark(logoImage) : false
       const needsText = !hasImage || !hasWords
 
-      const maxCompositionWidth = width * (isMobile ? 0.8 : 0.5)
-      const maxCompositionHeight = Math.max(
-        120,
-        Math.min(
-          height * (isMobile ? 0.56 : 0.64),
-          height - (isMobile ? 170 : 190)
+      let drawWidth
+      let imageHeight
+      let textHeight
+      let totalHeight
+
+      if (isStacked) {
+        // Fit the mark inside the dedicated mobile/tablet stage: target width
+        // is the smaller of 80% of the width and 90% of the height, with the
+        // image's aspect ratio preserved.
+        const maxCompositionHeight = height * 0.9
+        drawWidth = Math.min(width * 0.8, height * 0.9)
+        imageHeight = drawWidth * aspect
+        textHeight = needsText ? drawWidth * 0.34 : 0
+        totalHeight = imageHeight + textHeight
+
+        if (totalHeight > maxCompositionHeight) {
+          const scale = maxCompositionHeight / totalHeight
+          drawWidth *= scale
+          imageHeight *= scale
+          textHeight *= scale
+          totalHeight = maxCompositionHeight
+        }
+      } else {
+        // The mark is composed at ~50% of the viewport width on desktop and
+        // ~64% of the height. A smaller composition is not sampled densely
+        // enough to reach the target at the requested grid, so the sampler
+        // solves the effective step (see solveSampleStep).
+        const maxCompositionWidth = width * 0.5
+        const maxCompositionHeight = Math.max(
+          120,
+          Math.min(height * 0.64, height - 190)
         )
-      )
 
-      let drawWidth = maxCompositionWidth
-      let imageHeight = drawWidth * aspect
-      let textHeight = needsText
-        ? drawWidth * (isMobile ? 0.34 : 0.28)
-        : 0
-      let totalHeight = imageHeight + textHeight
+        drawWidth = maxCompositionWidth
+        imageHeight = drawWidth * aspect
+        textHeight = needsText ? drawWidth * 0.28 : 0
+        totalHeight = imageHeight + textHeight
 
-      if (totalHeight > maxCompositionHeight) {
-        const scale = maxCompositionHeight / totalHeight
-        drawWidth *= scale
-        imageHeight *= scale
-        textHeight *= scale
-        totalHeight = maxCompositionHeight
+        if (totalHeight > maxCompositionHeight) {
+          const scale = maxCompositionHeight / totalHeight
+          drawWidth *= scale
+          imageHeight *= scale
+          textHeight *= scale
+          totalHeight = maxCompositionHeight
+        }
       }
 
       const compositionWidth = Math.max(1, Math.round(drawWidth))
@@ -873,10 +903,10 @@ export default function ParticleHero() {
         return
       }
 
-      const baseStep = isMobile
+      const baseStep = isStacked
         ? preset.sampleStep.mobile
         : preset.sampleStep.desktop
-      const requestedTarget = isMobile
+      const requestedTarget = isStacked
         ? preset.logoTarget.mobile
         : preset.logoTarget.desktop
 
@@ -921,13 +951,15 @@ export default function ParticleHero() {
       const pos = new Float32Array(total * 2)
 
       const offsetX = (width - compositionWidth) / 2
-      const desiredOffsetY = (height - compositionHeight) / 2 - height * 0.015
-      const minOffsetY = isMobile ? 82 : 92
-      const maxOffsetY = Math.max(
-        minOffsetY,
-        height - compositionHeight - (isMobile ? 90 : 104)
-      )
-      const offsetY = clamp(desiredOffsetY, minOffsetY, maxOffsetY)
+      // The stacked stage centres the mark both ways. Desktop keeps its
+      // original optical offset and clamps exactly as before.
+      const offsetY = isStacked
+        ? (height - compositionHeight) / 2
+        : clamp(
+            (height - compositionHeight) / 2 - height * 0.015,
+            92,
+            Math.max(92, height - compositionHeight - 104)
+          )
 
       let index = 0
 
@@ -1633,6 +1665,13 @@ export default function ParticleHero() {
       if (gl) drawWebGL()
       else draw2D()
 
+      // Reveal only after a complete frame exists. This prevents the blank or
+      // half-sampled canvas flash while the logo pixels are being read.
+      if (!revealed) {
+        revealed = true
+        setCanvasReady(true)
+      }
+
       // FPS readout is written straight to the DOM so React does not re-render
       // twice a second just to update two characters.
       fpsFrames += 1
@@ -1697,6 +1736,7 @@ export default function ParticleHero() {
     const resizeObserver = new ResizeObserver(onResize)
     resizeObserver.observe(container)
     window.addEventListener("resize", onResize)
+    window.addEventListener("orientationchange", onResize)
 
     /* ── Logo load + first build ────────────────────────────────────────── */
 
@@ -1768,6 +1808,7 @@ export default function ParticleHero() {
       resizeObserver.disconnect()
       document.removeEventListener("visibilitychange", onVisibilityChange)
       window.removeEventListener("resize", onResize)
+      window.removeEventListener("orientationchange", onResize)
       if (resizeTimer) clearTimeout(resizeTimer)
 
       container.removeEventListener("pointermove", onPointerMove)
@@ -1827,31 +1868,42 @@ export default function ParticleHero() {
   return (
     <section
       id="hero"
-      ref={containerRef}
       style={themeStyle}
       className="hero-shell relative w-full select-none overflow-hidden"
       aria-label="Kotlin User Group Coimbatore particle cloud"
     >
-      {/* WebGL points, or the 2D-canvas fallback. */}
-      <canvas
-        ref={canvasRef}
-        role="img"
-        aria-label="The Kotlin User Group Coimbatore mark formed from tens of thousands of coloured dust particles. Move the pointer to disturb them; click to splash."
-        className={`absolute inset-0 block h-full w-full touch-pan-y ${
-          showStatic ? "invisible" : "visible"
-        }`}
-      />
+      {/* Dedicated particle stage. On mobile it is a normal-flow box directly
+          below the copy; at lg it becomes the original full-hero absolute
+          canvas again. */}
+      <div
+        ref={stageRef}
+        className="hero-stage relative z-0 order-2 overflow-hidden touch-pan-y lg:absolute lg:inset-0 lg:order-none lg:m-0 lg:h-full lg:w-full"
+      >
+        {/* WebGL points, or the 2D-canvas fallback. */}
+        <canvas
+          ref={canvasRef}
+          role="img"
+          aria-label="The Kotlin User Group Coimbatore mark formed from tens of thousands of coloured dust particles. Move the pointer to disturb them; click to splash."
+          className={`absolute inset-0 block h-full w-full touch-pan-y transition-opacity duration-700 ease-out ${
+            showStatic
+              ? "invisible"
+              : canvasReady
+                ? "opacity-100"
+                : "opacity-0"
+          }`}
+        />
 
-      {/* Reduced motion / no-canvas fallback: a crisp static mark. */}
-      {showStatic && (
-        <div className="absolute inset-0 flex items-center justify-center px-6">
-          <img
-            src="/assets/kug-logo.png"
-            alt="Kotlin User Group Coimbatore"
-            className="w-[min(78vw,520px)] max-h-[62svh] object-contain"
-          />
-        </div>
-      )}
+        {/* Reduced motion / no-canvas fallback: a crisp static mark. */}
+        {showStatic && (
+          <div className="absolute inset-0 flex items-center justify-center px-6">
+            <img
+              src="/assets/kug-logo.png"
+              alt="Kotlin User Group Coimbatore"
+              className="w-[min(78vw,520px)] max-h-[62svh] object-contain"
+            />
+          </div>
+        )}
+      </div>
 
       {/* Top-left mark is now a NON-TEXT indicator. The brand name on this
           screen lives exactly once (the H1 below); repeating it here was
@@ -1859,7 +1911,7 @@ export default function ParticleHero() {
           populated without any words. */}
       {/* Top-left mark is now a NON-TEXT indicator (desktop instrument corner). */}
       <div
-        className="hero-ui-shadow pointer-events-none absolute left-4 top-20 z-20 hidden items-center gap-1.5 sm:flex sm:left-8 lg:left-12"
+        className="hero-ui-shadow pointer-events-none absolute left-4 top-20 z-20 hidden items-center gap-1.5 lg:flex lg:left-12"
         aria-hidden="true"
       >
         {[
@@ -1876,7 +1928,7 @@ export default function ParticleHero() {
       </div>
 
       {/* Live count / FPS readout, intentionally hidden on mobile. */}
-      <div className="hero-ui-shadow pointer-events-none absolute right-8 top-20 z-20 hidden text-right font-mono text-[11px] uppercase leading-relaxed tracking-[0.24em] text-[color:var(--hero-faint)] md:block lg:right-12">
+      <div className="hero-ui-shadow pointer-events-none absolute right-8 top-20 z-20 hidden text-right font-mono text-[11px] uppercase leading-relaxed tracking-[0.24em] text-[color:var(--hero-faint)] lg:block lg:right-12">
         <div>{countLabel}</div>
         <div>
           <span ref={fpsRef}>60</span> FPS
@@ -1886,7 +1938,7 @@ export default function ParticleHero() {
       {/* Welcome copy and the settings rail share one quiet left column.
           Exactly one H1 on the page, one welcome sentence, no duplicate
           eyebrow. Mascot greetings chip introduces Kodee with high polish. */}
-      <div className="hero-left-rail pointer-events-none absolute left-4 right-4 sm:right-auto top-[4.75rem] sm:top-[7.5rem] sm:bottom-8 z-20 flex flex-col sm:left-8 lg:left-12">
+      <div className="hero-left-rail pointer-events-none absolute left-5 right-5 sm:right-auto top-[4.75rem] sm:top-[7.5rem] sm:bottom-8 z-20 flex flex-col sm:left-8 lg:left-12">
         <div className="hero-welcome hero-ui-shadow pointer-events-none shrink-0">
           <div className="hero-eyebrow-chip pointer-events-auto inline-flex items-center gap-2 self-start rounded-full border border-border bg-surface-2/90 px-2.5 py-1 backdrop-blur-md mb-2 sm:mb-3">
             <KodeeGif
@@ -1929,7 +1981,7 @@ export default function ParticleHero() {
             motion bar is gone, so each control appears exactly once. On
             mobile it is collapsed by default and expands in the rail with
             44px touch targets (scrollable if the panel is long). */}
-        <aside className="pointer-events-none mt-4 sm:mt-6 flex min-h-0 w-[240px] max-w-full flex-col">
+        <aside className="hero-controls pointer-events-none flex min-h-0 w-[240px] max-w-full flex-col">
           <button
             type="button"
             onClick={() => setPanelOpen((open) => !open)}
@@ -2030,7 +2082,7 @@ export default function ParticleHero() {
 
       {/* Quiet interaction hint, desktop only, anchored bottom-right with
           enough clearance that the companion FAB never covers it. */}
-      <p className="hero-ui-shadow pointer-events-none absolute bottom-7 right-36 z-20 hidden text-[11px] uppercase tracking-[0.28em] text-[color:var(--hero-faint)] sm:block lg:right-44">
+      <p className="hero-ui-shadow pointer-events-none absolute bottom-7 right-36 z-20 hidden text-[11px] uppercase tracking-[0.28em] text-[color:var(--hero-faint)] lg:block lg:right-44">
         Move to disturb <span aria-hidden="true">·</span> click to splash
       </p>
     </section>

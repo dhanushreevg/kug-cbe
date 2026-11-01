@@ -6,8 +6,12 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
+      // "@/..." maps to src/
       "@": path.resolve(__dirname, "./src"),
-      "gsap/SplitText": path.resolve(__dirname, "./src/lib/SplitText.js"),
+      // gsap/SplitText is resolved from the npm package (node_modules/gsap/SplitText.js).
+      // The local src/lib/SplitText.js is an IIFE that never assigns SplitText onto its
+      // exportsObj, so the named export was always undefined → "Z_ is not a constructor".
+      // The npm package exports { SplitText, SplitText as default } correctly.
     },
   },
 })
