@@ -51,6 +51,19 @@
    identical in both themes and used as accents only.
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/* ── Spacing tokens — single source of truth for vertical rhythm ──────────
+   --section-gap: the space between major page sections. Clamps 48px→64px on
+     mobile, easing to 6rem on wide screens. Max on mobile is 64px (4rem).
+   --stack-gap: spacing between elements inside a block (chip→h1→p→buttons).
+   These are consumed by .section-spacing and the Tailwind py-[var(...)].
+   ─────────────────────────────────────────────────────────────────────────── */
+:root {
+  --section-gap: clamp(3rem, 8vw, 6rem);   /* 48px mobile → 96px desktop  */
+  --stack-gap:   1.25rem;                   /* 20px — chip/h1/p/button gaps */
+  /* Fixed-header height (64px + notch). Used by the stacked hero's top pad. */
+  --header-h:    calc(4rem + env(safe-area-inset-top));
+}
+
 /* ── Carbon (dark, default) ── */
 :root,
 :root[data-theme="dark"] {
@@ -517,7 +530,7 @@ body {
 
 /* ── Safe areas: header, page loader, KodeeCompanion ── */
 .site-header {
-  height: calc(4rem + env(safe-area-inset-top));
+  height: var(--header-h);
   padding-top: env(safe-area-inset-top);
 }
 .page-loader-safe {
@@ -539,9 +552,10 @@ body {
 
 /* ── Kodee walker lane (owns the mascot's layout box) ──
    The lane between the hero and the marquee band. It never uses
-   overflow-hidden, so no ancestor can clip the walker: ≥72px tall on
-   mobile (64px GIF), 128px on tablet+ with the walker vertically centred.
-   transform-only scrub animation. */
+   overflow-hidden, so no ancestor can clip the walker: 72px tall on mobile
+   (64px GIF + 4px top + 4px bottom), 96px on tablet+.
+   Reduced from 128px to 96px on sm+ to not contribute to the ~90px gap
+   that was accumulating between the marquee band and the events section. */
 .kodee-lane {
   position: relative;
   z-index: 10;
@@ -552,7 +566,7 @@ body {
   padding: 0 8px;
 }
 @media (min-width: 640px) {
-  .kodee-lane { height: 128px; }
+  .kodee-lane { height: 96px; }
 }
 
 /* ── Widescreen container: keep the 7xl rhythm but breathe at 1440px+ ── */
@@ -608,10 +622,14 @@ body {
 .org-card-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 3.5rem;
+  gap: 1.75rem; /* tighter on mobile; desktop restores 3.5rem below */
   width: 100%;
   max-width: 1200px;
   margin-inline: auto;
+}
+
+@media (min-width: 640px) {
+  .org-card-grid { gap: 2.5rem; }
 }
 
 @media (min-width: 1024px) {
@@ -1027,7 +1045,14 @@ body {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .hero-shell {
-  height: 100dvh;
+  /* Mobile: fill exactly the small-viewport height so the hero never shows a
+     blank band top or bottom. 100svh is the modern spelling; 100vh is the
+     fallback for browsers that don't support it. A minimum of 560px prevents
+     squashing below usable size on very short phones.
+     NOTE: avoid min(100dvh, 680px) — that hard cap was larger than the actual
+     viewport on 327×658 and 360×780 devices, causing a visible empty band. */
+  height: 100vh;          /* fallback */
+  height: 100svh;         /* preferred — excludes browser chrome */
   min-height: 560px;
 }
 
@@ -1136,9 +1161,13 @@ body {
   background: var(--hero-border, rgba(255, 255, 255, 0.08));
 }
 
-/* Welcome copy sits in the quiet left column, above the settings rail. */
+/* Welcome copy sits in the quiet left column, above the settings rail.
+   The left offset matches the site-wide gutter (px-5 = 1.25rem = 20px) so
+   hero content, the events section, and every other section share the same
+   x position on mobile. On sm+ the left edge shifts to 2rem (32px) and on
+   lg to 3rem (48px), matching the px-8/px-16 ladders used in sections. */
 .hero-left-rail {
-  width: min(26.25rem, calc(100vw - 2rem));
+  width: min(26.25rem, calc(100vw - 2.5rem)); /* 100vw − 2×gutter(1.25rem) */
 }
 
 .hero-welcome__title {
@@ -1238,6 +1267,77 @@ body {
   .hero-left-rail {
     width: min(26.25rem, 24vw);
   }
+  /* Original desktop gap between the welcome copy and the controls rail. */
+  .hero-controls {
+    margin-top: 1.5rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STACKED HERO (below lg / 1024px)
+   ---------------------------------------------------------------------------
+   Copy first → dedicated particle stage → controls hint. The canvas is no
+   longer positioned against the full hero, so it cannot sit over the text.
+   Everything above lg keeps the original absolute desktop composition.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 1023.98px) {
+  .hero-shell {
+    /* Let the stack determine the height; the viewport is only a floor. */
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* 24px: p→stage and stage→hint both land in range */
+    height: auto;
+    min-height: 100vh;  /* fallback */
+    min-height: 100svh;
+    padding-top: calc(var(--header-h) + 1rem);
+    padding-bottom: 1.25rem;
+  }
+
+  /* The rail dissolves on mobile so its children join the hero flex column. */
+  .hero-left-rail {
+    display: contents;
+  }
+
+  .hero-welcome {
+    position: relative;
+    z-index: 10;
+    order: 1;
+    padding-inline: 1.25rem; /* shared 20px gutter */
+  }
+
+  .hero-stage {
+    order: 2;
+    width: calc(100% - 2.5rem);
+    margin-inline: 1.25rem; /* same 20px gutter as the copy */
+    /* 40–45svh band with a 280px floor and 420px ceiling. */
+    height: clamp(280px, 42vh, 420px);  /* fallback */
+    height: clamp(280px, 42svh, 420px);
+    touch-action: pan-y;
+  }
+
+  .hero-controls {
+    position: relative;
+    z-index: 10;
+    order: 3;
+    width: 100%;
+    margin-top: 0;
+    padding-inline: 1.25rem; /* same x as the copy + chip + CTAs */
+  }
+}
+
+/* ── Unified section spacing utility ────────────────────────────────────────
+   Apply .section-spacing to the <section> elements that need consistent top
+   and bottom padding. The hero and marquee band are exempt (the hero fills
+   the viewport; the marquee is a thin divider). */
+.section-spacing {
+  padding-top:    var(--section-gap);
+  padding-bottom: var(--section-gap);
+}
+
+/* ── Marquee band: thin consistent vertical padding (no extra gap) ──────── */
+.marquee-band {
+  padding-top:    0.75rem;  /* 12px */
+  padding-bottom: 0.75rem;  /* 12px */
 }
 
 @media (prefers-reduced-motion: reduce) {

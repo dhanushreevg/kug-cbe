@@ -50,10 +50,10 @@ export default function Events() {
   return (
     <section
       id="events"
-      className="max-w-7xl mx-auto bg-void px-5 sm:px-10 lg:px-16 py-[clamp(4rem,8vw,8rem)]"
+      className="max-w-7xl mx-auto bg-void px-5 sm:px-10 lg:px-16 py-[var(--section-gap)]"
     >
       {/* Editorial header: numbered rail + heading, staggered left edge kept. */}
-      <div className="relative mb-14 sm:pl-[8%]">
+      <div className="relative mb-10 sm:mb-14 sm:pl-[8%]">
         {/* kodee-floating.gif: decorative header accent, 25% opacity, gentle
             CSS float. Hidden entirely under reduced motion. */}
         {!reducedMotion && (

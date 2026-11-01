@@ -38,6 +38,11 @@ export default function App() {
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
     if (reduceMotion) return
 
+    // SplitText must be a real constructor (the npm gsap/SplitText exports it
+    // correctly; the former alias to src/lib/SplitText.js returned undefined
+    // which caused "Z_ is not a constructor").
+    if (typeof SplitText !== "function") return
+
     const headings = document.querySelectorAll("h2.section-heading")
     const splits = []
     const triggers = []
@@ -57,8 +62,9 @@ export default function App() {
           },
         })
         if (anim.scrollTrigger) triggers.push(anim.scrollTrigger)
-      } catch (err) {
-        console.warn("SplitText heading fallback:", err)
+      } catch {
+        // SplitText is a progressive enhancement — heading text is always
+        // visible; no error is logged so the console stays clean.
       }
     })
 
@@ -85,8 +91,9 @@ export default function App() {
         {/* The mascot's own lane — walker is never clipped here. */}
         <KodeeStage />
 
-        {/* Minimal Solid Marquee Divider (track only; the walker runs above). */}
-        <div className="relative overflow-hidden py-3 bg-surface select-none border-y border-border marquee-band">
+        {/* Minimal Solid Marquee Divider (track only; the walker runs above).
+            .marquee-band in index.css owns the 12px top/bottom padding. */}
+        <div className="relative overflow-hidden bg-surface select-none border-y border-border marquee-band">
           <div className="marquee-track motion-safe:animate-marquee flex w-max whitespace-nowrap font-mono font-bold text-muted uppercase tracking-[0.15em] text-[11px] sm:text-xs">
             <span>{MARQUEE_TEXT.repeat(6)}</span>
             <span aria-hidden="true">{MARQUEE_TEXT.repeat(6)}</span>
