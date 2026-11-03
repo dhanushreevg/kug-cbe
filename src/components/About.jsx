@@ -422,6 +422,29 @@ export default function About() {
             ))}
           </div>
 
+          {/* Volunteer application CTA */}
+          <div className="mt-12 flex flex-col gap-6 rounded-xl border border-border bg-surface p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+            <div className="max-w-2xl">
+              <span className="font-mono text-xs uppercase tracking-widest text-muted block mb-2">
+                Join the Team
+              </span>
+              <h3 className="font-display text-xl font-bold text-fg mb-2">
+                Help us grow the Kotlin community
+              </h3>
+              <p className="font-body text-sm text-muted leading-relaxed">
+                Interested in volunteering with KUG Coimbatore? Fill out the form and we will review your application and reach out within 3 days.
+              </p>
+            </div>
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSe61S_Fa2AAbVIgQq_G8Dl9BTKtxSjbiUhHP5GftKfvGK4SrQ/viewform"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="tap-44 w-full sm:w-auto shrink-0 px-6 py-3 rounded-xl font-body font-medium text-sm text-ink bg-fg hover:bg-fg-hover transition-all duration-150 active:scale-[0.98] select-none inline-flex items-center justify-center"
+            >
+              Join as a Volunteer
+            </a>
+          </div>
+
           {/* Kodee mascot — restyled as a layered card */}
           <div className="mt-16">
             <KodeeCard />
