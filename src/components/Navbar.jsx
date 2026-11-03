@@ -139,12 +139,12 @@ export default function Navbar() {
             <ThemeToggle />
 
             <a
-              href="https://www.linkedin.com/groups/42835384/"
+              href="https://www.linkedin.com/company/kotlin-user-group-coimbatore"
               target="_blank"
               rel="noopener noreferrer"
               className="hidden lg:inline-flex px-4 py-2.5 rounded-xl font-body font-medium text-xs text-ink bg-fg hover:bg-fg-hover transition-all duration-150 active:scale-[0.98] select-none"
             >
-              Join Group
+              Follow KUG Coimbatore
             </a>
 
             {/* Mobile Hamburger Button — 44×44 target */}
@@ -202,13 +202,13 @@ export default function Navbar() {
             ))}
 
             <a
-              href="https://www.linkedin.com/groups/42835384/"
+              href="https://www.linkedin.com/company/kotlin-user-group-coimbatore"
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setIsMobileMenuOpen(false)}
               className="mt-3 px-6 py-3.5 rounded-xl font-body font-medium text-sm text-ink bg-fg select-none w-full text-center active:scale-[0.98] transition-transform"
             >
-              Join Group on LinkedIn
+              Follow KUG Coimbatore on LinkedIn
             </a>
           </div>
         </div>

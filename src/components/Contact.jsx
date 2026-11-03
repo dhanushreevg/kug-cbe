@@ -60,12 +60,12 @@ export default function Contact() {
         {/* Social / Ecosystem Links */}
         <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-8 border-t border-border pt-8">
           <a
-            href="https://www.linkedin.com/groups/42835384/"
+            href="https://www.linkedin.com/company/kotlin-user-group-coimbatore"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 font-body text-sm text-muted hover:text-fg transition-colors duration-150"
           >
-            <span>LinkedIn Group</span>
+            <span>Follow on LinkedIn</span>
             <ArrowRight className="w-4 h-4 text-dim" />
           </a>
 

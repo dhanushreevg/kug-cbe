@@ -1962,10 +1962,12 @@ export default function ParticleHero() {
           </p>
           <div className="hero-welcome__actions">
             <a
-              href="#community"
+              href="https://www.linkedin.com/company/kotlin-user-group-coimbatore"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hero-welcome__cta hero-focus pointer-events-auto"
             >
-              Join the group
+              Follow the chapter
             </a>
             <a
               href="#events"

@@ -25,12 +25,12 @@ export default function Footer() {
           {/* Right: Nav Links — wrap cleanly into rows at tablet width */}
           <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm font-body text-muted">
             <a
-              href="https://www.linkedin.com/groups/42835384/"
+              href="https://www.linkedin.com/company/kotlin-user-group-coimbatore"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-fg active:text-fg transition-colors duration-150 inline-flex items-center py-1.5"
             >
-              LinkedIn Group
+              Follow on LinkedIn
             </a>
             <a
               href="https://luma.com/user/usr-DwA5zofXDKPJNPX"

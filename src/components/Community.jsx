@@ -73,12 +73,12 @@ export default function Community() {
         {/* CTAs stack full-width on mobile, side by side from sm. */}
         <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:gap-3 md:w-auto md:shrink-0">
           <a
-            href="https://www.linkedin.com/groups/42835384/"
+            href="https://www.linkedin.com/company/kotlin-user-group-coimbatore"
             target="_blank"
             rel="noopener noreferrer"
             className="tap-44 w-full sm:w-auto px-6 py-3 rounded-xl font-body font-medium text-sm text-ink bg-fg hover:bg-fg-hover transition-all duration-150 active:scale-[0.98] select-none inline-flex items-center justify-center gap-2"
           >
-            Join LinkedIn Group
+            Follow KUG Coimbatore
           </a>
           <a
             href="https://luma.com/user/usr-DwA5zofXDKPJNPX"

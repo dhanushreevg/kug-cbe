@@ -1186,7 +1186,7 @@ body {
   letter-spacing: 0.002em;
 }
 
-/* The CTA borrows the header's Join Group treatment; 48px tall on mobile.
+/* The CTA borrows the header's LinkedIn follow treatment; 48px tall on mobile.
    Secondary variant: hairline ghost button, same instrument aesthetic.
    Font floor: 0.75rem (12px) — never below the 11px readable minimum. */
 .hero-welcome__cta {
