@@ -17,31 +17,23 @@ const ArrowRight = ({ className = "w-4 h-4" }) => (
   </svg>
 )
 
-/* Event slate — realistic near-term dates for the 2026/27 season. Exact
-   venues/times are announced on Slack first, so the lede says so plainly
-   instead of inventing precision. */
+const LUMA_EVENT_URL = "https://luma.com/7kvusrr5"
+
 const EVENTS = [
   {
     category: "Featured Meetup",
     title: "KUG Coimbatore Kickoff: Kotlin 2.0 & Beyond",
-    description: "The in-person gathering for Kotlin engineers in Coimbatore. Deep dive into K2 compiler performance, coroutines, and community roadmap.",
-    date: "November 2026 · CBE",
+    description: "Join Kotlin developers in Coimbatore for an in-person community meetup focused on learning, collaboration, and building together.",
+    date: "December 20, 2026 · CBE",
     featured: true,
-    rsvpStatus: "coming_soon",
+    rsvpStatus: "live",
+    href: LUMA_EVENT_URL,
   },
   {
-    category: "Hands-on Workshop",
-    title: "Kotlin Multiplatform: Compose Across Platforms",
-    description: "Build a single codebase that runs seamlessly across Android, iOS, and Desktop with shared Kotlin logic and declarative Compose UI.",
-    date: "December 2026 · Hands-on",
-    featured: false,
-    rsvpStatus: "coming_soon",
-  },
-  {
-    category: "Deep Dive Talk",
-    title: "High-Throughput Backends with Ktor & Coroutines",
-    description: "Master non-blocking asynchronous servers, structured concurrency, and resilience patterns using Ktor and Kotlin Flow in production.",
-    date: "January 2027 · Online",
+    category: "Flagship Event",
+    title: "January 5, 2027: KUG Coimbatore Flagship Event",
+    description: "A bigger community event focused on technology, innovation, collaboration, and exciting learning opportunities. These events are important steps towards building a strong and active developer community in Coimbatore.",
+    date: "January 5, 2027",
     featured: false,
     rsvpStatus: "coming_soon",
   },
@@ -116,18 +108,27 @@ export default function Events() {
                 </span>
               ) : (
                 <a
-                  href="https://luma.com/user/usr-DwA5zofXDKPJNPX"
+                  href={event.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="tap-44 inline-flex items-center gap-1.5 whitespace-nowrap rounded-md font-mono text-xs uppercase tracking-[0.14em] text-body transition-colors duration-150 hover:text-fg focus-visible:text-fg active:text-fg"
                 >
-                  RSVP on Luma
+                  REGISTER ON LUMA
                   <ArrowRight className="w-3.5 h-3.5" />
                 </a>
               )}
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="bg-surface border border-border rounded-xl p-6 sm:p-8 mb-6">
+        <p className="font-body text-base text-muted leading-relaxed max-w-4xl">
+          We will be discussing the event ideas, planning, responsibilities, and preparations together. Let&apos;s work as a team, share ideas, and make both events successful! Let&apos;s build something amazing together!
+        </p>
+        <p className="font-mono text-xs tracking-widest uppercase text-dim mt-4">
+          KUG Coimbatore Organizing Team
+        </p>
       </div>
 
       {/* Luma Event Updates Callout */}
@@ -159,7 +160,7 @@ export default function Events() {
           </div>
         </div>
         <a
-          href="https://luma.com/user/usr-DwA5zofXDKPJNPX"
+          href={LUMA_EVENT_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="tap-44 w-full sm:w-auto px-6 py-3 rounded-xl font-body font-medium text-sm text-ink bg-fg hover:bg-fg-hover transition-all duration-150 active:scale-[0.98] select-none inline-flex items-center justify-center gap-2 shrink-0"

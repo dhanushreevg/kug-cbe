@@ -70,7 +70,7 @@ export default function Contact() {
           </a>
 
           <a
-            href="https://luma.com/user/usr-DwA5zofXDKPJNPX"
+            href="https://luma.com/7kvusrr5"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 font-body text-sm text-muted hover:text-fg transition-colors duration-150"

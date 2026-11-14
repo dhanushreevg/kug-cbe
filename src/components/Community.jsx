@@ -81,7 +81,7 @@ export default function Community() {
             Follow KUG Coimbatore
           </a>
           <a
-            href="https://luma.com/user/usr-DwA5zofXDKPJNPX"
+            href="https://luma.com/7kvusrr5"
             target="_blank"
             rel="noopener noreferrer"
             className="tap-44 w-full sm:w-auto px-6 py-3 rounded-xl font-body font-medium text-sm text-body hover:text-fg bg-surface-2 hover:bg-surface-3 border border-border transition-all duration-150 active:scale-[0.98] select-none inline-flex items-center justify-center gap-2"

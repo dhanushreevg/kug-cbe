@@ -18,6 +18,7 @@ import Contact from "@/components/Contact"
 import Footer from "@/components/Footer"
 import KodeeCompanion from "@/components/KodeeCompanion"
 import PageLoader from "@/components/PageLoader"
+import EventNotification from "@/components/EventNotification"
 
 gsap.registerPlugin(ScrollTrigger, SplitText)
 
@@ -82,6 +83,7 @@ export default function App() {
   return (
     <div className="relative min-h-screen bg-void text-body">
       <PageLoader onFinish={() => ScrollTrigger.refresh()} />
+      <EventNotification />
       <Navbar />
 
       <main>

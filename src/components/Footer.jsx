@@ -33,7 +33,7 @@ export default function Footer() {
               Follow on LinkedIn
             </a>
             <a
-              href="https://luma.com/user/usr-DwA5zofXDKPJNPX"
+              href="https://luma.com/7kvusrr5"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-fg active:text-fg transition-colors duration-150 inline-flex items-center py-1.5"

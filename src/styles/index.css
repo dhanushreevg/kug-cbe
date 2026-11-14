@@ -362,6 +362,27 @@ body {
     box-shadow: none;
   }
 }
+
+@keyframes event-notification-in {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.event-notification {
+  animation: event-notification-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .event-notification {
+    animation: none;
+  }
+}
 /* Pressed state for touch */
 @media (hover: none) and (pointer: coarse) {
   .card-base:active {
