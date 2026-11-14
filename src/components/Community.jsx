@@ -77,7 +77,7 @@ export default function Community() {
             href={COMMUNITY_LINKS.whatsapp}
             target="_blank"
             rel="noopener noreferrer"
-            className="tap-44 w-full sm:w-auto px-6 py-3 rounded-xl font-body font-medium text-sm text-ink bg-fg hover:bg-fg-hover transition-all duration-150 active:scale-[0.98] select-none inline-flex items-center justify-center gap-2"
+            className="tap-44 w-full sm:w-auto px-6 py-3 rounded-xl font-body font-medium text-sm text-ink bg-fg hover:bg-fg-hover transition-all duration-150 active:scale-[0.98] select-none inline-flex items-center justify-center gap-2 border-2 border-accent shadow-[0_0_0_3px_rgba(127,82,255,0.2)] sm:border sm:border-transparent sm:shadow-none"
           >
             Join WhatsApp Community
           </a>
