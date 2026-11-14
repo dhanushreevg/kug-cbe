@@ -184,7 +184,7 @@ export default function Events() {
           </p>
         </div>
         <a
-          href="mailto:kugcoimbatore@gmail.com?subject=Call%20for%20Speakers%20-%20KUG%20Coimbatore"
+          href="mailto:admin@kotlincoimbatore.live?subject=Call%20for%20Speakers%20-%20KUG%20Coimbatore"
           className="tap-44 w-full sm:w-auto px-6 py-3 rounded-xl font-body font-medium text-sm text-body hover:text-fg bg-surface-2 hover:bg-surface-3 border border-border transition-all duration-150 active:scale-[0.98] select-none inline-flex items-center justify-center shrink-0"
         >
           Submit a Talk

@@ -50,10 +50,10 @@ export default function Contact() {
         {/* Primary Contact: Email in solid white */}
         <div className="mb-12">
           <a
-            href="mailto:kugcoimbatore@gmail.com"
+            href="mailto:admin@kotlincoimbatore.live"
             className="inline-block max-w-full break-words font-mono text-[clamp(1rem,5vw,3rem)] font-bold text-fg hover:text-body transition-colors duration-150 select-all"
           >
-            kugcoimbatore@gmail.com
+            admin@kotlincoimbatore.live
           </a>
         </div>
 
