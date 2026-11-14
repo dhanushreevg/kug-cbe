@@ -1,4 +1,5 @@
 import KugLogo from "@/components/KugLogo"
+import { COMMUNITY_LINKS } from "@/config/links"
 
 export default function Footer() {
   return (
@@ -22,15 +23,35 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Right: Nav Links — wrap cleanly into rows at tablet width */}
-          <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm font-body text-muted">
+          {/* Right: Community and ecosystem links — wrap cleanly at every width */}
+          <div className="flex flex-col gap-3">
+            <h2 className="font-mono text-xs uppercase tracking-widest text-dim">
+              Community
+            </h2>
+            <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm font-body text-muted">
             <a
-              href="https://www.linkedin.com/company/kotlin-user-group-coimbatore"
+              href={COMMUNITY_LINKS.whatsapp}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-fg active:text-fg transition-colors duration-150 inline-flex items-center py-1.5"
+            >
+              Join WhatsApp Community
+            </a>
+            <a
+              href={COMMUNITY_LINKS.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-fg active:text-fg transition-colors duration-150 inline-flex items-center py-1.5"
             >
               Follow on LinkedIn
+            </a>
+            <a
+              href={COMMUNITY_LINKS.volunteer}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-fg active:text-fg transition-colors duration-150 inline-flex items-center py-1.5"
+            >
+              Volunteer Sign Up
             </a>
             <a
               href="https://luma.com/7kvusrr5"
@@ -72,6 +93,7 @@ export default function Footer() {
             >
               Playground
             </a>
+            </div>
           </div>
         </div>
 

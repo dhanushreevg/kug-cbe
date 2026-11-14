@@ -1,4 +1,5 @@
 import SectionHeader from "@/components/SectionHeader"
+import { COMMUNITY_LINKS } from "@/config/links"
 
 const STATS = [
   { number: "250+", label: "Engineers in Network" },
@@ -73,12 +74,28 @@ export default function Community() {
         {/* CTAs stack full-width on mobile, side by side from sm. */}
         <div className="flex w-full flex-col gap-3 sm:flex-row sm:items-center sm:gap-3 md:w-auto md:shrink-0">
           <a
-            href="https://www.linkedin.com/company/kotlin-user-group-coimbatore"
+            href={COMMUNITY_LINKS.whatsapp}
             target="_blank"
             rel="noopener noreferrer"
             className="tap-44 w-full sm:w-auto px-6 py-3 rounded-xl font-body font-medium text-sm text-ink bg-fg hover:bg-fg-hover transition-all duration-150 active:scale-[0.98] select-none inline-flex items-center justify-center gap-2"
           >
-            Follow KUG Coimbatore
+            Join WhatsApp Community
+          </a>
+          <a
+            href={COMMUNITY_LINKS.linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="tap-44 w-full sm:w-auto px-6 py-3 rounded-xl font-body font-medium text-sm text-body hover:text-fg bg-surface-2 hover:bg-surface-3 border border-border transition-all duration-150 active:scale-[0.98] select-none inline-flex items-center justify-center gap-2"
+          >
+            Follow on LinkedIn
+          </a>
+          <a
+            href={COMMUNITY_LINKS.volunteer}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="tap-44 w-full sm:w-auto px-6 py-3 rounded-xl font-body font-medium text-sm text-body hover:text-fg bg-surface-2 hover:bg-surface-3 border border-border transition-all duration-150 active:scale-[0.98] select-none inline-flex items-center justify-center gap-2"
+          >
+            Volunteer Sign Up
           </a>
           <a
             href="https://luma.com/7kvusrr5"
